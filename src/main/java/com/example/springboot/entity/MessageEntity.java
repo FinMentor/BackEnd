@@ -8,7 +8,9 @@ import lombok.ToString;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.List;
 
+@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,4 +43,7 @@ public class MessageEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
+
+    @ManyToOne
+    private ChatroomEntity chatroomEntity;
 }

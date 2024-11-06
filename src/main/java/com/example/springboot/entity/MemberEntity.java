@@ -13,6 +13,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
+@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -48,7 +49,7 @@ public class MemberEntity {
     @Column(name = "ALARM_STATUS")
     private Character alarmStatus;
 
-    @Column(name = "ALARM_STATUS")
+    @Column(name = "REPORT_TIME")
     private Time reportTime;
 
     @Column(name = "PROFILE_IMAGE_URL")
@@ -76,13 +77,30 @@ public class MemberEntity {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
+    @OneToOne(mappedBy = "memberEntity")
     private SettingEntity settingEntity;
+
+    @OneToOne(mappedBy = "memberEntity")
     private MemberSmsEntity memberSmsEntity;
+
+    @OneToOne(mappedBy = "memberEntity")
     private MemberEmailEntity memberEmailEntity;
+
+    @OneToMany(mappedBy = "memberEntity")
     private List<NotificationEntity> notificationEntityList;
+
+    @OneToMany(mappedBy = "memberEntity")
     private List<SelectedTermsEntity> selectedTermsEntityList;
+
+    @OneToMany(mappedBy = "memberEntity")
     private List<MemberAnswerVO> memberAnswerVOList;
+
+    @OneToMany(mappedBy = "memberEntity")
     private List<InterestCategoryEntity> interestCategoryEntityList;
+
+    @OneToMany(mappedBy = "memberEntity")
     private List<PostEntity> postEntityList;
+
+    @OneToMany(mappedBy = "memberEntity")
     private List<ChatroomEntity> chatroomEntityList;
 }

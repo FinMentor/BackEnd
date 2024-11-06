@@ -9,10 +9,12 @@ import lombok.ToString;
 import java.sql.Timestamp;
 import java.time.Instant;
 
+@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@IdClass(MemberSmsId.class)
 @Table(name = "MEMBER_SMS")
 public class MemberSmsEntity {
     @Id
@@ -54,4 +56,7 @@ public class MemberSmsEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
+
+    @OneToOne
+    private MemberEntity memberEntity;
 }

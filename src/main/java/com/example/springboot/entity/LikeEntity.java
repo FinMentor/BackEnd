@@ -9,6 +9,7 @@ import lombok.ToString;
 import java.sql.Timestamp;
 import java.time.Instant;
 
+@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,4 +39,7 @@ public class LikeEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
+
+    @ManyToOne
+    private PostEntity postEntity;
 }

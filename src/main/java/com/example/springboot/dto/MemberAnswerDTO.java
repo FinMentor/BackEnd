@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @ToString
 public class MemberAnswerDTO {
-    //    private String memberId;
+    private String memberId;
     private Long questionId;
     private Long optionId;
 }

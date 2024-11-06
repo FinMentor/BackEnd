@@ -9,6 +9,7 @@ import lombok.ToString;
 import java.sql.Timestamp;
 import java.time.Instant;
 
+@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,4 +42,10 @@ public class InterestCategoryEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
+
+    @ManyToOne
+    private SubCategoryEntity subCategoryEntity;
+
+    @ManyToOne
+    private MemberEntity memberEntity;
 }

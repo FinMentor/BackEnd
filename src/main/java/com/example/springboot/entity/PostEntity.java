@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
+@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -55,6 +56,12 @@ public class PostEntity {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
+    @ManyToOne
+    private MemberEntity memberEntity;
+
+    @OneToMany(mappedBy = "postEntity")
     List<CommentEntity> commentEntityList;
+
+    @OneToMany(mappedBy = "postEntity")
     List<LikeEntity> likeEntityList;
 }

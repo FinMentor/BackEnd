@@ -9,6 +9,7 @@ import lombok.ToString;
 import java.sql.Timestamp;
 import java.time.Instant;
 
+@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,4 +45,7 @@ public class MemberEmailEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
+
+    @OneToOne
+    private MemberEntity memberEntity;
 }

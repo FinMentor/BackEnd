@@ -1,9 +1,9 @@
 package com.example.springboot.vo;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
+import com.example.springboot.entity.MemberEntity;
+import com.example.springboot.entity.QuestionEntity;
+import com.example.springboot.entity.QuestionOptionEntity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,18 +12,23 @@ import lombok.ToString;
 import java.sql.Timestamp;
 import java.time.Instant;
 
+@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@IdClass(MemberAnswerId.class)
 @Table(name = "MEMBER_ANSWER")
 public class MemberAnswerVO {
+    @Id
     @Column(name = "MEMBER_ID")
     private String memberId;
 
+    @Id
     @Column(name = "QUESTION_ID")
     private Long questionId;
 
+    @Id
     @Column(name = "QUESTION_OPTION_ID")
     private Long questionOptionId;
 
@@ -42,4 +47,13 @@ public class MemberAnswerVO {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
+
+    @ManyToOne
+    private MemberEntity memberEntity;
+
+    @OneToOne
+    private QuestionEntity questionEntity;
+
+    @OneToOne
+    private QuestionOptionEntity questionOptionEntity;
 }

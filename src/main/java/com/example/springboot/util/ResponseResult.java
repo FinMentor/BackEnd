@@ -12,7 +12,7 @@ public class ResponseResult<T> {
     private ResponseEntity response;
 
     // 작업을 실패할 경우
-    public static <T> ResponseResult<T> error(T result) {
+    public static <T> ResponseResult<T> fail(T result) {
         return new ResponseResult<>(ResultCodeEnum.FAIL.getValue(), result, ResponseEntity.ok(ResultCodeEnum.FAIL.getMessage()));
     }
 

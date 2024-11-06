@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
+@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,5 +44,9 @@ public class SubCategoryEntity {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    List<InterestCategoryEntity> interestCategoryEntityList;
+    @ManyToOne
+    private MainCategoryEntity mainCategoryEntity;
+
+    @OneToMany(mappedBy = "subCategoryEntity")
+    private List<InterestCategoryEntity> interestCategoryEntityList;
 }

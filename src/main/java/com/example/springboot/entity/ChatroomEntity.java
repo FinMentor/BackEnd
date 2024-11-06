@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
+@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,5 +44,9 @@ public class ChatroomEntity {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    List<MessageEntity> messageEntityList;
+    @OneToMany(mappedBy = "chatroomEntity")
+    private List<MessageEntity> messageEntityList;
+
+    @ManyToOne
+    private MemberEntity memberEntity;
 }

@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
+@Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,6 +42,9 @@ public class QuestionEntity {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
+    @OneToOne(mappedBy = "questionEntity")
     private MemberAnswerVO memberAnswerVO;
+
+    @OneToMany(mappedBy = "questionEntity")
     private List<QuestionOptionEntity> questionOptionEntityList;
 }
