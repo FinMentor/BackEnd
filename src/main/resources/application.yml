@@ -20,3 +20,17 @@ spring:
 logging:
   level:
     root: info
+
+kakao:
+  rest-api-key: 314541b0e482a6d2f2ff97d5c582ed3b
+  redirect-uri: http://localhost:5173/auth/login/kakao
+  logout-redirect-uri: http://localhost:5173/auth/logout/kakao
+
+naver:
+  client-id: IYVENBOBxesP1YgAYgbo
+  clinet-secret: DsxNO2Pnnn
+  redirect-uri: http://localhost:5173/auth/login/naver
+
+coolsms:
+  api-key: NCSZGBYEUUF0QADU
+  api-secret: PDYDAPMULLX63CPDEVQWTUGITRV4NQAN
