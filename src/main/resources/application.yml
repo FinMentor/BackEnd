@@ -1,0 +1,22 @@
+spring.application.name: springboot
+
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://bbaek2.synology.me:3306/example
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    generate-ddl: false
+    hibernate.ddl-auto: none
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+logging:
+  level:
+    root: info
