@@ -40,10 +40,4 @@ public class SelectedTermsEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
-
-    @ManyToOne
-    private MemberEntity memberEntity;
-
-    @OneToOne
-    private TermsOfUseEntity termsOfUseEntity;
 }

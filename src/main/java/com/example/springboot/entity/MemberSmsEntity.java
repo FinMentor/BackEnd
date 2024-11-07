@@ -17,17 +17,14 @@ import java.time.Instant;
 public class MemberSmsEntity {
     @Id
     @Column(name = "PHONE_FIRST")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String phoneFirst;
 
     @Id
     @Column(name = "PHONE_MIDDLE")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String phoneMiddle;
 
     @Id
     @Column(name = "PHONE_LAST")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String phoneLast;
 
     @Column(name = "MEMBER_ID")
@@ -54,7 +51,4 @@ public class MemberSmsEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
-
-    @OneToOne
-    private MemberEntity memberEntity;
 }

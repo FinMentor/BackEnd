@@ -43,7 +43,4 @@ public class SettingEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
-
-    @OneToOne
-    private MemberEntity memberEntity;
 }

@@ -1,12 +1,10 @@
 package com.example.springboot.entity;
 
-import com.example.springboot.vo.MemberAnswerVO;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
 
 @Entity
 @Getter
@@ -39,10 +37,4 @@ public class QuestionEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
-
-    @OneToOne(mappedBy = "questionEntity")
-    private MemberAnswerVO memberAnswerVO;
-
-    @OneToMany(mappedBy = "questionEntity")
-    private List<QuestionOptionEntity> questionOptionEntityList;
 }

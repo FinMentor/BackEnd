@@ -43,7 +43,4 @@ public class TermsOfUseEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
-
-    @OneToOne(mappedBy = "termsOfUseEntity")
-    private SelectedTermsEntity selectedTermsEntity;
 }

@@ -19,6 +19,9 @@ public class CommentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
+    @Column(name = "MEMBER_ID")
+    private String memberId;
+
     @Column(name = "POST_ID")
     private Long postId;
 
@@ -40,7 +43,4 @@ public class CommentEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
-
-    @ManyToOne
-    private PostEntity postEntity;
 }

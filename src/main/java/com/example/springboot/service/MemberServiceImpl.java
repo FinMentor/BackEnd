@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -150,13 +150,14 @@ public class MemberServiceImpl implements MemberService {
      * @param memberSignupRequestDTO
      */
     private void checkTermsOfUse(MemberSignupRequestDTO memberSignupRequestDTO) {
-        Optional<TermsOfUseEntity> optionalTermsOfUseEntity = termsOfUseRepository.findByRequired(CommonCodeEnum.YES.getValue().charAt(0));
 
-        if (optionalTermsOfUseEntity.isEmpty() || memberSignupRequestDTO.getTermsAgreementDTOList() == null || memberSignupRequestDTO.getTermsAgreementDTOList().isEmpty()) {
+        List<TermsOfUseEntity> termsOfUseEntityList = termsOfUseRepository.findByRequired(CommonCodeEnum.YES.getValue().charAt(0));
+
+        if (termsOfUseEntityList.isEmpty() || memberSignupRequestDTO.getTermsAgreementDTOList() == null || memberSignupRequestDTO.getTermsAgreementDTOList().isEmpty()) {
             throw new FailGetTermsOfUseException(ExceptionCodeEnum.NONEXISTENT_TERMS_OF_USE.getMessage());
         }
 
-        Set<Long> requiredTermsOfUseIds = optionalTermsOfUseEntity.stream().map(TermsOfUseEntity::getTermsOfUseId).collect(Collectors.toSet());
+        Set<Long> requiredTermsOfUseIds = termsOfUseEntityList.stream().map(TermsOfUseEntity::getTermsOfUseId).collect(Collectors.toSet());
 
         memberSignupRequestDTO.getTermsAgreementDTOList().forEach(termsAgreementDTO -> {
             if (!requiredTermsOfUseIds.contains(termsAgreementDTO.getTermsOfUseId())) {

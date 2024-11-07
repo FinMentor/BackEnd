@@ -16,7 +16,6 @@ import java.time.Instant;
 public class MemberEmailEntity {
     @Id
     @Column(name = "EMAIL")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String email;
 
     @Column(name = "MEMBER_ID")
@@ -43,7 +42,4 @@ public class MemberEmailEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
-
-    @OneToOne
-    private MemberEntity memberEntity;
 }

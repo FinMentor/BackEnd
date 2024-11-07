@@ -1,4 +1,4 @@
-package com.example.springboot.entity;
+package com.example.springboot.vo;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,18 +12,16 @@ import java.time.Instant;
 @AllArgsConstructor
 @Builder
 @ToString
-@Table(name = "INTEREST_CATEGORY")
-public class InterestCategoryEntity {
+@IdClass(ChatroomGroupId.class)
+@Table(name = "CHATROOM_GROUP")
+public class ChatroomGroupVO {
     @Id
-    @Column(name = "INTEREST_CATEGORY_ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long interestCategoryId;
-
     @Column(name = "MEMBER_ID")
     private String memberId;
 
-    @Column(name = "SUB_CATEGORY_ID")
-    private Long subCategoryId;
+    @Id
+    @Column(name = "CHATROOM_ID")
+    private Long chatroomId;
 
     @Column(name = "CREATED_AT")
     private Timestamp createdAt;
@@ -40,10 +38,4 @@ public class InterestCategoryEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
-
-    @ManyToOne
-    private SubCategoryEntity subCategoryEntity;
-
-    @ManyToOne
-    private MemberEntity memberEntity;
 }

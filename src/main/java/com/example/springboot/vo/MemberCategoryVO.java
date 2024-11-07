@@ -1,11 +1,10 @@
-package com.example.springboot.entity;
+package com.example.springboot.vo;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
 
 @Entity
 @Getter
@@ -13,18 +12,16 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @ToString
-@Table(name = "SUB_CATEGORY")
-public class SubCategoryEntity {
+@IdClass(MemberCategoryId.class)
+@Table(name = "MEMBER_CATEGORY")
+public class MemberCategoryVO {
     @Id
-    @Column(name = "SUB_CATEGORY_ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long subCategoryId;
+    @Column(name = "MEMBER_ID")
+    private String memberId;
 
+    @Id
     @Column(name = "MAIN_CATEGORY_ID")
-    private Long mainCategoryId;
-
-    @Column(name = "SUB_CATEGORY_NAME")
-    private String subCategoryName;
+    private String mainCategoryId;
 
     @Column(name = "CREATED_AT")
     private Timestamp createdAt;
@@ -41,10 +38,4 @@ public class SubCategoryEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
-
-    @ManyToOne
-    private MainCategoryEntity mainCategoryEntity;
-
-    @OneToMany(mappedBy = "subCategoryEntity")
-    private List<InterestCategoryEntity> interestCategoryEntityList;
 }

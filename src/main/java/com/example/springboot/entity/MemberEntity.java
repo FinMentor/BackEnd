@@ -1,14 +1,11 @@
 package com.example.springboot.entity;
 
-import com.example.springboot.vo.MemberAnswerVO;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Getter
@@ -20,7 +17,6 @@ import java.util.List;
 public class MemberEntity {
     @Id
     @Column(name = "MEMBER_ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String memberId;
 
     @Column(name = "PASSWORD")
@@ -47,9 +43,6 @@ public class MemberEntity {
     @Column(name = "ALARM_STATUS")
     private Character alarmStatus;
 
-    @Column(name = "REPORT_TIME")
-    private Time reportTime;
-
     @Column(name = "PROFILE_IMAGE_URL")
     private String profileImageUrl;
 
@@ -58,6 +51,9 @@ public class MemberEntity {
 
     @Column(name = "SNS_TYPE")
     private String snsType;
+
+    @Column(name = "MEMBER_TYPE")
+    private String memberType;
 
     @Column(name = "CREATED_AT")
     private Timestamp createdAt;
@@ -74,31 +70,4 @@ public class MemberEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
-
-    @OneToOne(mappedBy = "memberEntity")
-    private SettingEntity settingEntity;
-
-    @OneToOne(mappedBy = "memberEntity")
-    private MemberSmsEntity memberSmsEntity;
-
-    @OneToOne(mappedBy = "memberEntity")
-    private MemberEmailEntity memberEmailEntity;
-
-    @OneToMany(mappedBy = "memberEntity")
-    private List<NotificationEntity> notificationEntityList;
-
-    @OneToMany(mappedBy = "memberEntity")
-    private List<SelectedTermsEntity> selectedTermsEntityList;
-
-    @OneToMany(mappedBy = "memberEntity")
-    private List<MemberAnswerVO> memberAnswerVOList;
-
-    @OneToMany(mappedBy = "memberEntity")
-    private List<InterestCategoryEntity> interestCategoryEntityList;
-
-    @OneToMany(mappedBy = "memberEntity")
-    private List<PostEntity> postEntityList;
-
-    @OneToMany(mappedBy = "memberEntity")
-    private List<ChatroomEntity> chatroomEntityList;
 }

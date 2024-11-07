@@ -5,7 +5,6 @@ import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
 
 @Entity
 @Getter
@@ -38,7 +37,4 @@ public class MainCategoryEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
-
-    @OneToMany(mappedBy = "mainCategoryEntity")
-    private List<SubCategoryEntity> subCategoryEntityList;
 }

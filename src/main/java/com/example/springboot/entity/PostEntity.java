@@ -5,7 +5,6 @@ import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
 
 @Entity
 @Getter
@@ -29,9 +28,6 @@ public class PostEntity {
     @Column(name = "CONTENT")
     private String content;
 
-    @Column(name = "MAIN_CATEGORY_ID")
-    private Integer mainCategoryId;
-
     @Column(name = "VIEW_COUNT")
     private Integer viewCount;
 
@@ -53,13 +49,4 @@ public class PostEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
-
-    @ManyToOne
-    private MemberEntity memberEntity;
-
-    @OneToMany(mappedBy = "postEntity")
-    List<CommentEntity> commentEntityList;
-
-    @OneToMany(mappedBy = "postEntity")
-    List<LikeEntity> likeEntityList;
 }

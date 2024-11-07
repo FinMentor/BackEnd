@@ -1,6 +1,5 @@
 package com.example.springboot.entity;
 
-import com.example.springboot.vo.MemberAnswerVO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -44,10 +43,4 @@ public class QuestionOptionEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
-
-    @OneToOne(mappedBy = "questionOptionEntity")
-    private MemberAnswerVO memberAnswerVO;
-
-    @ManyToOne
-    private QuestionEntity questionEntity;
 }

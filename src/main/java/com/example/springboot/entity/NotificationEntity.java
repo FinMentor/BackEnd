@@ -46,7 +46,4 @@ public class NotificationEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
-
-    @ManyToOne
-    private MemberEntity memberEntity;
 }

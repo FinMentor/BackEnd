@@ -19,6 +19,9 @@ public class LikeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long likeId;
 
+    @Column(name = "MEMBER_ID")
+    private String memberId;
+
     @Column(name = "POST_ID")
     private Long postId;
 
@@ -37,7 +40,4 @@ public class LikeEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
-
-    @ManyToOne
-    private PostEntity postEntity;
 }

@@ -5,7 +5,6 @@ import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
 
 @Entity
 @Getter
@@ -20,11 +19,17 @@ public class MessageEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long messageId;
 
+    @Column(name = "MEMBER_ID")
+    private String memberId;
+
     @Column(name = "CHATROOM_ID")
     private Long chatroomId;
 
     @Column(name = "CONTENT")
     private String content;
+
+    @Column(name = "MESSAGE_TYPE")
+    private Character messageType;
 
     @Column(name = "CREATED_AT")
     private Timestamp createdAt;
@@ -41,7 +46,4 @@ public class MessageEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
-
-    @ManyToOne
-    private ChatroomEntity chatroomEntity;
 }
