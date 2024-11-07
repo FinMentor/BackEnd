@@ -1,5 +1,6 @@
 package com.example.springboot.entity;
 
+import com.example.springboot.util.CommonCodeEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -62,8 +63,13 @@ public class MemberEntity {
     private Timestamp updatedAt;
 
     @PrePersist
-    public void createdAt() {
+    public void setDefaultValues() {
         this.createdAt = Timestamp.from(Instant.now());
+        this.passwordFailureCount = 0;
+        this.memberStatus = CommonCodeEnum.YES.getValue().charAt(0);
+        this.surveyStatus = CommonCodeEnum.NO.getValue().charAt(0);
+        this.alarmStatus = CommonCodeEnum.YES.getValue().charAt(0);
+        this.autoLogin = CommonCodeEnum.NO.getValue().charAt(0);
     }
 
     @PreUpdate
