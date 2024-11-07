@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @ToString
-public class MemberDTO {
+public class MemberSignupRequestDTO {
     private String memberId;
     private String password;
     private String passwordConfirmation;
@@ -17,8 +17,10 @@ public class MemberDTO {
     private String phoneMiddle;
     private String phoneLast;
     private String phoneVerificationCode;
+    private String phoneVerifiedStatus;
     private String name;
     private String email;
     private String emailVerificationCode;
+    private String emailVerifiedStatus;
     private List<TermsAgreementDTO> termsAgreementDTOList;
 }

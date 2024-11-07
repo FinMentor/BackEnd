@@ -1,10 +1,7 @@
 package com.example.springboot.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -14,6 +11,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @ToString
 @Table(name = "MESSAGE")
 public class MessageEntity {

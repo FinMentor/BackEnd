@@ -11,15 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Slf4j
 public class EncryptionServiceImpl implements EncryptionService {
-    private BasicTextEncryptor textEncryptor;
+    private BasicTextEncryptor basicTextEncryptor;
 
-    // 암호화 메서드
     public String encrypt(String plainText) {
-        return textEncryptor.encrypt(plainText);
+        return basicTextEncryptor.encrypt(plainText);
     }
 
-    // 복호화 메서드
     public String decrypt(String encryptedText) {
-        return textEncryptor.decrypt(encryptedText);
+        return basicTextEncryptor.decrypt(encryptedText);
     }
 }

@@ -2,10 +2,7 @@ package com.example.springboot.entity;
 
 import com.example.springboot.vo.MemberAnswerVO;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -14,6 +11,7 @@ import java.time.Instant;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @ToString
 @Table(name = "QUESTION_OPTION")
 public class QuestionOptionEntity {

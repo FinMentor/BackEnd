@@ -4,10 +4,7 @@ import com.example.springboot.entity.MemberEntity;
 import com.example.springboot.entity.QuestionEntity;
 import com.example.springboot.entity.QuestionOptionEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -16,6 +13,7 @@ import java.time.Instant;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @ToString
 @IdClass(MemberAnswerId.class)
 @Table(name = "MEMBER_ANSWER")

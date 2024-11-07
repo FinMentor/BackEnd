@@ -1,5 +1,8 @@
 package com.example.springboot.service;
 
-public interface MemberService {
+import com.example.springboot.dto.MemberSignupRequestDTO;
+import com.example.springboot.dto.MemberSignupResponseDTO;
 
+public interface MemberService {
+    MemberSignupResponseDTO signup(MemberSignupRequestDTO memberSignupRequestDTO);
 }
