@@ -76,4 +76,7 @@ public class MemberEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
+
+    @OneToOne(mappedBy = "memberEntity")
+    private MemberSmsEntity memberSmsEntity;
 }

@@ -1,5 +1,6 @@
 package com.example.springboot.service;
 
+import com.example.springboot.dto.MemberFindidResponseDTO;
 import com.example.springboot.dto.MemberSignupRequestDTO;
 import com.example.springboot.dto.MemberSignupResponseDTO;
 import com.example.springboot.entity.*;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -60,7 +62,7 @@ public class MemberServiceImpl implements MemberService {
         checkTermsOfUse(memberSignupRequestDTO);
 
         // 회원가입 - 멤버, 휴대폰, 이메일, 이용약관동의내역 저장
-        memberRepository.save(MemberEntity.builder()
+        MemberEntity memberEntity = memberRepository.save(MemberEntity.builder()
                 .memberId(memberSignupRequestDTO.getMemberId())
                 .password(passwordEncoder.encode(memberSignupRequestDTO.getPassword()))
                 .name(memberSignupRequestDTO.getName()).build());
@@ -69,7 +71,7 @@ public class MemberServiceImpl implements MemberService {
                 .phoneFirst(memberSignupRequestDTO.getPhoneFirst())
                 .phoneMiddle(memberSignupRequestDTO.getPhoneMiddle())
                 .phoneLast(encryptionService.encrypt(memberSignupRequestDTO.getPhoneLast()))
-                .memberId(memberSignupRequestDTO.getMemberId())
+                .memberEntity(memberEntity)
                 .phoneVerificationCode(memberSignupRequestDTO.getPhoneVerificationCode())
                 .phoneVerifiedStatus(CommonCodeEnum.YES.getValue().charAt(0)).build());
 
@@ -166,5 +168,84 @@ public class MemberServiceImpl implements MemberService {
                 }
             }
         });
+    }
+
+    /**
+     * 아이디 찾기
+     * <p>
+     * 이름과 휴대폰으로 아이디를 찾는 메소드이다.
+     *
+     * @param name
+     * @param phoneFirst
+     * @param phoneMiddle
+     * @param phoneLast
+     * @param phoneVerificationCode
+     * @return
+     */
+    @Override
+    public List<MemberFindidResponseDTO> findid(String name, String phoneFirst, String phoneMiddle, String phoneLast, String phoneVerificationCode) {
+        if (log.isInfoEnabled()) {
+            log.info("findId name : {}, phoneFirst : {}, phoneMiddle : {}, phoneLast : {}, phoneVerificationCode : {}", name, phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode);
+        }
+
+        // 휴대폰인증 확인
+        checkVerifiedPhone(phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode);
+
+        // 멤버 조회
+        List<MemberEntity> memberEntityList = memberRepository.findMemberByPhone(phoneFirst, phoneMiddle);
+
+        if (memberEntityList.isEmpty()) {
+            throw new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER.getMessage());
+        }
+
+        // 멤버 할당
+        List<MemberFindidResponseDTO> memberFindidResponseDTOList = new ArrayList<>();
+        memberEntityList.forEach(memberEntity -> {
+            if (phoneLast.equals(encryptionService.decrypt(memberEntity.getMemberSmsEntity().getPhoneLast()))) {
+                MemberFindidResponseDTO memberFindidResponseDTO = MemberFindidResponseDTO.builder()
+                        .memberId(memberEntity.getMemberId())
+                        .snsType(memberEntity.getSnsType())
+                        .createdAt(memberEntity.getCreatedAt()).build();
+                memberFindidResponseDTOList.add(memberFindidResponseDTO);
+            }
+        });
+
+        if (memberFindidResponseDTOList.isEmpty()) {
+            throw new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER.getMessage());
+        }
+        return memberFindidResponseDTOList;
+    }
+
+    /**
+     * 휴대폰인증 확인
+     * <p>
+     * 휴대폰인증이 되었는지 체크하는 메소드이다.
+     *
+     * @param phoneFirst
+     * @param phoneMiddle
+     * @param phoneLast
+     * @param phoneVerificationCode
+     */
+    private void checkVerifiedPhone(String phoneFirst, String phoneMiddle, String phoneLast, String phoneVerificationCode) {
+        List<MemberSmsEntity> memberSmsEntityList = memberSmsRepository.findByPhoneFirstAndPhoneMiddleAndPhoneVerificationCode(phoneFirst, phoneMiddle, phoneVerificationCode);
+
+        if (memberSmsEntityList.isEmpty()) {
+            throw new FailSaveVerifiedPhoneException(ExceptionCodeEnum.NONEXISTENT_VERIFIED_PHONE.getMessage());
+        }
+
+        Character phoneVerifiedStatus = null;
+        for (MemberSmsEntity memberSmsEntity : memberSmsEntityList) {
+            if (phoneLast.equals(encryptionService.decrypt(memberSmsEntity.getPhoneLast()))) {
+                phoneVerifiedStatus = memberSmsEntity.getPhoneVerifiedStatus();
+            }
+        }
+
+        if (phoneVerifiedStatus == null) {
+            throw new FailSaveVerifiedPhoneException(ExceptionCodeEnum.NONEXISTENT_VERIFIED_PHONE.getMessage());
+        }
+
+        if (!CommonCodeEnum.YES.getValue().equals(Character.toString(phoneVerifiedStatus))) {
+            throw new FailVerifiedPhoneException(ExceptionCodeEnum.UNVERIFIED_PHONE.getMessage());
+        }
     }
 }

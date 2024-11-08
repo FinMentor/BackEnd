@@ -27,9 +27,6 @@ public class MemberSmsEntity {
     @Column(name = "PHONE_LAST")
     private String phoneLast;
 
-    @Column(name = "MEMBER_ID")
-    private String memberId;
-
     @Column(name = "PHONE_VERIFICATION_CODE")
     private String phoneVerificationCode;
 
@@ -51,4 +48,8 @@ public class MemberSmsEntity {
     public void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
+
+    @OneToOne
+    @JoinColumn(name = "MEMBER_ID", referencedColumnName = "MEMBER_ID")
+    private MemberEntity memberEntity;
 }

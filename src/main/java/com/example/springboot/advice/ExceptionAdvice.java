@@ -65,4 +65,22 @@ public class ExceptionAdvice {
         }
         return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_REQUIRED_TERMS_OF_USE.getHttpStatus(), ResultCodeEnum.NONEXISTENT_REQUIRED_TERMS_OF_USE.getValue(), ResultCodeEnum.NONEXISTENT_REQUIRED_TERMS_OF_USE.getMessage());
     }
+
+    // 휴대폰인증 누락
+    @ExceptionHandler(FailSaveVerifiedPhoneException.class)
+    public ResponseResult<ErrorResponse> failSaveVerifiedPhoneException(FailSaveVerifiedPhoneException e) {
+        if (log.isErrorEnabled()) {
+            log.error("ExceptionAdvice failSaveVerifiedPhoneException : {}", e.getMessage());
+        }
+        return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_VERIFIED_PHONE.getHttpStatus(), ResultCodeEnum.NONEXISTENT_VERIFIED_PHONE.getValue(), ResultCodeEnum.NONEXISTENT_VERIFIED_PHONE.getMessage());
+    }
+
+    // 존재하지않는 멤버
+    @ExceptionHandler(FailGetMemberException.class)
+    public ResponseResult<ErrorResponse> failGetMemberException(FailGetMemberException e) {
+        if (log.isErrorEnabled()) {
+            log.error("ExceptionAdvice failGetMemberException : {}", e.getMessage());
+        }
+        return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_MEMBER.getHttpStatus(), ResultCodeEnum.NONEXISTENT_MEMBER.getValue(), ResultCodeEnum.NONEXISTENT_MEMBER.getMessage());
+    }
 }
