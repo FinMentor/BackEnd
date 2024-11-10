@@ -1,9 +1,6 @@
-package com.example.springboot.vo;
+package com.example.springboot.entity.domain;
 
 import com.example.springboot.entity.common.CommonColumn;
-import com.example.springboot.entity.domain.MainCategoryEntity;
-import com.example.springboot.entity.domain.MemberEntity;
-import com.example.springboot.vo.id.MemberCategoryId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,10 +13,14 @@ import org.hibernate.annotations.Comment;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@IdClass(MemberCategoryId.class)
-@Table(name = "MEMBER_CATEGORY")
-public class MemberCategoryVO extends CommonColumn {
+@Table(name = "SELECTED_TERMS")
+public class SelectedTermsEntity extends CommonColumn {
     @Id
+    @Comment("이용 약관 동의 내역 아이디")
+    @Column(name = "SELECTED_TERMS_ID", nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long selectedTermsId;
+
     @Comment("멤버 아이디")
     @Column(name = "MEMBER_ID", length = 50, nullable = false, insertable = false, updatable = false)
     private String memberId;
@@ -28,12 +29,11 @@ public class MemberCategoryVO extends CommonColumn {
     @JoinColumn(name = "MEMBER_ID")
     private MemberEntity memberEntity;
 
-    @Id
-    @Comment("메인 카테고리 아이디")
-    @Column(name = "MAIN_CATEGORY_ID", nullable = false, insertable = false, updatable = false)
-    private String mainCategoryId;
+    @Comment("이용 약관 아이디")
+    @Column(name = "TERMS_OF_USE_ID", nullable = false, insertable = false, updatable = false)
+    private Long termsOfUseId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MAIN_CATEGORY_ID")
-    private MainCategoryEntity mainCategoryEntity;
+    @JoinColumn(name = "TERMS_OF_USE_ID")
+    private TermsOfUseEntity termsOfUseEntity;
 }

@@ -9,5 +9,5 @@ import java.util.List;
 public interface MemberService {
     MemberSignupResponseDTO signup(MemberSignupRequestDTO memberSignupRequestDTO);
 
-    List<MemberFindidResponseDTO> findid(String name, String phoneFirst, String phoneMiddle, String phoneLast, String phoneVerificationCode);
+    List<MemberFindidResponseDTO> findId(String name, String phoneFirst, String phoneMiddle, String phoneLast, String phoneVerificationCode);
 }

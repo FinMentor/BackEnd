@@ -1,45 +1,49 @@
 package com.example.springboot.vo;
 
+import com.example.springboot.entity.common.CommonColumn;
+import com.example.springboot.entity.domain.MemberEntity;
+import com.example.springboot.entity.domain.QuestionEntity;
+import com.example.springboot.entity.domain.QuestionOptionEntity;
+import com.example.springboot.vo.id.MemberAnswerId;
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.sql.Timestamp;
-import java.time.Instant;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 @IdClass(MemberAnswerId.class)
 @Table(name = "MEMBER_ANSWER")
-public class MemberAnswerVO {
+public class MemberAnswerVO extends CommonColumn {
     @Id
-    @Column(name = "MEMBER_ID")
+    @Comment("멤버 아이디")
+    @Column(name = "MEMBER_ID", length = 50, nullable = false, insertable = false, updatable = false)
     private String memberId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MEMBER_ID")
+    private MemberEntity memberEntity;
+
     @Id
-    @Column(name = "QUESTION_ID")
+    @Comment("질문 아이디")
+    @Column(name = "QUESTION_ID", nullable = false, insertable = false, updatable = false)
     private Long questionId;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "QUESTION_ID")
+    private QuestionEntity questionEntity;
+
     @Id
-    @Column(name = "QUESTION_OPTION_ID")
+    @Comment("옵션 아이디")
+    @Column(name = "QUESTION_OPTION_ID", nullable = false, insertable = false, updatable = false)
     private Long questionOptionId;
 
-    @Column(name = "CREATED_AT")
-    private Timestamp createdAt;
-
-    @Column(name = "UPDATED_AT")
-    private Timestamp updatedAt;
-
-    @PrePersist
-    public void createdAt() {
-        this.createdAt = Timestamp.from(Instant.now());
-    }
-
-    @PreUpdate
-    public void updatedAt() {
-        this.updatedAt = Timestamp.from(Instant.now());
-    }
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "QUESTION_OPTION_ID")
+    private QuestionOptionEntity questionOptionEntity;
 }

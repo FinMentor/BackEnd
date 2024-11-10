@@ -1,4 +1,4 @@
-package com.example.springboot.vo;
+package com.example.springboot.vo.id;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,8 +9,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberAnswerId implements Serializable {
+public class MemberCategoryId implements Serializable {
     private String memberId;
-    private Long questionId;
-    private Long questionOptionId;
+    private Long mainCategoryId;
 }

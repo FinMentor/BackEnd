@@ -1,8 +1,10 @@
 package com.example.springboot.repository;
 
-import com.example.springboot.entity.MemberEmailEntity;
+import com.example.springboot.entity.domain.MemberEmailEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface MemberEmailRepository extends JpaRepository<MemberEmailEntity, Integer> {
+@Repository
+public interface MemberEmailRepository extends JpaRepository<MemberEmailEntity, String> {
 
 }

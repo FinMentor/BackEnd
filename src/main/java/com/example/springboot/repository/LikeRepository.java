@@ -1,8 +1,10 @@
 package com.example.springboot.repository;
 
-import com.example.springboot.entity.LikeEntity;
+import com.example.springboot.entity.domain.LikeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface LikeRepository extends JpaRepository<LikeEntity, Integer> {
+@Repository
+public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
 
 }

@@ -3,9 +3,11 @@ package com.example.springboot.service;
 import com.example.springboot.dto.MemberFindidResponseDTO;
 import com.example.springboot.dto.MemberSignupRequestDTO;
 import com.example.springboot.dto.MemberSignupResponseDTO;
-import com.example.springboot.entity.*;
+import com.example.springboot.entity.common.util.ColumnYn;
+import com.example.springboot.entity.domain.*;
 import com.example.springboot.exception.*;
 import com.example.springboot.repository.*;
+import com.example.springboot.repository.querydsl.MemberSmsQueryDSLRepository;
 import com.example.springboot.util.CommonCodeEnum;
 import com.example.springboot.util.ExceptionCodeEnum;
 import com.example.springboot.util.ResultCodeEnum;
@@ -15,8 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,6 +35,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberEmailRepository memberEmailRepository;
     private final SelectedTermsRepository selectedTermsRepository;
     private final TermsOfUseRepository termsOfUseRepository;
+    private final MemberSmsQueryDSLRepository memberSmsQueryDSLRepository;
 
     /**
      * 회원가입
@@ -42,24 +46,22 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public MemberSignupResponseDTO signup(MemberSignupRequestDTO memberSignupRequestDTO) {
-        if (log.isInfoEnabled()) {
-            log.info("signup memberSignupRequestDTO : {}", memberSignupRequestDTO);
-        }
+        log.info("signup memberSignupRequestDTO : {}", memberSignupRequestDTO);
 
         // 아이디중복 체크
-        checkDuplicatedMemberId(memberSignupRequestDTO);
+        _checkDuplicatedMemberId(memberSignupRequestDTO);
 
         // 비밀번호 체크
-        checkPassword(memberSignupRequestDTO);
+        _checkPassword(memberSignupRequestDTO);
 
         // 휴대폰인증 확인
-        checkVerifiedPhone(memberSignupRequestDTO);
+        _checkVerifiedPhone(memberSignupRequestDTO);
 
         // 이메일인증 확인
-        checkVerifiedEmail(memberSignupRequestDTO);
+        _checkVerifiedEmail(memberSignupRequestDTO);
 
         // 이용약관 체크
-        checkTermsOfUse(memberSignupRequestDTO);
+        _checkTermsOfUse(memberSignupRequestDTO);
 
         // 회원가입 - 멤버, 휴대폰, 이메일, 이용약관동의내역 저장
         MemberEntity memberEntity = memberRepository.save(MemberEntity.builder()
@@ -73,13 +75,13 @@ public class MemberServiceImpl implements MemberService {
                 .phoneLast(encryptionService.encrypt(memberSignupRequestDTO.getPhoneLast()))
                 .memberEntity(memberEntity)
                 .phoneVerificationCode(memberSignupRequestDTO.getPhoneVerificationCode())
-                .phoneVerifiedStatus(CommonCodeEnum.YES.getValue().charAt(0)).build());
+                .phoneVerifiedStatus(ColumnYn.valueOf(CommonCodeEnum.YES.getValue())).build());
 
         memberEmailRepository.save(MemberEmailEntity.builder()
                 .email(memberSignupRequestDTO.getEmail())
                 .memberId(memberSignupRequestDTO.getMemberId())
                 .emailVerificationCode(memberSignupRequestDTO.getEmailVerificationCode())
-                .emailVerifiedStatus(CommonCodeEnum.YES.getValue().charAt(0)).build());
+                .emailVerifiedStatus(ColumnYn.valueOf(CommonCodeEnum.YES.getValue())).build());
 
         memberSignupRequestDTO.getTermsAgreementDTOList().forEach(termsAgreementDTO -> {
             selectedTermsRepository.save(SelectedTermsEntity.builder()
@@ -99,9 +101,9 @@ public class MemberServiceImpl implements MemberService {
      *
      * @param memberSignupRequestDTO
      */
-    private void checkDuplicatedMemberId(MemberSignupRequestDTO memberSignupRequestDTO) {
-        memberRepository.findByMemberId(memberSignupRequestDTO.getMemberId()).ifPresent(memberEntity -> {
-            throw new DuplicatedIdException(ExceptionCodeEnum.DUPLICATED_ID.getMessage());
+    private void _checkDuplicatedMemberId(MemberSignupRequestDTO memberSignupRequestDTO) {
+        memberRepository.findById(memberSignupRequestDTO.getMemberId()).ifPresent(memberEntity -> {
+            throw new DuplicatedIdException(ExceptionCodeEnum.DUPLICATED_ID);
         });
     }
 
@@ -112,9 +114,9 @@ public class MemberServiceImpl implements MemberService {
      *
      * @param memberSignupRequestDTO
      */
-    private static void checkPassword(MemberSignupRequestDTO memberSignupRequestDTO) {
+    private static void _checkPassword(MemberSignupRequestDTO memberSignupRequestDTO) {
         if (!memberSignupRequestDTO.getPassword().equals(memberSignupRequestDTO.getPasswordConfirmation())) {
-            throw new MismatchPasswordException(ExceptionCodeEnum.MISMATCH_PASSWORD.getMessage());
+            throw new MismatchPasswordException(ExceptionCodeEnum.MISMATCH_PASSWORD);
         }
     }
 
@@ -125,9 +127,9 @@ public class MemberServiceImpl implements MemberService {
      *
      * @param memberSignupRequestDTO
      */
-    private void checkVerifiedPhone(MemberSignupRequestDTO memberSignupRequestDTO) {
+    private void _checkVerifiedPhone(MemberSignupRequestDTO memberSignupRequestDTO) {
         if (!CommonCodeEnum.YES.getValue().equals(memberSignupRequestDTO.getPhoneVerifiedStatus())) {
-            throw new FailVerifiedPhoneException(ExceptionCodeEnum.UNVERIFIED_PHONE.getMessage());
+            throw new FailVerifiedPhoneException(ExceptionCodeEnum.UNVERIFIED_PHONE);
         }
     }
 
@@ -138,9 +140,9 @@ public class MemberServiceImpl implements MemberService {
      *
      * @param memberSignupRequestDTO
      */
-    private void checkVerifiedEmail(MemberSignupRequestDTO memberSignupRequestDTO) {
+    private void _checkVerifiedEmail(MemberSignupRequestDTO memberSignupRequestDTO) {
         if (!CommonCodeEnum.YES.getValue().equals(memberSignupRequestDTO.getEmailVerifiedStatus())) {
-            throw new FailVerifiedEmailException(ExceptionCodeEnum.UNVERIFIED_EMAIL.getMessage());
+            throw new FailVerifiedEmailException(ExceptionCodeEnum.UNVERIFIED_EMAIL);
         }
     }
 
@@ -151,20 +153,20 @@ public class MemberServiceImpl implements MemberService {
      *
      * @param memberSignupRequestDTO
      */
-    private void checkTermsOfUse(MemberSignupRequestDTO memberSignupRequestDTO) {
+    private void _checkTermsOfUse(MemberSignupRequestDTO memberSignupRequestDTO) {
 
-        List<TermsOfUseEntity> termsOfUseEntityList = termsOfUseRepository.findByRequired(CommonCodeEnum.YES.getValue().charAt(0));
+        Optional<TermsOfUseEntity> optionalTermsOfUseEntity = termsOfUseRepository.findByRequired(ColumnYn.valueOf(CommonCodeEnum.YES.getValue()));
 
-        if (termsOfUseEntityList.isEmpty() || memberSignupRequestDTO.getTermsAgreementDTOList() == null || memberSignupRequestDTO.getTermsAgreementDTOList().isEmpty()) {
-            throw new FailGetTermsOfUseException(ExceptionCodeEnum.NONEXISTENT_TERMS_OF_USE.getMessage());
+        if (optionalTermsOfUseEntity.isEmpty() || memberSignupRequestDTO.getTermsAgreementDTOList() == null || memberSignupRequestDTO.getTermsAgreementDTOList().isEmpty()) {
+            throw new FailGetTermsOfUseException(ExceptionCodeEnum.NONEXISTENT_TERMS_OF_USE);
         }
 
-        Set<Long> requiredTermsOfUseIds = termsOfUseEntityList.stream().map(TermsOfUseEntity::getTermsOfUseId).collect(Collectors.toSet());
+        Set<Long> requiredTermsOfUseIds = optionalTermsOfUseEntity.stream().map(TermsOfUseEntity::getTermsOfUseId).collect(Collectors.toSet());
 
         memberSignupRequestDTO.getTermsAgreementDTOList().forEach(termsAgreementDTO -> {
             if (!requiredTermsOfUseIds.contains(termsAgreementDTO.getTermsOfUseId())) {
                 if (CommonCodeEnum.YES.getValue().equals(termsAgreementDTO.getRequired().toString())) {
-                    throw new FailSaveRequiredTermsOfUseException(ExceptionCodeEnum.NONEXISTENT_REQUIRED_TERMS_OF_USE.getMessage());
+                    throw new FailSaveRequiredTermsOfUseException(ExceptionCodeEnum.NONEXISTENT_REQUIRED_TERMS_OF_USE);
                 }
             }
         });
@@ -183,35 +185,37 @@ public class MemberServiceImpl implements MemberService {
      * @return
      */
     @Override
-    public List<MemberFindidResponseDTO> findid(String name, String phoneFirst, String phoneMiddle, String phoneLast, String phoneVerificationCode) {
-        if (log.isInfoEnabled()) {
-            log.info("findId name : {}, phoneFirst : {}, phoneMiddle : {}, phoneLast : {}, phoneVerificationCode : {}", name, phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode);
-        }
+    public List<MemberFindidResponseDTO> findId(String name, String phoneFirst, String phoneMiddle, String phoneLast, String phoneVerificationCode) {
+        log.info("findId name : {}, phoneFirst : {}, phoneMiddle : {}, phoneLast : {}, phoneVerificationCode : {}", name, phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode);
 
         // 휴대폰인증 확인
-        checkVerifiedPhone(phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode);
+        _checkVerifiedPhone(phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode);
 
         // 멤버 조회
-        List<MemberEntity> memberEntityList = memberRepository.findMemberByPhone(phoneFirst, phoneMiddle);
+        List<MemberSmsEntity> memberSmsEntityList = memberSmsQueryDSLRepository.selectListMemberByPhone(phoneFirst, phoneMiddle);
 
-        if (memberEntityList.isEmpty()) {
-            throw new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER.getMessage());
+        if (memberSmsEntityList.isEmpty()) {
+            throw new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER);
         }
 
         // 멤버 할당
-        List<MemberFindidResponseDTO> memberFindidResponseDTOList = new ArrayList<>();
-        memberEntityList.forEach(memberEntity -> {
-            if (phoneLast.equals(encryptionService.decrypt(memberEntity.getMemberSmsEntity().getPhoneLast()))) {
-                MemberFindidResponseDTO memberFindidResponseDTO = MemberFindidResponseDTO.builder()
-                        .memberId(memberEntity.getMemberId())
-                        .snsType(memberEntity.getSnsType())
-                        .createdAt(memberEntity.getCreatedAt()).build();
-                memberFindidResponseDTOList.add(memberFindidResponseDTO);
-            }
-        });
+        List<MemberFindidResponseDTO> memberFindidResponseDTOList = memberSmsEntityList.stream()
+                .map(memberSmsEntity -> {
+                    if (!Objects.equals(phoneLast, encryptionService.decrypt(memberSmsEntity.getPhoneLast()))) {
+                        return null;
+                    }
+
+                    return MemberFindidResponseDTO.builder()
+                            .memberId(memberSmsEntity.getMemberEntity().getMemberId())
+                            .snsType(memberSmsEntity.getMemberEntity().getSnsType())
+                            .createdAt(memberSmsEntity.getMemberEntity().getCreatedAt())
+                            .build();
+                })
+                .filter(Objects::nonNull)
+                .toList();
 
         if (memberFindidResponseDTOList.isEmpty()) {
-            throw new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER.getMessage());
+            throw new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER);
         }
         return memberFindidResponseDTOList;
     }
@@ -226,26 +230,31 @@ public class MemberServiceImpl implements MemberService {
      * @param phoneLast
      * @param phoneVerificationCode
      */
-    private void checkVerifiedPhone(String phoneFirst, String phoneMiddle, String phoneLast, String phoneVerificationCode) {
-        List<MemberSmsEntity> memberSmsEntityList = memberSmsRepository.findByPhoneFirstAndPhoneMiddleAndPhoneVerificationCode(phoneFirst, phoneMiddle, phoneVerificationCode);
+    private void _checkVerifiedPhone(String phoneFirst, String phoneMiddle, String phoneLast, String phoneVerificationCode) {
+        List<MemberSmsEntity> memberSmsEntityList = memberSmsQueryDSLRepository.selectListMemberSmsByPhoneVerificationCode(phoneFirst, phoneMiddle, phoneVerificationCode);
 
         if (memberSmsEntityList.isEmpty()) {
-            throw new FailSaveVerifiedPhoneException(ExceptionCodeEnum.NONEXISTENT_VERIFIED_PHONE.getMessage());
+            throw new FailSaveVerifiedPhoneException(ExceptionCodeEnum.NONEXISTENT_VERIFIED_PHONE);
         }
 
-        Character phoneVerifiedStatus = null;
-        for (MemberSmsEntity memberSmsEntity : memberSmsEntityList) {
-            if (phoneLast.equals(encryptionService.decrypt(memberSmsEntity.getPhoneLast()))) {
-                phoneVerifiedStatus = memberSmsEntity.getPhoneVerifiedStatus();
-            }
-        }
+        String phoneVerifiedStatus = memberSmsEntityList.stream()
+                .map(memberSmsEntity -> {
+                    if (Objects.equals(phoneLast, encryptionService.decrypt(memberSmsEntity.getPhoneLast()))) {
+                        return String.valueOf(memberSmsEntity.getPhoneVerifiedStatus());
+                    }
+
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
 
         if (phoneVerifiedStatus == null) {
-            throw new FailSaveVerifiedPhoneException(ExceptionCodeEnum.NONEXISTENT_VERIFIED_PHONE.getMessage());
+            throw new FailSaveVerifiedPhoneException(ExceptionCodeEnum.NONEXISTENT_VERIFIED_PHONE);
         }
 
-        if (!CommonCodeEnum.YES.getValue().equals(Character.toString(phoneVerifiedStatus))) {
-            throw new FailVerifiedPhoneException(ExceptionCodeEnum.UNVERIFIED_PHONE.getMessage());
+        if (!CommonCodeEnum.YES.getValue().equals(phoneVerifiedStatus)) {
+            throw new FailVerifiedPhoneException(ExceptionCodeEnum.UNVERIFIED_PHONE);
         }
     }
 }

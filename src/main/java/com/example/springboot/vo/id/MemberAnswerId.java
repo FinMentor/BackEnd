@@ -1,4 +1,4 @@
-package com.example.springboot.vo;
+package com.example.springboot.vo.id;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,8 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatroomGroupId implements Serializable {
+public class MemberAnswerId implements Serializable {
     private String memberId;
-    private Long chatroomId;
+    private Long questionId;
+    private Long questionOptionId;
 }

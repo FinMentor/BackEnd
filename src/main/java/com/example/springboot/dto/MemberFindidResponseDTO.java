@@ -2,7 +2,7 @@ package com.example.springboot.dto;
 
 import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -12,5 +12,5 @@ import java.sql.Timestamp;
 public class MemberFindidResponseDTO {
     private String memberId;
     private String snsType;
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 }

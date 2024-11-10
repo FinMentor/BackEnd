@@ -1,8 +1,10 @@
 package com.example.springboot.repository;
 
-import com.example.springboot.entity.QuestionEntity;
+import com.example.springboot.entity.domain.QuestionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface QuestionRepository extends JpaRepository<QuestionEntity, Integer> {
+@Repository
+public interface QuestionRepository extends JpaRepository<QuestionEntity, Long> {
 
 }

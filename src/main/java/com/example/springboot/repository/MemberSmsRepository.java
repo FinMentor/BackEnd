@@ -1,11 +1,11 @@
 package com.example.springboot.repository;
 
-import com.example.springboot.entity.MemberSmsEntity;
+import com.example.springboot.entity.domain.MemberSmsEntity;
+import com.example.springboot.entity.id.MemberSmsId;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+@Repository
+public interface MemberSmsRepository extends JpaRepository<MemberSmsEntity, MemberSmsId> {
 
-public interface MemberSmsRepository extends JpaRepository<MemberSmsEntity, Integer> {
-    List<MemberSmsEntity> findByPhoneFirstAndPhoneMiddleAndPhoneVerificationCode(String phoneFirst, String phoneMiddle, String phoneVerificationCode);
 }

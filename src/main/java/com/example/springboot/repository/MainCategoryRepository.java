@@ -1,8 +1,10 @@
 package com.example.springboot.repository;
 
-import com.example.springboot.entity.MainCategoryEntity;
+import com.example.springboot.entity.domain.MainCategoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface MainCategoryRepository extends JpaRepository<MainCategoryEntity, Integer> {
+@Repository
+public interface MainCategoryRepository extends JpaRepository<MainCategoryEntity, Long> {
 
 }

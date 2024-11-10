@@ -28,9 +28,8 @@ public class MemberController {
      */
     @PostMapping("/signup")
     public ResponseResult<MemberSignupResponseDTO> signup(@RequestBody MemberSignupRequestDTO memberSignupRequestDTO) {
-        if (log.isInfoEnabled()) {
-            log.info("signup memberSignupRequestDTO : {}", memberSignupRequestDTO);
-        }
+        log.info("signup memberSignupRequestDTO : {}", memberSignupRequestDTO);
+
         return ResponseResult.success(memberService.signup(memberSignupRequestDTO));
     }
 
@@ -48,9 +47,8 @@ public class MemberController {
      */
     @GetMapping("/find-id")
     public ResponseResult<List<MemberFindidResponseDTO>> findId(@RequestParam String name, @RequestParam String phoneFirst, @RequestParam String phoneMiddle, @RequestParam String phoneLast, @RequestParam String phoneVerificationCode) {
-        if (log.isInfoEnabled()) {
-            log.info("findId name : {}, phoneFirst : {}, phoneMiddle : {}, phoneLast : {}, phoneVerificationCode : {}", name, phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode);
-        }
-        return ResponseResult.success(memberService.findid(name, phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode));
+        log.info("findId name : {}, phoneFirst : {}, phoneMiddle : {}, phoneLast : {}, phoneVerificationCode : {}", name, phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode);
+
+        return ResponseResult.success(memberService.findId(name, phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode));
     }
 }
