@@ -16,6 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberSmsDAOImpl implements MemberSmsDAO {
     private final MemberSmsRepository memberSmsRepository;
 
+    /**
+     * 멤버SMS 저장
+     * <p>
+     * 멤버SMS 테이블에 컬럼 정보를 저장하는 메소드이다.
+     *
+     * @param memberSmsEntity
+     * @return
+     */
     @Override
     public MemberSmsEntity save(MemberSmsEntity memberSmsEntity) {
         if (memberSmsEntity.getPhoneFirst() == null || memberSmsEntity.getPhoneFirst().isEmpty()) {

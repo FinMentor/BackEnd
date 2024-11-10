@@ -16,6 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class SelectedTermsDAOImpl implements SelectedTermsDAO {
     private final SelectedTermsRepository selectedTermsRepository;
 
+    /**
+     * 이용약관동의내역 저장
+     * <p>
+     * 이용약관동의내역 테이블에 컬럼 정보를 저장하는 메소드이다.
+     *
+     * @param selectedTermsEntity
+     * @return
+     */
     @Override
     public SelectedTermsEntity save(SelectedTermsEntity selectedTermsEntity) {
         if (selectedTermsEntity.getMemberEntity() == null || selectedTermsEntity.getMemberEntity().getMemberId() == null || selectedTermsEntity.getMemberEntity().getMemberId().isEmpty()) {

@@ -16,6 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberEmailDAOImpl implements MemberEmailDAO {
     private final MemberEmailRepository memberEmailRepository;
 
+    /**
+     * 멤버이메일 저장
+     * <p>
+     * 멤버이메일 테이블에 컬럼 정보를 저장하는 메소드이다.
+     *
+     * @param memberEmailEntity
+     * @return
+     */
     @Override
     public MemberEmailEntity save(MemberEmailEntity memberEmailEntity) {
         if (memberEmailEntity.getEmail() == null || memberEmailEntity.getEmail().isEmpty()) {

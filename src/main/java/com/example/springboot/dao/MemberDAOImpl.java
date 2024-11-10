@@ -18,6 +18,14 @@ import java.util.Optional;
 public class MemberDAOImpl implements MemberDAO {
     private final MemberRepository memberRepository;
 
+    /**
+     * 멤버 저장
+     * <p>
+     * 멤버 테이블에 컬럼 정보를 저장하는 메소드이다.
+     *
+     * @param memberEntity
+     * @return
+     */
     @Override
     public MemberEntity save(MemberEntity memberEntity) {
         if (memberEntity.getMemberId() == null || memberEntity.getMemberId().isEmpty()) {
@@ -35,6 +43,14 @@ public class MemberDAOImpl implements MemberDAO {
         return memberRepository.save(memberEntity);
     }
 
+    /**
+     * 멤버 찾기
+     * <p>
+     * PK로 멤버 테이블을 찾는 메소드이다.
+     *
+     * @param memberId
+     * @return
+     */
     @Override
     public Optional<MemberEntity> findById(String memberId) {
         if (memberId == null || memberId.isEmpty()) {

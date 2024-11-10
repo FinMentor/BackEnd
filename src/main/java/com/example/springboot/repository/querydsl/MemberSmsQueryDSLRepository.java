@@ -15,6 +15,15 @@ import static com.example.springboot.entity.domain.QMemberSmsEntity.memberSmsEnt
 public class MemberSmsQueryDSLRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
+    /**
+     * 휴대폰으로 멤버리스트 조회
+     * <p>
+     * 휴대폰 정보로 멤버리스트를 조회하는 메소드이다.
+     *
+     * @param phoneFirst
+     * @param phoneMiddle
+     * @return
+     */
     public List<MemberSmsEntity> selectListMemberByPhone(String phoneFirst, String phoneMiddle) {
         return jpaQueryFactory
                 .selectFrom(memberSmsEntity)
@@ -24,6 +33,16 @@ public class MemberSmsQueryDSLRepository {
                 .fetch();
     }
 
+    /**
+     * 휴대폰인증코드로 멤버SMS리스트 조회
+     * <p>
+     * 휴대폰과 휴대폰인증코드로 멤버SMS리스트를 조회하는 메소드이다.
+     *
+     * @param phoneFirst
+     * @param phoneMiddle
+     * @param phoneVerificationCode
+     * @return
+     */
     public List<MemberSmsEntity> selectListMemberSmsByPhoneVerificationCode(String phoneFirst, String phoneMiddle, String phoneVerificationCode) {
         return jpaQueryFactory
                 .selectFrom(memberSmsEntity)

@@ -20,6 +20,14 @@ import java.util.Optional;
 public class TermsOfUseDAOImpl implements TermsOfUseDAO {
     private final TermsOfUseRepository termsOfUseRepository;
 
+    /**
+     * 이용약관 찾기
+     * <p>
+     * PK로 이용약관 테이블을 찾는 메소드이다.
+     *
+     * @param termsOfUseId
+     * @return
+     */
     @Override
     public Optional<TermsOfUseEntity> findById(Long termsOfUseId) {
         if (termsOfUseId == null) {
@@ -31,6 +39,14 @@ public class TermsOfUseDAOImpl implements TermsOfUseDAO {
         return termsOfUseRepository.findById(termsOfUseId);
     }
 
+    /**
+     * 필수/선택약관구분으로 이용약관 찾기
+     * <p>
+     * 필수/선택약관구분으로 이용약관 테이블을 찾는 메소드이다.
+     *
+     * @param required
+     * @return
+     */
     @Override
     public List<TermsOfUseEntity> findByRequired(ColumnYn required) {
         if (required == null) {
