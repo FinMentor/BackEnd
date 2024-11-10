@@ -75,4 +75,12 @@ public class ExceptionAdvice {
 
         return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_MEMBER.getHttpStatus(), ResultCodeEnum.NONEXISTENT_MEMBER.getValue(), ResultCodeEnum.NONEXISTENT_MEMBER.getMessage());
     }
+
+    // 필수값검증 오류
+    @ExceptionHandler(ErrorRequiredValueValidation.class)
+    public ResponseResult<ErrorResponse> errorRequiredValueValidation(ErrorRequiredValueValidation e) {
+        log.error("ExceptionAdvice errorRequiredValueValidation : {}", e.getMessage());
+
+        return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE.getHttpStatus(), ResultCodeEnum.NONEXISTENT_REQUIRED_VALUE.getValue(), ResultCodeEnum.NONEXISTENT_REQUIRED_VALUE.getMessage());
+    }
 }

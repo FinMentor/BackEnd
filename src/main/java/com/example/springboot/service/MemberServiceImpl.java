@@ -1,13 +1,13 @@
 package com.example.springboot.service;
 
+import com.example.springboot.dao.*;
+import com.example.springboot.dao.querydsl.MemberSmsQueryDSLDAO;
 import com.example.springboot.dto.MemberFindidResponseDTO;
 import com.example.springboot.dto.MemberSignupRequestDTO;
 import com.example.springboot.dto.MemberSignupResponseDTO;
 import com.example.springboot.entity.common.util.ColumnYn;
 import com.example.springboot.entity.domain.*;
 import com.example.springboot.exception.*;
-import com.example.springboot.repository.*;
-import com.example.springboot.repository.querydsl.MemberSmsQueryDSLRepository;
 import com.example.springboot.util.CommonCodeEnum;
 import com.example.springboot.util.ExceptionCodeEnum;
 import com.example.springboot.util.ResultCodeEnum;
@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 public class MemberServiceImpl implements MemberService {
     private final EncryptionService encryptionService;
     private final PasswordEncoder passwordEncoder;
-    private final MemberRepository memberRepository;
-    private final MemberSmsRepository memberSmsRepository;
-    private final MemberEmailRepository memberEmailRepository;
-    private final SelectedTermsRepository selectedTermsRepository;
-    private final TermsOfUseRepository termsOfUseRepository;
-    private final MemberSmsQueryDSLRepository memberSmsQueryDSLRepository;
+    private final MemberDAO memberDAO;
+    private final MemberSmsDAO memberSmsDAO;
+    private final MemberEmailDAO memberEmailDAO;
+    private final SelectedTermsDAO selectedTermsDAO;
+    private final TermsOfUseDAO termsOfUseDAO;
+    private final MemberSmsQueryDSLDAO memberSmsQueryDSLDAO;
 
     /**
      * 회원가입
@@ -63,12 +63,12 @@ public class MemberServiceImpl implements MemberService {
         _checkTermsOfUse(memberSignupRequestDTO);
 
         // 회원가입 - 멤버, 휴대폰, 이메일, 이용약관동의내역 저장
-        MemberEntity memberEntity = memberRepository.save(MemberEntity.builder()
+        MemberEntity memberEntity = memberDAO.save(MemberEntity.builder()
                 .memberId(memberSignupRequestDTO.getMemberId())
                 .password(passwordEncoder.encode(memberSignupRequestDTO.getPassword()))
                 .name(memberSignupRequestDTO.getName()).build());
 
-        memberSmsRepository.save(MemberSmsEntity.builder()
+        memberSmsDAO.save(MemberSmsEntity.builder()
                 .phoneFirst(memberSignupRequestDTO.getPhoneFirst())
                 .phoneMiddle(memberSignupRequestDTO.getPhoneMiddle())
                 .phoneLast(encryptionService.encrypt(memberSignupRequestDTO.getPhoneLast()))
@@ -76,16 +76,16 @@ public class MemberServiceImpl implements MemberService {
                 .phoneVerificationCode(memberSignupRequestDTO.getPhoneVerificationCode())
                 .phoneVerifiedStatus(ColumnYn.valueOf(CommonCodeEnum.YES.getValue())).build());
 
-        memberEmailRepository.save(MemberEmailEntity.builder()
+        memberEmailDAO.save(MemberEmailEntity.builder()
                 .email(memberSignupRequestDTO.getEmail())
                 .memberEntity(memberEntity)
                 .emailVerificationCode(memberSignupRequestDTO.getEmailVerificationCode())
                 .emailVerifiedStatus(ColumnYn.valueOf(CommonCodeEnum.YES.getValue())).build());
 
         memberSignupRequestDTO.getTermsAgreementDTOList().forEach(termsAgreementDTO -> {
-            TermsOfUseEntity termsOfUseEntity = termsOfUseRepository.findById(termsAgreementDTO.getTermsOfUseId()).orElseThrow(() -> new FailGetTermsOfUseException(ExceptionCodeEnum.NONEXISTENT_TERMS_OF_USE));
+            TermsOfUseEntity termsOfUseEntity = termsOfUseDAO.findById(termsAgreementDTO.getTermsOfUseId()).orElseThrow(() -> new FailGetTermsOfUseException(ExceptionCodeEnum.NONEXISTENT_TERMS_OF_USE));
 
-            selectedTermsRepository.save(SelectedTermsEntity.builder()
+            selectedTermsDAO.save(SelectedTermsEntity.builder()
                     .memberEntity(memberEntity)
                     .termsOfUseEntity(termsOfUseEntity).build());
         });
@@ -103,7 +103,7 @@ public class MemberServiceImpl implements MemberService {
      * @param memberSignupRequestDTO
      */
     private void _checkDuplicatedMemberId(MemberSignupRequestDTO memberSignupRequestDTO) {
-        memberRepository.findById(memberSignupRequestDTO.getMemberId()).ifPresent(memberEntity -> {
+        memberDAO.findById(memberSignupRequestDTO.getMemberId()).ifPresent(memberEntity -> {
             throw new DuplicatedIdException(ExceptionCodeEnum.DUPLICATED_ID);
         });
     }
@@ -156,7 +156,7 @@ public class MemberServiceImpl implements MemberService {
      */
     private void _checkTermsOfUse(MemberSignupRequestDTO memberSignupRequestDTO) {
 
-        List<TermsOfUseEntity> termsOfUseEntityList = termsOfUseRepository.findByRequired(ColumnYn.valueOf(CommonCodeEnum.YES.getValue()));
+        List<TermsOfUseEntity> termsOfUseEntityList = termsOfUseDAO.findByRequired(ColumnYn.valueOf(CommonCodeEnum.YES.getValue()));
 
         if (termsOfUseEntityList.isEmpty() || memberSignupRequestDTO.getTermsAgreementDTOList() == null || memberSignupRequestDTO.getTermsAgreementDTOList().isEmpty()) {
             throw new FailGetTermsOfUseException(ExceptionCodeEnum.NONEXISTENT_TERMS_OF_USE);
@@ -193,7 +193,7 @@ public class MemberServiceImpl implements MemberService {
         _checkVerifiedPhone(phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode);
 
         // 멤버 조회
-        List<MemberSmsEntity> memberSmsEntityList = memberSmsQueryDSLRepository.selectListMemberByPhone(phoneFirst, phoneMiddle);
+        List<MemberSmsEntity> memberSmsEntityList = memberSmsQueryDSLDAO.selectListMemberByPhone(phoneFirst, phoneMiddle);
 
         if (memberSmsEntityList.isEmpty()) {
             throw new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER);
@@ -232,7 +232,7 @@ public class MemberServiceImpl implements MemberService {
      * @param phoneVerificationCode
      */
     private void _checkVerifiedPhone(String phoneFirst, String phoneMiddle, String phoneLast, String phoneVerificationCode) {
-        List<MemberSmsEntity> memberSmsEntityList = memberSmsQueryDSLRepository.selectListMemberSmsByPhoneVerificationCode(phoneFirst, phoneMiddle, phoneVerificationCode);
+        List<MemberSmsEntity> memberSmsEntityList = memberSmsQueryDSLDAO.selectListMemberSmsByPhoneVerificationCode(phoneFirst, phoneMiddle, phoneVerificationCode);
 
         if (memberSmsEntityList.isEmpty()) {
             throw new FailSaveVerifiedPhoneException(ExceptionCodeEnum.NONEXISTENT_VERIFIED_PHONE);

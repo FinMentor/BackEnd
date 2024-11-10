@@ -15,7 +15,8 @@ public enum ResultCodeEnum {
     NONEXISTENT_TERMS_OF_USE("0005", "이용약관 조회 실패"),
     NONEXISTENT_REQUIRED_TERMS_OF_USE("0006", "필수이용약관 누락"),
     NONEXISTENT_VERIFIED_PHONE("0007", "휴대폰인증 누락"),
-    NONEXISTENT_MEMBER("0008", "존재하지않는 멤버");
+    NONEXISTENT_MEMBER("0008", "존재하지않는 멤버"),
+    NONEXISTENT_REQUIRED_VALUE("0009", "필수값검증 오류");
 
     private String value;
     private String message;
