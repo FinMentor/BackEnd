@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -79,14 +78,16 @@ public class MemberServiceImpl implements MemberService {
 
         memberEmailRepository.save(MemberEmailEntity.builder()
                 .email(memberSignupRequestDTO.getEmail())
-                .memberId(memberSignupRequestDTO.getMemberId())
+                .memberEntity(memberEntity)
                 .emailVerificationCode(memberSignupRequestDTO.getEmailVerificationCode())
                 .emailVerifiedStatus(ColumnYn.valueOf(CommonCodeEnum.YES.getValue())).build());
 
         memberSignupRequestDTO.getTermsAgreementDTOList().forEach(termsAgreementDTO -> {
+            TermsOfUseEntity termsOfUseEntity = termsOfUseRepository.findById(termsAgreementDTO.getTermsOfUseId()).orElseThrow(() -> new FailGetTermsOfUseException(ExceptionCodeEnum.NONEXISTENT_TERMS_OF_USE));
+
             selectedTermsRepository.save(SelectedTermsEntity.builder()
-                    .memberId(memberSignupRequestDTO.getMemberId())
-                    .termsOfUseId(termsAgreementDTO.getTermsOfUseId()).build());
+                    .memberEntity(memberEntity)
+                    .termsOfUseEntity(termsOfUseEntity).build());
         });
         return MemberSignupResponseDTO.builder()
                 .resultCode(ResultCodeEnum.SUCCESS.getValue())
@@ -155,13 +156,13 @@ public class MemberServiceImpl implements MemberService {
      */
     private void _checkTermsOfUse(MemberSignupRequestDTO memberSignupRequestDTO) {
 
-        Optional<TermsOfUseEntity> optionalTermsOfUseEntity = termsOfUseRepository.findByRequired(ColumnYn.valueOf(CommonCodeEnum.YES.getValue()));
+        List<TermsOfUseEntity> termsOfUseEntityList = termsOfUseRepository.findByRequired(ColumnYn.valueOf(CommonCodeEnum.YES.getValue()));
 
-        if (optionalTermsOfUseEntity.isEmpty() || memberSignupRequestDTO.getTermsAgreementDTOList() == null || memberSignupRequestDTO.getTermsAgreementDTOList().isEmpty()) {
+        if (termsOfUseEntityList.isEmpty() || memberSignupRequestDTO.getTermsAgreementDTOList() == null || memberSignupRequestDTO.getTermsAgreementDTOList().isEmpty()) {
             throw new FailGetTermsOfUseException(ExceptionCodeEnum.NONEXISTENT_TERMS_OF_USE);
         }
 
-        Set<Long> requiredTermsOfUseIds = optionalTermsOfUseEntity.stream().map(TermsOfUseEntity::getTermsOfUseId).collect(Collectors.toSet());
+        Set<Long> requiredTermsOfUseIds = termsOfUseEntityList.stream().map(TermsOfUseEntity::getTermsOfUseId).collect(Collectors.toSet());
 
         memberSignupRequestDTO.getTermsAgreementDTOList().forEach(termsAgreementDTO -> {
             if (!requiredTermsOfUseIds.contains(termsAgreementDTO.getTermsOfUseId())) {

@@ -33,7 +33,7 @@ public class SelectedTermsEntity extends CommonColumn {
     @Column(name = "TERMS_OF_USE_ID", nullable = false, insertable = false, updatable = false)
     private Long termsOfUseId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TERMS_OF_USE_ID")
     private TermsOfUseEntity termsOfUseEntity;
 }

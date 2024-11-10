@@ -12,9 +12,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicInsert;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -22,6 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@DynamicInsert
 @Table(name = "MEMBER")
 public class MemberEntity extends CommonColumn {
     @Id

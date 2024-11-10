@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -23,8 +25,8 @@ public class TermsOfUseEntity extends CommonColumn {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long termsOfUseId;
 
-    @OneToOne(mappedBy = "termsOfUseEntity", fetch = FetchType.LAZY)
-    private SelectedTermsEntity selectedTermsEntity;
+    @OneToMany(mappedBy = "termsOfUseEntity", fetch = FetchType.LAZY)
+    private List<SelectedTermsEntity> selectedTermsEntityList;
 
     @Comment("제목")
     @Column(name = "TITLE", length = 50, nullable = false)
