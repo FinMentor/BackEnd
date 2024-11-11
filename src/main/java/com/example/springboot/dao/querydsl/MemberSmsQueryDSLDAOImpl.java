@@ -70,4 +70,38 @@ public class MemberSmsQueryDSLDAOImpl implements MemberSmsQueryDSLDAO {
 
         return memberSmsQueryDSLRepository.selectListMemberSmsByPhoneVerificationCode(phoneFirst, phoneMiddle, phoneVerificationCode);
     }
+
+    /**
+     * 아이디, 이름, 휴대폰으로 멤버리스트 조회
+     * <p>
+     * 아이디와 이름, 휴대폰으로 멤버리스트를 조회하는 메소드이다.
+     *
+     * @param memberId
+     * @param name
+     * @param phoneFirst
+     * @param phoneMiddle
+     * @return
+     */
+    @Override
+    public List<MemberSmsEntity> selectListMemberByIdAndNameAndPhone(String memberId, String name, String phoneFirst, String phoneMiddle) {
+        if (memberId == null || memberId.isEmpty()) {
+            throw new ErrorRequiredValueValidation(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (name == null || name.isEmpty()) {
+            throw new ErrorRequiredValueValidation(new StringBuilder("name은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (phoneFirst == null || phoneFirst.isEmpty()) {
+            throw new ErrorRequiredValueValidation(new StringBuilder("phoneFirst는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (phoneMiddle == null || phoneMiddle.isEmpty()) {
+            throw new ErrorRequiredValueValidation(new StringBuilder("phoneMiddle은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("selectListMemberByIdAndNameAndPhone memberId : {}, name : {}, phoneFirst : {}, phoneMiddle : {}", memberId, name, phoneFirst, phoneMiddle);
+
+        return memberSmsQueryDSLRepository.selectListMemberByIdAndNameAndPhone(memberId, name, phoneFirst, phoneMiddle);
+    }
 }

@@ -54,11 +54,37 @@ public class MemberDAOImpl implements MemberDAO {
     @Override
     public Optional<MemberEntity> findById(String memberId) {
         if (memberId == null || memberId.isEmpty()) {
-            throw new ErrorRequiredValueValidation(new StringBuilder("memberId"), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+            throw new ErrorRequiredValueValidation(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         log.info("findById memberId: {}", memberId);
 
         return memberRepository.findById(memberId);
+    }
+
+    /**
+     * 비밀번호 변경
+     * <p>
+     * 멤버 테이블의 비밀번호를 변경하는 메소드이다.
+     *
+     * @param memberId
+     * @param password
+     * @return
+     */
+    @Override
+    public MemberEntity save(String memberId, String password) {
+        if (memberId == null || memberId.isEmpty()) {
+            throw new ErrorRequiredValueValidation(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (password == null || password.isEmpty()) {
+            throw new ErrorRequiredValueValidation(new StringBuilder("password는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("save memberId: {}, password: {}", memberId, password);
+
+        return memberRepository.save(MemberEntity.builder()
+                .memberId(memberId)
+                .password(password).build());
     }
 }

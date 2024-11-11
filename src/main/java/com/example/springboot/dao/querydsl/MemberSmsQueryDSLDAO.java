@@ -8,4 +8,6 @@ public interface MemberSmsQueryDSLDAO {
     List<MemberSmsEntity> selectListMemberByPhone(String phoneFirst, String phoneMiddle);
 
     List<MemberSmsEntity> selectListMemberSmsByPhoneVerificationCode(String phoneFirst, String phoneMiddle, String phoneVerificationCode);
+
+    List<MemberSmsEntity> selectListMemberByIdAndNameAndPhone(String memberId, String name, String phoneFirst, String phoneMiddle);
 }
