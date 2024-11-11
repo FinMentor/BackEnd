@@ -1,5 +1,6 @@
 package com.example.springboot.entity.domain;
 
+import com.example.springboot.dto.PostDTO;
 import com.example.springboot.entity.common.CommonColumn;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

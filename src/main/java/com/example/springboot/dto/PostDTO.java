@@ -2,7 +2,7 @@ package com.example.springboot.dto;
 
 import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -15,8 +15,8 @@ public class PostDTO {
     private Long mainCategoryId;
     private String title;
     private String content;
-    private int viewCOUNT;
-    private int likeCOUNT;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private Long viewCount;
+    private Long likeCount;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
