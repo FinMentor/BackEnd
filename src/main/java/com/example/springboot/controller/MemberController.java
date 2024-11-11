@@ -1,8 +1,6 @@
 package com.example.springboot.controller;
 
-import com.example.springboot.dto.MemberFindidResponseDTO;
-import com.example.springboot.dto.MemberSignupRequestDTO;
-import com.example.springboot.dto.MemberSignupResponseDTO;
+import com.example.springboot.dto.*;
 import com.example.springboot.service.MemberService;
 import com.example.springboot.util.ResponseResult;
 import lombok.RequiredArgsConstructor;
@@ -50,5 +48,20 @@ public class MemberController {
         log.info("findId name : {}, phoneFirst : {}, phoneMiddle : {}, phoneLast : {}, phoneVerificationCode : {}", name, phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode);
 
         return ResponseResult.success(memberService.findId(name, phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode));
+    }
+
+    /**
+     * 비밀번호 찾기
+     * <p>
+     * 아이디와 이름, 휴대폰번호로 비밀번호를 변경하는 메소드이다.
+     *
+     * @param memberFindPasswordRequestDTO
+     * @return
+     */
+    @PutMapping("/find-password")
+    public ResponseResult<MemberFindPasswordResponseDTO> findPassword(@RequestBody MemberFindPasswordRequestDTO memberFindPasswordRequestDTO) {
+        log.info("findPassword memberFindPasswordRequestDTO : {}", memberFindPasswordRequestDTO);
+
+        return ResponseResult.success(memberService.findPassword(memberFindPasswordRequestDTO));
     }
 }

@@ -8,4 +8,6 @@ public interface MemberDAO {
     MemberEntity save(MemberEntity memberEntity);
 
     Optional<MemberEntity> findById(String memberId);
+
+    int save(String memberId, String password);
 }

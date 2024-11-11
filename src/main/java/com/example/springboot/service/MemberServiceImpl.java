@@ -2,9 +2,7 @@ package com.example.springboot.service;
 
 import com.example.springboot.dao.*;
 import com.example.springboot.dao.querydsl.MemberSmsQueryDSLDAO;
-import com.example.springboot.dto.MemberFindidResponseDTO;
-import com.example.springboot.dto.MemberSignupRequestDTO;
-import com.example.springboot.dto.MemberSignupResponseDTO;
+import com.example.springboot.dto.*;
 import com.example.springboot.entity.common.util.ColumnYn;
 import com.example.springboot.entity.domain.*;
 import com.example.springboot.exception.*;
@@ -257,5 +255,48 @@ public class MemberServiceImpl implements MemberService {
         if (!CommonCodeEnum.YES.getValue().equals(phoneVerifiedStatus)) {
             throw new FailVerifiedPhoneException(ExceptionCodeEnum.UNVERIFIED_PHONE);
         }
+    }
+
+    /**
+     * 비밀번호 찾기
+     * <p>
+     * 아이디와 이름, 휴대폰번호로 비밀번호를 변경하는 메소드이다.
+     *
+     * @param memberFindPasswordRequestDTO
+     * @return
+     */
+    @Override
+    public MemberFindPasswordResponseDTO findPassword(MemberFindPasswordRequestDTO memberFindPasswordRequestDTO) {
+        log.info("findPassword memberFindPasswordRequestDTO : {}", memberFindPasswordRequestDTO);
+
+        // 휴대폰인증 확인
+        _checkVerifiedPhone(memberFindPasswordRequestDTO.getPhoneFirst(), memberFindPasswordRequestDTO.getPhoneMiddle(), memberFindPasswordRequestDTO.getPhoneLast(), memberFindPasswordRequestDTO.getPhoneVerificationCode());
+
+        // 멤버 조회
+        List<MemberSmsEntity> memberSmsEntityList = memberSmsQueryDSLDAO.selectListMemberByIdAndNameAndPhone(memberFindPasswordRequestDTO.getMemberId(), memberFindPasswordRequestDTO.getName(), memberFindPasswordRequestDTO.getPhoneFirst(), memberFindPasswordRequestDTO.getPhoneMiddle());
+
+        if (memberSmsEntityList.isEmpty()) {
+            throw new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER);
+        }
+
+        boolean isPasswordChanged = memberSmsEntityList.stream()
+                .anyMatch(memberSmsEntity ->
+                        Objects.equals(memberFindPasswordRequestDTO.getPhoneLast(), encryptionService.decrypt(memberSmsEntity.getPhoneLast()))
+                );
+
+        if (isPasswordChanged) {
+            // 비밀번호 변경
+            if (Objects.equals(memberFindPasswordRequestDTO.getPassword(), memberFindPasswordRequestDTO.getPasswordConfirmation())) {
+                memberDAO.save(memberFindPasswordRequestDTO.getMemberId(), passwordEncoder.encode(memberFindPasswordRequestDTO.getPassword()));
+            } else {
+                throw new MismatchPasswordException(ExceptionCodeEnum.MISMATCH_PASSWORD);
+            }
+        } else {
+            throw new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER);
+        }
+
+        return MemberFindPasswordResponseDTO.builder()
+                .resultCode(ResultCodeEnum.SUCCESS.getValue())
+                .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
     }
 }
