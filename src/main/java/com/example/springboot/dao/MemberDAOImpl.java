@@ -72,7 +72,7 @@ public class MemberDAOImpl implements MemberDAO {
      * @return
      */
     @Override
-    public MemberEntity save(String memberId, String password) {
+    public int save(String memberId, String password) {
         if (memberId == null || memberId.isEmpty()) {
             throw new ErrorRequiredValueValidation(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
@@ -83,8 +83,6 @@ public class MemberDAOImpl implements MemberDAO {
 
         log.info("save memberId: {}, password: {}", memberId, password);
 
-        return memberRepository.save(MemberEntity.builder()
-                .memberId(memberId)
-                .password(password).build());
+        return memberRepository.save(memberId, password);
     }
 }

@@ -287,7 +287,7 @@ public class MemberServiceImpl implements MemberService {
         if (isPasswordChanged) {
             // 비밀번호 변경
             if (Objects.equals(memberFindPasswordRequestDTO.getPassword(), memberFindPasswordRequestDTO.getPasswordConfirmation())) {
-                memberDAO.save(memberFindPasswordRequestDTO.getMemberId(), memberFindPasswordRequestDTO.getPassword());
+                memberDAO.save(memberFindPasswordRequestDTO.getMemberId(), passwordEncoder.encode(memberFindPasswordRequestDTO.getPassword()));
             } else {
                 throw new MismatchPasswordException(ExceptionCodeEnum.MISMATCH_PASSWORD);
             }

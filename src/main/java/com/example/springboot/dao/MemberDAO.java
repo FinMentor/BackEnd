@@ -9,5 +9,5 @@ public interface MemberDAO {
 
     Optional<MemberEntity> findById(String memberId);
 
-    MemberEntity save(String memberId, String password);
+    int save(String memberId, String password);
 }
