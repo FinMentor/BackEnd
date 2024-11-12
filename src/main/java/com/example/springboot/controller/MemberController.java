@@ -44,7 +44,7 @@ public class MemberController {
      * @return
      */
     @GetMapping("/find-id")
-    public ResponseResult<List<MemberFindidResponseDTO>> findId(@RequestParam String name, @RequestParam String phoneFirst, @RequestParam String phoneMiddle, @RequestParam String phoneLast, @RequestParam String phoneVerificationCode) {
+    public ResponseResult<List<MemberFindIdDTO>> findId(@RequestParam String name, @RequestParam String phoneFirst, @RequestParam String phoneMiddle, @RequestParam String phoneLast, @RequestParam String phoneVerificationCode) {
         log.info("findId name : {}, phoneFirst : {}, phoneMiddle : {}, phoneLast : {}, phoneVerificationCode : {}", name, phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode);
 
         return ResponseResult.success(memberService.findId(name, phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode));

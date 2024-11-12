@@ -2,7 +2,6 @@ package com.example.springboot.entity.domain;
 
 import com.example.springboot.entity.common.CommonColumn;
 import com.example.springboot.entity.common.util.ColumnYn;
-import com.example.springboot.vo.ChatroomGroupVO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,13 +29,17 @@ public class MessageEntity extends CommonColumn {
     @Column(name = "MEMBER_ID", length = 50, nullable = false, insertable = false, updatable = false)
     private String memberId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MEMBER_ID")
+    private MemberEntity memberEntity;
+
     @Comment("채팅방 아이디")
     @Column(name = "CHATROOM_ID", nullable = false, insertable = false, updatable = false)
     private Long chatroomId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumns({@JoinColumn(name = "MEMBER_ID"), @JoinColumn(name = "CHATROOM_ID")})
-    private ChatroomGroupVO chatroomGroupVO;
+    @JoinColumn(name = "CHATROOM_ID")
+    private ChatroomEntity chatroomEntity;
 
     @Comment("내용")
     @Column(name = "CONTENT", nullable = false)

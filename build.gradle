@@ -57,6 +57,9 @@ dependencies {
 
     // Optional: Hibernate JPA Model Generator (QueryDSL 관련)
     annotationProcessor 'org.hibernate:hibernate-jpamodelgen:6.0.0.Final'
+
+    // mahout-integration : 아파치 사용자 기반 필터링
+    implementation group: 'org.apache.mahout', name: 'mahout-integration', version: '0.13.0'
 }
 
 tasks.named('test') {

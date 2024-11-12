@@ -28,7 +28,7 @@ public class MemberEmailEntity extends CommonColumn {
     @Column(name = "MEMBER_ID", length = 50, nullable = false, insertable = false, updatable = false)
     private String memberId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private MemberEntity memberEntity;
 

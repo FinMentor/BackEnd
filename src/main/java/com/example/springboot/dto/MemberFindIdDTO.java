@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @ToString
-public class MemberFindidResponseDTO {
+public class MemberFindIdDTO {
     private String memberId;
     private String snsType;
     private LocalDateTime createdAt;
