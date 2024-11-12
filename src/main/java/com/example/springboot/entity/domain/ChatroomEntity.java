@@ -27,6 +27,9 @@ public class ChatroomEntity extends CommonColumn {
     @OneToMany(mappedBy = "chatroomEntity", fetch = FetchType.LAZY)
     private List<ChatroomGroupVO> chatroomGroupVOList;
 
+    @OneToMany(mappedBy = "chatroomEntity", fetch = FetchType.LAZY)
+    private List<MessageEntity> messageEntityList;
+
     @Comment("제목")
     @Column(name = "SUBJECT", length = 10, nullable = false)
     private String subject;

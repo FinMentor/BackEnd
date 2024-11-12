@@ -34,7 +34,7 @@ public class MemberAnswerVO extends CommonColumn {
     @Column(name = "QUESTION_ID", nullable = false, insertable = false, updatable = false)
     private Long questionId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "QUESTION_ID")
     private QuestionEntity questionEntity;
 
@@ -43,7 +43,7 @@ public class MemberAnswerVO extends CommonColumn {
     @Column(name = "QUESTION_OPTION_ID", nullable = false, insertable = false, updatable = false)
     private Long questionOptionId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "QUESTION_OPTION_ID")
     private QuestionOptionEntity questionOptionEntity;
 }

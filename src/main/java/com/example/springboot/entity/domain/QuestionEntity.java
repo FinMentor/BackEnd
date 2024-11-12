@@ -24,8 +24,8 @@ public class QuestionEntity extends CommonColumn {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long questionId;
 
-    @OneToOne(mappedBy = "questionEntity", fetch = FetchType.LAZY)
-    private MemberAnswerVO memberAnswerVO;
+    @OneToMany(mappedBy = "questionEntity", fetch = FetchType.LAZY)
+    private List<MemberAnswerVO> memberAnswerVOList;
 
     @OneToMany(mappedBy = "questionEntity", fetch = FetchType.LAZY)
     private List<QuestionOptionEntity> questionOptionEntityList;

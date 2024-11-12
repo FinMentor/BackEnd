@@ -7,7 +7,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CommonCodeEnum {
     YES("Y"),
-    NO("N");
+    NO("N"),
+    MASTER("master"),
+    ROOKIE("rookie");
 
     private String value;
 }

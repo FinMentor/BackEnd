@@ -31,11 +31,17 @@ public class MemberDAOImpl implements MemberDAO {
         if (memberEntity.getMemberId() == null || memberEntity.getMemberId().isEmpty()) {
             throw new ErrorRequiredValueValidation(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
+
         if (memberEntity.getPassword() == null || memberEntity.getPassword().isEmpty()) {
             throw new ErrorRequiredValueValidation(new StringBuilder("password는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
+
         if (memberEntity.getName() == null || memberEntity.getName().isEmpty()) {
             throw new ErrorRequiredValueValidation(new StringBuilder("name은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (memberEntity.getIntroduce() == null || memberEntity.getIntroduce().isEmpty()) {
+            throw new ErrorRequiredValueValidation(new StringBuilder("introduce는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         log.info("save memberEntity: {}", memberEntity);
