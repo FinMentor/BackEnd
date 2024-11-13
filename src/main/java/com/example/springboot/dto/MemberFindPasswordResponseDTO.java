@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class MemberFindPasswordResponseDTO {
-    String resultCode;
-    String resultMessage;
+    private String resultCode;
+    private String resultMessage;
 }

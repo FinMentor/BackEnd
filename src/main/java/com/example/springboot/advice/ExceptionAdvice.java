@@ -107,4 +107,12 @@ public class ExceptionAdvice {
 
         return ResponseResult.fail(ExceptionCodeEnum.ERROR_FIVE_TIMES_OVER_PASSWORD.getHttpStatus(), ResultCodeEnum.ERROR_FIVE_TIMES_OVER_PASSWORD.getValue(), ResultCodeEnum.ERROR_FIVE_TIMES_OVER_PASSWORD.getMessage());
     }
+
+    // 세션 만료
+    @ExceptionHandler(SessionExpiredException.class)
+    public ResponseResult<ErrorResponse> sessionExpiredException(SessionExpiredException e) {
+        log.error("ExceptionAdvice sessionExpiredException : {}", e.getMessage());
+
+        return ResponseResult.fail(ExceptionCodeEnum.SESSION_EXPIRED.getHttpStatus(), ResultCodeEnum.SESSION_EXPIRED.getValue(), ResultCodeEnum.SESSION_EXPIRED.getMessage());
+    }
 }
