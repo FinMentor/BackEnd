@@ -20,6 +20,17 @@ import java.io.IOException;
 public class MasterController {
     private final MasterService masterService;
 
+    /**
+     * 고수 추천
+     * <p>
+     * 분야를 기반으로 고수를 추천해주는 메소드이다.
+     *
+     * @param mainCategoryId
+     * @param answerTime
+     * @return
+     * @throws IOException
+     * @throws TasteException
+     */
     @GetMapping("/recommend")
     public ResponseResult<MasterRecommendDTO> recommendMaster(@RequestParam long mainCategoryId, @RequestParam String answerTime) throws IOException, TasteException {
         log.info("recommendMaster mainCategoryId : {}, answerTime : {}", mainCategoryId, answerTime);

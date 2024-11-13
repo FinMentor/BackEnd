@@ -6,10 +6,12 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum CommonCodeEnum {
-    YES("Y"),
-    NO("N"),
-    MASTER("master"),
-    ROOKIE("rookie");
+    YES("Y", null),
+    NO("N", null),
+    MASTER("master", null),
+    ROOKIE("rookie", null),
+    FIVE("", 5L);
 
     private String value;
+    private Long num;
 }

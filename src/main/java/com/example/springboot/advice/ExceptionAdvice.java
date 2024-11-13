@@ -77,10 +77,34 @@ public class ExceptionAdvice {
     }
 
     // 필수값검증 오류
-    @ExceptionHandler(ErrorRequiredValueValidation.class)
-    public ResponseResult<ErrorResponse> errorRequiredValueValidation(ErrorRequiredValueValidation e) {
-        log.error("ExceptionAdvice errorRequiredValueValidation : {}", e.getMessage());
+    @ExceptionHandler(ErrorRequiredValueValidationException.class)
+    public ResponseResult<ErrorResponse> errorRequiredValueValidationException(ErrorRequiredValueValidationException e) {
+        log.error("ExceptionAdvice errorRequiredValueValidationException : {}", e.getMessage());
 
         return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE.getHttpStatus(), ResultCodeEnum.NONEXISTENT_REQUIRED_VALUE.getValue(), ResultCodeEnum.NONEXISTENT_REQUIRED_VALUE.getMessage());
+    }
+
+    // 아이디 또는 비밀번호 불일치
+    @ExceptionHandler(ErrorIdAndPasswordException.class)
+    public ResponseResult<ErrorResponse> errorIdAndPasswordException(ErrorIdAndPasswordException e) {
+        log.error("ExceptionAdvice errorIdAndPasswordException : {}", e.getMessage());
+
+        return ResponseResult.fail(ExceptionCodeEnum.MISMATCH_ID_OR_PASSWORD.getHttpStatus(), ResultCodeEnum.MISMATCH_ID_OR_PASSWORD.getValue(), ResultCodeEnum.MISMATCH_ID_OR_PASSWORD.getMessage());
+    }
+
+    // 회원탈퇴한 멤버
+    @ExceptionHandler(WithdrawalOfMemberException.class)
+    public ResponseResult<ErrorResponse> withdrawalOfMemberException(WithdrawalOfMemberException e) {
+        log.error("ExceptionAdvice withdrawalOfMemberException : {}", e.getMessage());
+
+        return ResponseResult.fail(ExceptionCodeEnum.WITHDRAWAL_MEMBER.getHttpStatus(), ResultCodeEnum.WITHDRAWAL_MEMBER.getValue(), ResultCodeEnum.WITHDRAWAL_MEMBER.getMessage());
+    }
+
+    // 비밀번호 틀린 횟수 5회이상
+    @ExceptionHandler(ErrorFiveTimesOverPasswordException.class)
+    public ResponseResult<ErrorResponse> errorFiveTimesOverPasswordException(ErrorFiveTimesOverPasswordException e) {
+        log.error("ExceptionAdvice errorFiveTimesOverPasswordException : {}", e.getMessage());
+
+        return ResponseResult.fail(ExceptionCodeEnum.ERROR_FIVE_TIMES_OVER_PASSWORD.getHttpStatus(), ResultCodeEnum.ERROR_FIVE_TIMES_OVER_PASSWORD.getValue(), ResultCodeEnum.ERROR_FIVE_TIMES_OVER_PASSWORD.getMessage());
     }
 }

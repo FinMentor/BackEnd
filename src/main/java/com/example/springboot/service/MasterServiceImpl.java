@@ -44,6 +44,17 @@ public class MasterServiceImpl implements MasterService {
     private final MemberQueryDSLDAO memberQueryDSLDAO;
     private final MemberDAO memberDAO;
 
+    /**
+     * 고수 추천
+     * <p>
+     * 아이템 기반 필터링으로 고수를 추천하는 메소드이다.
+     *
+     * @param mainCategoryId
+     * @param answerTime
+     * @return
+     * @throws IOException
+     * @throws TasteException
+     */
     @Override
     public MasterRecommendDTO recommendMaster(long mainCategoryId, String answerTime) throws IOException, TasteException {
         AtomicLong memberId = new AtomicLong(0);
