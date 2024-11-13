@@ -7,16 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Repository
 @Transactional
 public interface MemberRepository extends JpaRepository<MemberEntity, String> {
     @Modifying
     @Query("UPDATE MemberEntity m SET m.password = :password WHERE m.memberId = :memberId")
     int save(String memberId, String password);
-
-    Optional<MemberEntity> findByMemberIdAndPassword(String memberId, String password);
 
     @Modifying
     @Query("UPDATE MemberEntity m SET m.passwordFailureCount = 0 WHERE m.memberId = :memberId")

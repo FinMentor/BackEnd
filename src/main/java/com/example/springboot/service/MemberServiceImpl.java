@@ -184,8 +184,12 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public MemberLoginResponseDTO login(MemberLoginRequestDTO memberLoginRequestDTO) {
-        memberDAO.findByMemberIdAndPassword(memberLoginRequestDTO.getMemberId(), passwordEncoder.encode(memberLoginRequestDTO.getPassword())).ifPresentOrElse(
+        memberDAO.findById(memberLoginRequestDTO.getMemberId()).ifPresentOrElse(
                 memberEntity -> {
+                    if (!passwordEncoder.matches(memberLoginRequestDTO.getPassword(), memberEntity.getPassword())) {
+                        throw new ErrorIdAndPasswordException(ExceptionCodeEnum.MISMATCH_ID_OR_PASSWORD);
+                    }
+
                     if (CommonCodeEnum.NO.getValue().equals(String.valueOf(memberEntity.getMemberStatus()))) {
                         throw new WithdrawalOfMemberException(ExceptionCodeEnum.WITHDRAWAL_MEMBER);
                     }

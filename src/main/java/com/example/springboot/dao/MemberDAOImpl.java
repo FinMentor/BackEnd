@@ -69,30 +69,6 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     /**
-     * 아이디와 비밀번호로 멤버 조회
-     * <p>
-     * 아이디와 비밀번호로 멤버를 조회하는 메소드이다.
-     *
-     * @param memberId
-     * @param password
-     * @return
-     */
-    @Override
-    public Optional<MemberEntity> findByMemberIdAndPassword(String memberId, String password) {
-        if (memberId == null || memberId.isEmpty()) {
-            throw new ErrorRequiredValueValidationException(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
-        }
-
-        if (password == null || password.isEmpty()) {
-            throw new ErrorRequiredValueValidationException(new StringBuilder("password는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
-        }
-
-        log.info("findByIdAndPassword memberId: {}, password: {}", memberId, password);
-
-        return memberRepository.findByMemberIdAndPassword(memberId, password);
-    }
-
-    /**
      * 비밀번호실패횟수 초기화
      *
      * 멤버아이디로 비밀번호실패횟수를 초기화하는 메소드이다.
