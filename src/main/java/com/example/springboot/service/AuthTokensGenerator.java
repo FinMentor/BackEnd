@@ -7,5 +7,5 @@ public interface AuthTokensGenerator {
 
     boolean validateTokens(String accessToken);
 
-    String getMemberId(String accessToken);
+    String getMemberId(String token);
 }

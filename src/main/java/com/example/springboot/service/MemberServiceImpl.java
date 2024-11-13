@@ -353,8 +353,8 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public MemberLoginRenewResponseDTO loginRenew(MemberLoginRenewRequestDTO memberLoginRenewRequestDTO) {
-        if (authTokensGenerator.validateTokens(memberLoginRenewRequestDTO.getAccessToken())) {
-            return memberDAO.findById(authTokensGenerator.getMemberId(memberLoginRenewRequestDTO.getAccessToken())).map(
+        if (authTokensGenerator.validateTokens(memberLoginRenewRequestDTO.getRefreshToken())) {
+            return memberDAO.findById(authTokensGenerator.getMemberId(memberLoginRenewRequestDTO.getRefreshToken())).map(
                             memberEntity -> {
                                 if (CommonCodeEnum.YES.getValue().equals(String.valueOf(memberEntity.getAutoLogin()))) {
                                     AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberEntity.getMemberId());

@@ -60,13 +60,13 @@ public class AuthTokensGeneratorImpl implements AuthTokensGenerator {
     /**
      * 멤버아이디 조회
      * <p>
-     * 엑세스토큰으로 멤버아이디를 조회하는 메소드이다.
+     * 토큰으로 멤버아이디를 조회하는 메소드이다.
      *
-     * @param accessToken
+     * @param token
      * @return
      */
     @Override
-    public String getMemberId(String accessToken) {
-        return jwtTokenProvider.getMemberId(accessToken);
+    public String getMemberId(String token) {
+        return jwtTokenProvider.getMemberId(token);
     }
 }

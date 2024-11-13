@@ -86,17 +86,17 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
     /**
      * 멤버아이디 조회
      * <p>
-     * 엑세스토큰으로 멤버아이디를 조회하는 메소드이다.
+     * 토큰으로 멤버아이디를 조회하는 메소드이다.
      *
-     * @param accessToken
+     * @param token
      * @return
      */
     @Override
-    public String getMemberId(String accessToken) {
+    public String getMemberId(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(accessToken)
+                .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
     }

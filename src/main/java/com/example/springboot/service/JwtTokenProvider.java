@@ -9,5 +9,5 @@ public interface JwtTokenProvider {
 
     boolean validateAccessToken(String accessToken);
 
-    String getMemberId(String accessToken);
+    String getMemberId(String token);
 }
