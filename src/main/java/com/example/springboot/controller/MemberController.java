@@ -79,4 +79,19 @@ public class MemberController {
 
         return ResponseResult.success(memberService.findPassword(memberFindPasswordRequestDTO));
     }
+
+    /**
+     * 로그인 갱신
+     * <p>
+     * 로그인을 갱신하는 메소드이다.
+     *
+     * @param memberLoginRenewRequestDTO
+     * @return
+     */
+    @PostMapping("/login-renew")
+    public ResponseResult<MemberLoginRenewResponseDTO> loginRenew(@RequestBody MemberLoginRenewRequestDTO memberLoginRenewRequestDTO) {
+        log.info("loginRenew memberLoginRenewRequestDTO : {}", memberLoginRenewRequestDTO);
+
+        return ResponseResult.success(memberService.loginRenew(memberLoginRenewRequestDTO));
+    }
 }

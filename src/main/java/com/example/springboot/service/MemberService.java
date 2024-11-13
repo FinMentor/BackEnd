@@ -12,4 +12,6 @@ public interface MemberService {
     List<MemberFindIdDTO> findId(String name, String phoneFirst, String phoneMiddle, String phoneLast, String phoneVerificationCode);
 
     MemberFindPasswordResponseDTO findPassword(MemberFindPasswordRequestDTO memberFindPasswordRequestDTO);
+
+    MemberLoginRenewResponseDTO loginRenew(MemberLoginRenewRequestDTO memberLoginRenewRequestDTO);
 }

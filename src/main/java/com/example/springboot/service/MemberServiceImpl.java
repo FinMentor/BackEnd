@@ -342,4 +342,35 @@ public class MemberServiceImpl implements MemberService {
                 .resultCode(ResultCodeEnum.SUCCESS.getValue())
                 .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
     }
+
+    /**
+     * 로그인 갱신
+     * <p>
+     * 엑세스토큰을 검증하고 로그인을 갱신하는 메소드이다.
+     *
+     * @param memberLoginRenewRequestDTO
+     * @return
+     */
+    @Override
+    public MemberLoginRenewResponseDTO loginRenew(MemberLoginRenewRequestDTO memberLoginRenewRequestDTO) {
+        if (authTokensGenerator.validateTokens(memberLoginRenewRequestDTO.getAccessToken())) {
+            return memberDAO.findById(authTokensGenerator.getMemberId(memberLoginRenewRequestDTO.getAccessToken())).map(
+                            memberEntity -> {
+                                if (CommonCodeEnum.YES.getValue().equals(String.valueOf(memberEntity.getAutoLogin()))) {
+                                    AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberEntity.getMemberId());
+
+                                    return MemberLoginRenewResponseDTO.builder()
+                                            .accessToken(authTokensDTO.getAccessToken())
+                                            .refreshToken(authTokensDTO.getRefreshToken())
+                                            .resultCode(ResultCodeEnum.SUCCESS.getValue())
+                                            .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
+                                } else {
+                                    throw new SessionExpiredException(ExceptionCodeEnum.SESSION_EXPIRED);
+                                }
+                            })
+                    .orElseThrow(() -> new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER));
+        } else {
+            throw new SessionExpiredException(ExceptionCodeEnum.SESSION_EXPIRED);
+        }
+    }
 }
