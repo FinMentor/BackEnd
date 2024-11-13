@@ -16,6 +16,14 @@ import static com.example.springboot.vo.QMemberCategoryVO.memberCategoryVO;
 public class MemberQueryDSLRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
+    /**
+     * 멤버리스트 조회
+     * <p>
+     * 멤버 유형으로 멤버리스트를 조회하는 메소드이다.
+     *
+     * @param memberType
+     * @return
+     */
     public List<MemberEntity> selectListMemberByMemberType(String memberType) {
         return jpaQueryFactory
                 .selectFrom(memberEntity)

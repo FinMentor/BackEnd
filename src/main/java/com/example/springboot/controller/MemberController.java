@@ -32,6 +32,21 @@ public class MemberController {
     }
 
     /**
+     * 로그인
+     * <p>
+     * 아이디와 비밀번호로 로그인하는 메소드이다.
+     *
+     * @param memberLoginRequestDTO
+     * @return
+     */
+    @PostMapping("/login")
+    public ResponseResult<MemberLoginResponseDTO> login(@RequestBody MemberLoginRequestDTO memberLoginRequestDTO) {
+        log.info("login memberLoginRequestDTO : {}", memberLoginRequestDTO);
+
+        return ResponseResult.success(memberService.login(memberLoginRequestDTO));
+    }
+
+    /**
      * 아이디 찾기
      * <p>
      * 이름과 휴대폰번호로 아이디를 찾는 메소드이다.

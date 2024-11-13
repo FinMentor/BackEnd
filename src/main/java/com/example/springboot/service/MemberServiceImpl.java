@@ -33,6 +33,7 @@ public class MemberServiceImpl implements MemberService {
     private final SelectedTermsDAO selectedTermsDAO;
     private final TermsOfUseDAO termsOfUseDAO;
     private final MemberSmsQueryDSLDAO memberSmsQueryDSLDAO;
+    private final AuthTokensGenerator authTokensGenerator;
 
     /**
      * 회원가입
@@ -171,6 +172,42 @@ public class MemberServiceImpl implements MemberService {
                 }
             }
         });
+    }
+
+    /**
+     * 로그인
+     * <p>
+     * 아이디, 비밀번호를 검증하여 로그인 토큰을 만드는 메소드이다.
+     *
+     * @param memberLoginRequestDTO
+     * @return
+     */
+    @Override
+    public MemberLoginResponseDTO login(MemberLoginRequestDTO memberLoginRequestDTO) {
+        memberDAO.findByMemberIdAndPassword(memberLoginRequestDTO.getMemberId(), passwordEncoder.encode(memberLoginRequestDTO.getPassword())).ifPresentOrElse(
+                memberEntity -> {
+                    if (CommonCodeEnum.NO.getValue().equals(String.valueOf(memberEntity.getMemberStatus()))) {
+                        throw new WithdrawalOfMemberException(ExceptionCodeEnum.WITHDRAWAL_MEMBER);
+                    }
+
+                    if (memberEntity.getPasswordFailureCount() >= CommonCodeEnum.FIVE.getNum()) {
+                        throw new ErrorFiveTimesOverPasswordException(ExceptionCodeEnum.ERROR_FIVE_TIMES_OVER_PASSWORD);
+                    }
+
+                    memberDAO.resetPasswordFailureCount(memberEntity.getMemberId());
+                },
+                () -> {
+                    throw new ErrorIdAndPasswordException(ExceptionCodeEnum.MISMATCH_ID_OR_PASSWORD);
+                }
+        );
+
+        AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberLoginRequestDTO.getMemberId());
+
+        return MemberLoginResponseDTO.builder()
+                .accessToken(authTokensDTO.getAccessToken())
+                .refreshToken(authTokensDTO.getRefreshToken())
+                .resultCode(ResultCodeEnum.SUCCESS.getValue())
+                .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
     }
 
     /**
