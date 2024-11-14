@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @ToString
-public class PostDTO {
+public class PostResponseDTO {
     private Long postId;
     private String memberId;
     private Long mainCategoryId;
@@ -19,4 +19,6 @@ public class PostDTO {
     private Long likeCount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String resultCode;
+    private String resultMessage;
 }

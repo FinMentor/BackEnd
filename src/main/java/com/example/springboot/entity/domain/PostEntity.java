@@ -1,6 +1,5 @@
 package com.example.springboot.entity.domain;
 
-import com.example.springboot.dto.PostDTO;
 import com.example.springboot.entity.common.CommonColumn;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,8 +16,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @DynamicInsert
+@Builder
 @Table(name = "POST")
 public class PostEntity extends CommonColumn {
     @Id

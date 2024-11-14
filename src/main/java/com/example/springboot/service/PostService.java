@@ -1,10 +1,13 @@
 package com.example.springboot.service;
 
-import com.example.springboot.dto.PostDTO;
+import com.example.springboot.dto.PostRequestDTO;
+import com.example.springboot.dto.PostResponseDTO;
+
+import java.util.List;
 
 public interface PostService {
-
-    PostDTO save(PostDTO postDTO); // 글 작성
-    PostDTO getPostById(Long postId); // ID로 글 조회
-
+    PostResponseDTO save(PostRequestDTO postDTO); // 글 작성
+    PostResponseDTO findById(Long postId); // ID로 글 조회
+    List<PostResponseDTO> findAll(); // 글 목록 불러오기
+    void updateViewCount(Long postId); // 조회수 증가
 }

@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -20,9 +21,7 @@ import java.util.Optional;
 public class PostDAOImpl implements PostDAO {
     private final PostRepository postRepository;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
+    @Override
     public PostEntity save(PostEntity postEntity) {
         if (postEntity.getTitle() == null || postEntity.getTitle().isEmpty()) {
             throw new ErrorRequiredValueValidation(new StringBuilder("title은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
@@ -34,13 +33,18 @@ public class PostDAOImpl implements PostDAO {
             throw new ErrorRequiredValueValidation(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
         log.info("save postEntity: {}", postEntity);
-        entityManager.persist(postEntity);
         return postRepository.save(postEntity);
     }
-
     @Override
     public Optional<PostEntity> findById(Long postId) {
-        PostEntity postEntity = entityManager.find(PostEntity.class, postId);
-        return Optional.ofNullable(postEntity);
+        return postRepository.findById(postId);
+    }
+    @Override
+    public List<PostEntity> findAll() {
+        return postRepository.findAll();
+    }
+    @Override
+    public void updateViewCount(Long postId) {
+        postRepository.updateViewCount(postId);
     }
 }

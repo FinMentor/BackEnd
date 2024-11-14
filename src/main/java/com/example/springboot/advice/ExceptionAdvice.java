@@ -83,4 +83,11 @@ public class ExceptionAdvice {
 
         return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE.getHttpStatus(), ResultCodeEnum.NONEXISTENT_REQUIRED_VALUE.getValue(), ResultCodeEnum.NONEXISTENT_REQUIRED_VALUE.getMessage());
     }
+    // 게시글 찾기 실패
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseResult<ErrorResponse> postNotFoundException(PostNotFoundException e) {
+        log.error("ExceptionAdvice postNotFoundException : {}", e.getMessage());
+
+        return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_POST.getHttpStatus(),ResultCodeEnum.NONEXISTENT_POST.getValue(), ResultCodeEnum.NONEXISTENT_POST.getMessage() );
+    }
 }

@@ -15,7 +15,8 @@ public enum ExceptionCodeEnum {
     NONEXISTENT_REQUIRED_TERMS_OF_USE(HttpStatus.BAD_REQUEST, "필수 이용약관이 존재하지 않습니다."),
     NONEXISTENT_VERIFIED_PHONE(HttpStatus.BAD_REQUEST, "휴대폰인증이 존재하지 않습니다."),
     NONEXISTENT_MEMBER(HttpStatus.NOT_FOUND, "멤버가 존재하지 않습니다."),
-    NONEXISTENT_REQUIRED_VALUE(HttpStatus.BAD_REQUEST, "필수값입니다.");
+    NONEXISTENT_REQUIRED_VALUE(HttpStatus.BAD_REQUEST, "필수값입니다."),
+    NONEXISTENT_POST(HttpStatus.NOT_FOUND, "게시글이 존재하지 않습니다.");
 
     private HttpStatus httpStatus;
     private String message;
