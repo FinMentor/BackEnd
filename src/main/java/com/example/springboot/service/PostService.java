@@ -11,4 +11,8 @@ public interface PostService {
     PostResponseDTO findById(Long postId); // ID로 글 조회
 
     List<PostResponseDTO> findAll(); // 글 목록 불러오기
+
+    PostResponseDTO update(PostRequestDTO postRequestDTO);
+
+    void delete(Long postId);
 }
