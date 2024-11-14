@@ -37,7 +37,7 @@ public class PostDAOImpl implements PostDAO {
             throw new ErrorRequiredValueValidationException(new StringBuilder("content는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
-        if (postEntity.getMemberId() == null || postEntity.getMemberId().isEmpty()) {
+        if (postEntity.getMemberId() == null) {
             throw new ErrorRequiredValueValidationException(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 

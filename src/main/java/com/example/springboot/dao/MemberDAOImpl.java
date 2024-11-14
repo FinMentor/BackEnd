@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -28,10 +29,6 @@ public class MemberDAOImpl implements MemberDAO {
      */
     @Override
     public MemberEntity save(MemberEntity memberEntity) {
-        if (memberEntity.getMemberId() == null || memberEntity.getMemberId().isEmpty()) {
-            throw new ErrorRequiredValueValidationException(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
-        }
-
         if (memberEntity.getPassword() == null || memberEntity.getPassword().isEmpty()) {
             throw new ErrorRequiredValueValidationException(new StringBuilder("password는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
@@ -44,7 +41,7 @@ public class MemberDAOImpl implements MemberDAO {
             throw new ErrorRequiredValueValidationException(new StringBuilder("introduce는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
-        log.info("save memberEntity: {}", memberEntity);
+        log.info("save memberEntity : {}", memberEntity);
 
         return memberRepository.save(memberEntity);
     }
@@ -54,18 +51,37 @@ public class MemberDAOImpl implements MemberDAO {
      * <p>
      * PK로 멤버 테이블을 조회하는 메소드이다.
      *
-     * @param memberId
+     * @param id
      * @return
      */
     @Override
-    public Optional<MemberEntity> findById(String memberId) {
-        if (memberId == null || memberId.isEmpty()) {
-            throw new ErrorRequiredValueValidationException(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+    public Optional<MemberEntity> findById(String id) {
+        if (id == null || id.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("id는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
-        log.info("findById memberId: {}", memberId);
+        log.info("findById id : {}", id);
 
-        return memberRepository.findById(memberId);
+        return memberRepository.findById(id);
+    }
+
+    /**
+     * 멤버리스트 조회
+     * <p>
+     * 멤버아이디리스트에 포함되는 모든 멤버를 조회한다.
+     *
+     * @param memberIdList
+     * @return
+     */
+    @Override
+    public List<MemberEntity> findById(List<Long> memberIdList) {
+        if (memberIdList == null || memberIdList.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberIdList는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("findById memberIdList : {}", memberIdList);
+
+        return memberRepository.findById(memberIdList);
     }
 
     /**
@@ -73,18 +89,18 @@ public class MemberDAOImpl implements MemberDAO {
      *
      * 멤버아이디로 비밀번호실패횟수를 초기화하는 메소드이다.
      *
-     * @param memberId
+     * @param id
      * @return
      */
     @Override
-    public int resetPasswordFailureCount(String memberId) {
-        if (memberId == null || memberId.isEmpty()) {
-            throw new ErrorRequiredValueValidationException(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+    public int resetPasswordFailureCount(String id) {
+        if (id == null || id.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("id는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
-        log.info("resetPasswordFailureCount memberId: {}", memberId);
+        log.info("resetPasswordFailureCount id : {}", id);
 
-        return memberRepository.resetPasswordFailureCount(memberId);
+        return memberRepository.resetPasswordFailureCount(id);
     }
 
     /**
@@ -92,22 +108,22 @@ public class MemberDAOImpl implements MemberDAO {
      * <p>
      * 멤버 테이블의 비밀번호를 변경하는 메소드이다.
      *
-     * @param memberId
+     * @param id
      * @param password
      * @return
      */
     @Override
-    public int save(String memberId, String password) {
-        if (memberId == null || memberId.isEmpty()) {
-            throw new ErrorRequiredValueValidationException(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+    public int save(String id, String password) {
+        if (id == null || id.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("id는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         if (password == null || password.isEmpty()) {
             throw new ErrorRequiredValueValidationException(new StringBuilder("password는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
-        log.info("save memberId: {}, password: {}", memberId, password);
+        log.info("save id : {}, password : {}", id, password);
 
-        return memberRepository.save(memberId, password);
+        return memberRepository.save(id, password);
     }
 }

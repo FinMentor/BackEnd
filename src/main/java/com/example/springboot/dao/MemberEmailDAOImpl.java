@@ -30,7 +30,7 @@ public class MemberEmailDAOImpl implements MemberEmailDAO {
             throw new ErrorRequiredValueValidationException(new StringBuilder("email은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
-        if (memberEmailEntity.getMemberEntity() == null || memberEmailEntity.getMemberEntity().getMemberId() == null || memberEmailEntity.getMemberEntity().getMemberId().isEmpty()) {
+        if (memberEmailEntity.getMemberEntity() == null || memberEmailEntity.getMemberEntity().getMemberId() == null) {
             throw new ErrorRequiredValueValidationException(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 

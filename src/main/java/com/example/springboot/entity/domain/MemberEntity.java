@@ -27,8 +27,9 @@ import java.util.List;
 public class MemberEntity extends CommonColumn {
     @Id
     @Comment("멤버 아이디")
-    @Column(name = "MEMBER_ID", length = 50, nullable = false, unique = true)
-    private String memberId;
+    @Column(name = "MEMBER_ID", nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long memberId;
 
     @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
     private List<MemberSmsEntity> memberSmsEntityList;
@@ -71,6 +72,10 @@ public class MemberEntity extends CommonColumn {
 
     @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
     private List<MessageEntity> messageEntityList;
+
+    @Comment("아이디")
+    @Column(name = "ID", length = 50, nullable = false, unique = true)
+    private String id;
 
     @Comment("비밀번호")
     @Column(name = "PASSWORD", length = 255, nullable = false)

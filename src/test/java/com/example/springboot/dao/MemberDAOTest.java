@@ -1,4 +1,4 @@
-package com.example.springboot.repository;
+package com.example.springboot.dao;
 
 import com.example.springboot.entity.domain.MemberEntity;
 import org.junit.jupiter.api.Test;
@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-public class MemberRepositoryTest {
+public class MemberDAOTest {
     @Autowired
-    private MemberRepository memberRepository;
+    private MemberDAO memberDAO;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -22,7 +22,7 @@ public class MemberRepositoryTest {
     @Test
     public void findById() {
         String memberId = "testUser01";
-        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
+        Optional<MemberEntity> optionalMemberEntity = memberDAO.findById(memberId);
         assertTrue(optionalMemberEntity.isPresent());
     }
 
@@ -32,7 +32,7 @@ public class MemberRepositoryTest {
         String password = "123456";
         String name = "금길동";
 
-        MemberEntity memberEntity = memberRepository.save(MemberEntity.builder()
+        MemberEntity memberEntity = memberDAO.save(MemberEntity.builder()
                 .memberId(memberId)
                 .password(passwordEncoder.encode(password))
                 .name(name).build());

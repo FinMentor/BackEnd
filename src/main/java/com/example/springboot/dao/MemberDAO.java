@@ -2,14 +2,17 @@ package com.example.springboot.dao;
 
 import com.example.springboot.entity.domain.MemberEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface MemberDAO {
     MemberEntity save(MemberEntity memberEntity);
 
-    Optional<MemberEntity> findById(String memberId);
+    Optional<MemberEntity> findById(String id);
 
-    int resetPasswordFailureCount(String memberId);
+    List<MemberEntity> findById(List<Long> memberIdList);
 
-    int save(String memberId, String password);
+    int resetPasswordFailureCount(String id);
+
+    int save(String id, String password);
 }

@@ -2,9 +2,8 @@ package com.example.springboot.service;
 
 import com.example.springboot.dao.MemberDAO;
 import com.example.springboot.dao.querydsl.MemberQueryDSLDAO;
-import com.example.springboot.dto.MasterMemberDTO;
-import com.example.springboot.dto.MasterRecommendDTO;
-import com.example.springboot.entity.domain.MemberEntity;
+import com.example.springboot.dto.MentorDTO;
+import com.example.springboot.dto.MentorRecommendDTO;
 import com.example.springboot.util.CommonCodeEnum;
 import com.example.springboot.util.ResultCodeEnum;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +25,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 import static org.apache.hadoop.yarn.webapp.hamlet.HamletSpec.InputType.file;
 
@@ -40,7 +35,7 @@ import static org.apache.hadoop.yarn.webapp.hamlet.HamletSpec.InputType.file;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class MasterServiceImpl implements MasterService {
+public class MentorServiceImpl implements MentorService {
     private final MemberQueryDSLDAO memberQueryDSLDAO;
     private final MemberDAO memberDAO;
 
@@ -50,40 +45,17 @@ public class MasterServiceImpl implements MasterService {
      * 아이템 기반 필터링으로 고수를 추천하는 메소드이다.
      *
      * @param mainCategoryId
-     * @param answerTime
      * @return
      * @throws IOException
      * @throws TasteException
      */
     @Override
-    public MasterRecommendDTO recommendMaster(long mainCategoryId, String answerTime) throws IOException, TasteException {
-        AtomicLong memberId = new AtomicLong(0);
-        Map<Long, String> members = new HashMap<>();
-
-        // 고수 멤버 조회후 팔로잉 카운트
-        List<MasterMemberDTO> masterMemberDTOList = memberQueryDSLDAO.selectListMemberByMemberType(CommonCodeEnum.MASTER.getValue()).stream()
-                .collect(Collectors.groupingBy(MemberEntity::getMemberId))
-                .values().stream()
-                .map(memberEntityList -> {
-                    if (memberEntityList.isEmpty()) {
-                        return null;
-                    }
-
-                    members.put(memberId.incrementAndGet(), memberEntityList.get(0).getMemberId());
-
-                    return MasterMemberDTO.builder()
-                            .memberId(memberId.get())
-                            .mainCategoryId(memberEntityList.get(0).getMemberCategoryVO() == null ? null : memberEntityList.get(0).getMemberCategoryVO().getMainCategoryId())
-                            .answerTime(memberEntityList.get(0).getAnswerTime())
-                            .followingCount(memberEntityList.get(0).getFollowingList().isEmpty() ? 0.0 : memberEntityList.get(0).getFollowingList().size()).build();
-                })
-                .filter(Objects::nonNull)
-                .toList();
-
+    public MentorRecommendDTO recommendMentor(Long mainCategoryId) throws IOException, TasteException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(String.valueOf(file), true))) {
-            masterMemberDTOList.forEach(masterMemberDTO -> {
+            // 멤버리스트 조회 및 고수파일 생성
+            memberQueryDSLDAO.selectListMemberByMainCategoryId(CommonCodeEnum.MENTEE.getValue(), mainCategoryId).forEach(mentorMemberDTO -> {
                 try {
-                    bw.write(masterMemberDTO.getMainCategoryId() + "," + masterMemberDTO.getMemberId() + "," + masterMemberDTO.getFollowingCount());
+                    bw.write(mentorMemberDTO.getMenteeId() + "," + mentorMemberDTO.getMentorId() + "," + mentorMemberDTO.getStar());
                     bw.newLine();
                 } catch (IOException e) {
                     throw new RuntimeException(e);  // 예외가 발생하면 런타임 예외로 처리
@@ -97,22 +69,23 @@ public class MasterServiceImpl implements MasterService {
         UserSimilarity userSimilarity = new PearsonCorrelationSimilarity(dataModel);
         UserNeighborhood userNeighborhood = new ThresholdUserNeighborhood(0.1, userSimilarity, dataModel);
         UserBasedRecommender userBasedRecommender = new GenericUserBasedRecommender(dataModel, userNeighborhood, userSimilarity);
-        List<RecommendedItem> recommendedItemList = userBasedRecommender.recommend(mainCategoryId, 1);
+        List<RecommendedItem> recommendedItemList = userBasedRecommender.recommend(mainCategoryId, 3);
 
-        AtomicLong itemId = new AtomicLong(1);
+        List<Long> itemId = new ArrayList<>();
         recommendedItemList.forEach(recommendedItem -> {
-            itemId.set(recommendedItem.getItemID());
+            itemId.add(recommendedItem.getItemID());
         });
 
-
-        return memberDAO.findById(members.get(itemId.get())).map(memberEntity ->
-                        MasterRecommendDTO.builder()
-                                .memberId(memberEntity.getMemberId())
+        return MentorRecommendDTO.builder()
+                .mentorDTOList(memberDAO.findById(itemId).stream().map(memberEntity ->
+                        MentorDTO.builder()
+                                .id(memberEntity.getId())
                                 .name(memberEntity.getName())
                                 .nickname(memberEntity.getNickname())
-                                .profileImageUrl(memberEntity.getProfileImageUrl())
-                                .resultCode(ResultCodeEnum.SUCCESS.getValue())
-                                .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build())
-                .orElse(null);
+                                .profileImageUrl(memberEntity.getProfileImageUrl()).build()
+                ).toList())
+                .resultCode(ResultCodeEnum.SUCCESS.getValue())
+                .resultMessage(ResultCodeEnum.SUCCESS.getMessage())
+                .build();
     }
 }

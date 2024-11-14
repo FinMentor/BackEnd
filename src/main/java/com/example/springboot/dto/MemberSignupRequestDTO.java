@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class MemberSignupRequestDTO {
-    private String memberId;
+    private String id;
     private String password;
     private String passwordConfirmation;
     private String phoneFirst;

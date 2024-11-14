@@ -5,13 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MasterMemberDTO {
-    private Long memberId;
-    private Long mainCategoryId;
-    private String answerTime;
-    private Double followingCount;
+public class MentorRecommendDTO {
+    private List<MentorDTO> mentorDTOList;
+    private String resultCode;
+    private String resultMessage;
 }

@@ -1,7 +1,7 @@
 package com.example.springboot.controller;
 
-import com.example.springboot.dto.MasterRecommendDTO;
-import com.example.springboot.service.MasterService;
+import com.example.springboot.dto.MentorRecommendDTO;
+import com.example.springboot.service.MentorService;
 import com.example.springboot.util.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +17,8 @@ import java.io.IOException;
 @RequestMapping("/api/v1/master")
 @RequiredArgsConstructor
 @Slf4j
-public class MasterController {
-    private final MasterService masterService;
+public class MentorController {
+    private final MentorService masterService;
 
     /**
      * 고수 추천
@@ -26,15 +26,14 @@ public class MasterController {
      * 분야를 기반으로 고수를 추천해주는 메소드이다.
      *
      * @param mainCategoryId
-     * @param answerTime
      * @return
      * @throws IOException
      * @throws TasteException
      */
     @GetMapping("/recommend")
-    public ResponseResult<MasterRecommendDTO> recommendMaster(@RequestParam long mainCategoryId, @RequestParam String answerTime) throws IOException, TasteException {
-        log.info("recommendMaster mainCategoryId : {}, answerTime : {}", mainCategoryId, answerTime);
+    public ResponseResult<MentorRecommendDTO> recommendMentor(@RequestParam Long mainCategoryId) throws IOException, TasteException {
+        log.info("recommendMaster mainCategoryId : {}", mainCategoryId);
 
-        return ResponseResult.success(masterService.recommendMaster(mainCategoryId, answerTime));
+        return ResponseResult.success(masterService.recommendMentor(mainCategoryId));
     }
 }

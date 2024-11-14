@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MasterRecommendDTO {
-    private String memberId;
+public class MentorDTO {
+    private String id;
     private String name;
     private String nickname;
     private String profileImageUrl;
-    private String resultCode;
-    private String resultMessage;
 }

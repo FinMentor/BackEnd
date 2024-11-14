@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class MemberFindPasswordRequestDTO {
-    private String memberId;
+    private String id;
     private String name;
     private String phoneFirst;
     private String phoneMiddle;
