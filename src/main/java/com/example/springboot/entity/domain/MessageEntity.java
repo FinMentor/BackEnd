@@ -26,8 +26,8 @@ public class MessageEntity extends CommonColumn {
     private Long messageId;
 
     @Comment("멤버 아이디")
-    @Column(name = "MEMBER_ID", length = 50, nullable = false, insertable = false, updatable = false)
-    private String memberId;
+    @Column(name = "MEMBER_ID", nullable = false, insertable = false, updatable = false)
+    private Long memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @ToString
 public class PostResponseDTO {
     private Long postId;
-    private String memberId;
+    private Long memberId;
     private Long mainCategoryId;
     private String title;
     private String content;

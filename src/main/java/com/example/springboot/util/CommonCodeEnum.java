@@ -8,8 +8,8 @@ import lombok.Getter;
 public enum CommonCodeEnum {
     YES("Y", null),
     NO("N", null),
-    MASTER("master", null),
-    ROOKIE("rookie", null),
+    MENTOR("mentor", null),
+    MENTEE("mentee", null),
     FIVE("", 5L);
 
     private String value;

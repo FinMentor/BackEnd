@@ -58,18 +58,18 @@ public class MemberSmsQueryDSLRepository {
      * <p>
      * 아이디와 이름, 휴대폰으로 멤버리스트를 조회하는 메소드이다.
      *
-     * @param memberId
+     * @param id
      * @param name
      * @param phoneFirst
      * @param phoneMiddle
      * @return
      */
-    public List<MemberSmsEntity> selectListMemberByIdAndNameAndPhone(String memberId, String name, String phoneFirst, String phoneMiddle) {
+    public List<MemberSmsEntity> selectListMemberByIdAndNameAndPhone(String id, String name, String phoneFirst, String phoneMiddle) {
         return jpaQueryFactory
                 .selectFrom(memberSmsEntity)
                 .join(memberSmsEntity.memberEntity, memberEntity)
                 .fetchJoin()
-                .where(memberSmsEntity.phoneFirst.eq(phoneFirst).and(memberSmsEntity.phoneMiddle.eq(phoneMiddle)).and(memberEntity.memberId.eq(memberId)).and(memberEntity.name.eq(name)))
+                .where(memberSmsEntity.phoneFirst.eq(phoneFirst).and(memberSmsEntity.phoneMiddle.eq(phoneMiddle)).and(memberEntity.id.eq(id)).and(memberEntity.name.eq(name)))
                 .fetch();
     }
 }

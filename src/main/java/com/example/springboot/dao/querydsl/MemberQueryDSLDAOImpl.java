@@ -1,6 +1,6 @@
 package com.example.springboot.dao.querydsl;
 
-import com.example.springboot.entity.domain.MemberEntity;
+import com.example.springboot.dto.MenteeMentorDTO;
 import com.example.springboot.exception.ErrorRequiredValueValidationException;
 import com.example.springboot.repository.querydsl.MemberQueryDSLRepository;
 import com.example.springboot.util.ExceptionCodeEnum;
@@ -21,19 +21,24 @@ public class MemberQueryDSLDAOImpl implements MemberQueryDSLDAO {
     /**
      * 멤버리스트 조회
      * <p>
-     * 멤버유형으로 멤버리스트를 조회하는 메소드이다.
+     * 멤버유형 및 메인카테고리아이디로 멤버리스트를 조회하는 메소드이다.
      *
      * @param memberType
+     * @param mainCategoryId
      * @return
      */
     @Override
-    public List<MemberEntity> selectListMemberByMemberType(String memberType) {
+    public List<MenteeMentorDTO> selectListMemberByMainCategoryId(String memberType, Long mainCategoryId) {
         if (memberType == null || memberType.isEmpty()) {
             throw new ErrorRequiredValueValidationException(new StringBuilder("memberType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
-        log.info("selectListMemberByMainCategoryId memberType : {}", memberType);
+        if (mainCategoryId == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("mainCategoryId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
 
-        return memberCategoryQueryDSLRepository.selectListMemberByMemberType(memberType);
+        log.info("selectListMemberByMainCategoryId memberType : {}, mainCategoryId : {}", memberType, mainCategoryId);
+
+        return memberCategoryQueryDSLRepository.selectListMemberByMemberType(memberType, mainCategoryId);
     }
 }
