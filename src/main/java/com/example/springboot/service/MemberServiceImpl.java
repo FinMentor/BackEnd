@@ -33,6 +33,7 @@ public class MemberServiceImpl implements MemberService {
     private final SelectedTermsDAO selectedTermsDAO;
     private final TermsOfUseDAO termsOfUseDAO;
     private final MemberSmsQueryDSLDAO memberSmsQueryDSLDAO;
+    private final AuthTokensGenerator authTokensGenerator;
 
     /**
      * 회원가입
@@ -64,7 +65,9 @@ public class MemberServiceImpl implements MemberService {
         MemberEntity memberEntity = memberDAO.save(MemberEntity.builder()
                 .memberId(memberSignupRequestDTO.getMemberId())
                 .password(passwordEncoder.encode(memberSignupRequestDTO.getPassword()))
-                .name(memberSignupRequestDTO.getName()).build());
+                .name(memberSignupRequestDTO.getName())
+                .introduce(memberSignupRequestDTO.getIntroduce())
+                .answerTime(memberSignupRequestDTO.getAnswerTime()).build());
 
         memberSmsDAO.save(MemberSmsEntity.builder()
                 .phoneFirst(memberSignupRequestDTO.getPhoneFirst())
@@ -172,6 +175,46 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
+     * 로그인
+     * <p>
+     * 아이디, 비밀번호를 검증하여 로그인 토큰을 만드는 메소드이다.
+     *
+     * @param memberLoginRequestDTO
+     * @return
+     */
+    @Override
+    public MemberLoginResponseDTO login(MemberLoginRequestDTO memberLoginRequestDTO) {
+        memberDAO.findById(memberLoginRequestDTO.getMemberId()).ifPresentOrElse(
+                memberEntity -> {
+                    if (!passwordEncoder.matches(memberLoginRequestDTO.getPassword(), memberEntity.getPassword())) {
+                        throw new ErrorIdAndPasswordException(ExceptionCodeEnum.MISMATCH_ID_OR_PASSWORD);
+                    }
+
+                    if (CommonCodeEnum.NO.getValue().equals(String.valueOf(memberEntity.getMemberStatus()))) {
+                        throw new WithdrawalOfMemberException(ExceptionCodeEnum.WITHDRAWAL_MEMBER);
+                    }
+
+                    if (memberEntity.getPasswordFailureCount() >= CommonCodeEnum.FIVE.getNum()) {
+                        throw new ErrorFiveTimesOverPasswordException(ExceptionCodeEnum.ERROR_FIVE_TIMES_OVER_PASSWORD);
+                    }
+
+                    memberDAO.resetPasswordFailureCount(memberEntity.getMemberId());
+                },
+                () -> {
+                    throw new ErrorIdAndPasswordException(ExceptionCodeEnum.MISMATCH_ID_OR_PASSWORD);
+                }
+        );
+
+        AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberLoginRequestDTO.getMemberId());
+
+        return MemberLoginResponseDTO.builder()
+                .accessToken(authTokensDTO.getAccessToken())
+                .refreshToken(authTokensDTO.getRefreshToken())
+                .resultCode(ResultCodeEnum.SUCCESS.getValue())
+                .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
+    }
+
+    /**
      * 아이디 찾기
      * <p>
      * 이름과 휴대폰으로 아이디를 찾는 메소드이다.
@@ -184,7 +227,7 @@ public class MemberServiceImpl implements MemberService {
      * @return
      */
     @Override
-    public List<MemberFindidResponseDTO> findId(String name, String phoneFirst, String phoneMiddle, String phoneLast, String phoneVerificationCode) {
+    public List<MemberFindIdDTO> findId(String name, String phoneFirst, String phoneMiddle, String phoneLast, String phoneVerificationCode) {
         log.info("findId name : {}, phoneFirst : {}, phoneMiddle : {}, phoneLast : {}, phoneVerificationCode : {}", name, phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode);
 
         // 휴대폰인증 확인
@@ -198,13 +241,13 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // 멤버 할당
-        List<MemberFindidResponseDTO> memberFindidResponseDTOList = memberSmsEntityList.stream()
+        List<MemberFindIdDTO> memberFindidResponseDTOList = memberSmsEntityList.stream()
                 .map(memberSmsEntity -> {
                     if (!Objects.equals(phoneLast, encryptionService.decrypt(memberSmsEntity.getPhoneLast()))) {
                         return null;
                     }
 
-                    return MemberFindidResponseDTO.builder()
+                    return MemberFindIdDTO.builder()
                             .memberId(memberSmsEntity.getMemberEntity().getMemberId())
                             .snsType(memberSmsEntity.getMemberEntity().getSnsType())
                             .createdAt(memberSmsEntity.getMemberEntity().getCreatedAt())
@@ -298,5 +341,36 @@ public class MemberServiceImpl implements MemberService {
         return MemberFindPasswordResponseDTO.builder()
                 .resultCode(ResultCodeEnum.SUCCESS.getValue())
                 .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
+    }
+
+    /**
+     * 로그인 갱신
+     * <p>
+     * 엑세스토큰을 검증하고 로그인을 갱신하는 메소드이다.
+     *
+     * @param memberLoginRenewRequestDTO
+     * @return
+     */
+    @Override
+    public MemberLoginRenewResponseDTO loginRenew(MemberLoginRenewRequestDTO memberLoginRenewRequestDTO) {
+        if (authTokensGenerator.validateTokens(memberLoginRenewRequestDTO.getRefreshToken())) {
+            return memberDAO.findById(authTokensGenerator.getMemberId(memberLoginRenewRequestDTO.getRefreshToken())).map(
+                            memberEntity -> {
+                                if (CommonCodeEnum.YES.getValue().equals(String.valueOf(memberEntity.getAutoLogin()))) {
+                                    AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberEntity.getMemberId());
+
+                                    return MemberLoginRenewResponseDTO.builder()
+                                            .accessToken(authTokensDTO.getAccessToken())
+                                            .refreshToken(authTokensDTO.getRefreshToken())
+                                            .resultCode(ResultCodeEnum.SUCCESS.getValue())
+                                            .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
+                                } else {
+                                    throw new SessionExpiredException(ExceptionCodeEnum.SESSION_EXPIRED);
+                                }
+                            })
+                    .orElseThrow(() -> new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER));
+        } else {
+            throw new SessionExpiredException(ExceptionCodeEnum.SESSION_EXPIRED);
+        }
     }
 }

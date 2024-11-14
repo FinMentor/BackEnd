@@ -30,8 +30,8 @@ public class MemberEntity extends CommonColumn {
     @Column(name = "MEMBER_ID", length = 50, nullable = false, unique = true)
     private String memberId;
 
-    @OneToOne(mappedBy = "memberEntity", fetch = FetchType.LAZY)
-    private MemberSmsEntity memberSmsEntity;
+    @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
+    private List<MemberSmsEntity> memberSmsEntityList;
 
     @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
     private List<CommentEntity> commentEntityList;
@@ -39,17 +39,17 @@ public class MemberEntity extends CommonColumn {
     @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
     private List<LikeEntity> likeEntityList;
 
-    @OneToOne(mappedBy = "memberEntity", fetch = FetchType.LAZY)
-    private MemberEmailEntity memberEmailEntity;
+    @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
+    private List<MemberEmailEntity> memberEmailEntityList;
 
     @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
     private List<PostEntity> postEntityList;
 
-    @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
-    private List<MemberCategoryVO> memberCategoryVOList;
-
     @OneToOne(mappedBy = "memberEntity", fetch = FetchType.LAZY)
-    private SettingEntity settingEntity;
+    private MemberCategoryVO memberCategoryVO;
+
+    @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
+    private List<SettingEntity> settingEntityList;
 
     @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
     private List<NotificationEntity> notificationEntityList;
@@ -62,6 +62,15 @@ public class MemberEntity extends CommonColumn {
 
     @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
     private List<ChatroomGroupVO> chatroomGroupVOList;
+
+    @OneToMany(mappedBy = "followerEntity", fetch = FetchType.LAZY)
+    private List<FollowEntity> followerList;
+
+    @OneToMany(mappedBy = "followingEntity", fetch = FetchType.LAZY)
+    private List<FollowEntity> followingList;
+
+    @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
+    private List<MessageEntity> messageEntityList;
 
     @Comment("비밀번호")
     @Column(name = "PASSWORD", length = 255, nullable = false)
@@ -119,4 +128,12 @@ public class MemberEntity extends CommonColumn {
     @Comment("멤버 유형")
     @Column(name = "MEMBER_TYPE", length = 10, nullable = true)
     private String memberType;
+
+    @Comment("자기소개")
+    @Column(name = "INTRODUCE", length = 255, nullable = false)
+    private String introduce;
+
+    @Comment("답변 가능한 시간")
+    @Column(name = "ANSWER_TIME", length = 10, nullable = true)
+    private String answerTime;
 }

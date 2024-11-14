@@ -1,9 +1,8 @@
 package com.example.springboot.vo;
 
-import com.example.springboot.entity.domain.ChatroomEntity;
 import com.example.springboot.entity.common.CommonColumn;
+import com.example.springboot.entity.domain.ChatroomEntity;
 import com.example.springboot.entity.domain.MemberEntity;
-import com.example.springboot.entity.domain.MessageEntity;
 import com.example.springboot.vo.id.ChatroomGroupId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,8 +10,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
-
-import java.util.List;
 
 @Entity
 @Getter
@@ -40,6 +37,7 @@ public class ChatroomGroupVO extends CommonColumn {
     @JoinColumn(name = "CHATROOM_ID")
     private ChatroomEntity chatroomEntity;
 
-    @OneToMany(mappedBy = "chatroomGroupVO", fetch = FetchType.LAZY)
-    private List<MessageEntity> messageEntityList;
+    @Comment("별점")
+    @Column(name = "STAR", nullable = true)
+    private Integer star;
 }

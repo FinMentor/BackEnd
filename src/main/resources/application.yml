@@ -39,3 +39,7 @@ coolsms:
 jasypt:
   encryptor:
     password: yUZp9wkybdGwzOlUW8Dh8a8g9G2eka0z6vXVCMhCCc2aw1qV8s
+
+custom:
+  jwt:
+    secretKey: umXvaYXe2LfjbmOsZMzXdmJnM9c4kRcHbSuqZlUyezbIGA1w7Yu7vZ8Oqpk33OrfX8O6XS8qwyEfIxB1g7HzJL

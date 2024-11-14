@@ -24,16 +24,16 @@ public class MemberCategoryVO extends CommonColumn {
     @Column(name = "MEMBER_ID", length = 50, nullable = false, insertable = false, updatable = false)
     private String memberId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private MemberEntity memberEntity;
 
     @Id
     @Comment("메인 카테고리 아이디")
     @Column(name = "MAIN_CATEGORY_ID", nullable = false, insertable = false, updatable = false)
-    private String mainCategoryId;
+    private Long mainCategoryId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MAIN_CATEGORY_ID")
     private MainCategoryEntity mainCategoryEntity;
 }

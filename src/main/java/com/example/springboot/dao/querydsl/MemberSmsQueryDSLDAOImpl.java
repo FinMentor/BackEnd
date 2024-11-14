@@ -1,7 +1,7 @@
 package com.example.springboot.dao.querydsl;
 
 import com.example.springboot.entity.domain.MemberSmsEntity;
-import com.example.springboot.exception.ErrorRequiredValueValidation;
+import com.example.springboot.exception.ErrorRequiredValueValidationException;
 import com.example.springboot.repository.querydsl.MemberSmsQueryDSLRepository;
 import com.example.springboot.util.ExceptionCodeEnum;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +30,11 @@ public class MemberSmsQueryDSLDAOImpl implements MemberSmsQueryDSLDAO {
     @Override
     public List<MemberSmsEntity> selectListMemberByPhone(String phoneFirst, String phoneMiddle) {
         if (phoneFirst == null || phoneFirst.isEmpty()) {
-            throw new ErrorRequiredValueValidation(new StringBuilder("phoneFirst는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+            throw new ErrorRequiredValueValidationException(new StringBuilder("phoneFirst는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         if (phoneMiddle == null || phoneMiddle.isEmpty()) {
-            throw new ErrorRequiredValueValidation(new StringBuilder("phoneMiddle은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+            throw new ErrorRequiredValueValidationException(new StringBuilder("phoneMiddle은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         log.info("selectListMemberByPhone phoneFirst : {}, phoneMiddle : {}", phoneFirst, phoneMiddle);
@@ -55,15 +55,15 @@ public class MemberSmsQueryDSLDAOImpl implements MemberSmsQueryDSLDAO {
     @Override
     public List<MemberSmsEntity> selectListMemberSmsByPhoneVerificationCode(String phoneFirst, String phoneMiddle, String phoneVerificationCode) {
         if (phoneFirst == null || phoneFirst.isEmpty()) {
-            throw new ErrorRequiredValueValidation(new StringBuilder("phoneFirst는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+            throw new ErrorRequiredValueValidationException(new StringBuilder("phoneFirst는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         if (phoneMiddle == null || phoneMiddle.isEmpty()) {
-            throw new ErrorRequiredValueValidation(new StringBuilder("phoneMiddle은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+            throw new ErrorRequiredValueValidationException(new StringBuilder("phoneMiddle은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         if (phoneVerificationCode == null || phoneVerificationCode.isEmpty()) {
-            throw new ErrorRequiredValueValidation(new StringBuilder("phoneVerificationCode는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+            throw new ErrorRequiredValueValidationException(new StringBuilder("phoneVerificationCode는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         log.info("selectListMemberSmsByPhoneVerificationCode phoneFirst : {}, phoneMiddle : {}, phoneVerificationCode : {}", phoneFirst, phoneMiddle, phoneVerificationCode);
@@ -85,19 +85,19 @@ public class MemberSmsQueryDSLDAOImpl implements MemberSmsQueryDSLDAO {
     @Override
     public List<MemberSmsEntity> selectListMemberByIdAndNameAndPhone(String memberId, String name, String phoneFirst, String phoneMiddle) {
         if (memberId == null || memberId.isEmpty()) {
-            throw new ErrorRequiredValueValidation(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         if (name == null || name.isEmpty()) {
-            throw new ErrorRequiredValueValidation(new StringBuilder("name은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+            throw new ErrorRequiredValueValidationException(new StringBuilder("name은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         if (phoneFirst == null || phoneFirst.isEmpty()) {
-            throw new ErrorRequiredValueValidation(new StringBuilder("phoneFirst는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+            throw new ErrorRequiredValueValidationException(new StringBuilder("phoneFirst는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         if (phoneMiddle == null || phoneMiddle.isEmpty()) {
-            throw new ErrorRequiredValueValidation(new StringBuilder("phoneMiddle은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+            throw new ErrorRequiredValueValidationException(new StringBuilder("phoneMiddle은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         log.info("selectListMemberByIdAndNameAndPhone memberId : {}, name : {}, phoneFirst : {}, phoneMiddle : {}", memberId, name, phoneFirst, phoneMiddle);

@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TermsAgreementDTO {
-    private Long termsOfUseId;
-    private Character required;
+public class MemberLoginRenewRequestDTO {
+    String refreshToken;
 }

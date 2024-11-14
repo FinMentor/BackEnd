@@ -44,7 +44,7 @@ public class PostEntity extends CommonColumn {
     @Column(name = "MAIN_CATEGORY_ID", nullable = false, insertable = false, updatable = false)
     private Long mainCategoryId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MAIN_CATEGORY_ID")
     private MainCategoryEntity mainCategoryEntity;
 

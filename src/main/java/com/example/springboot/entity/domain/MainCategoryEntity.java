@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -22,11 +24,11 @@ public class MainCategoryEntity extends CommonColumn {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mainCategoryId;
 
-    @OneToOne(mappedBy = "mainCategoryEntity", fetch = FetchType.LAZY)
-    private MemberCategoryVO memberCategoryVO;
+    @OneToMany(mappedBy = "mainCategoryEntity", fetch = FetchType.LAZY)
+    private List<MemberCategoryVO> memberCategoryVOList;
 
-    @OneToOne(mappedBy = "mainCategoryEntity", fetch = FetchType.LAZY)
-    private PostEntity postEntity;
+    @OneToMany(mappedBy = "mainCategoryEntity", fetch = FetchType.LAZY)
+    private List<PostEntity> postEntityList;
 
     @Comment("메인 카테고리 이름")
     @Column(name = "MAIN_CATEGORY_NAME", length = 20, nullable = false)

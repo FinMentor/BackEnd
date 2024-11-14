@@ -9,5 +9,7 @@ public interface MemberDAO {
 
     Optional<MemberEntity> findById(String memberId);
 
+    int resetPasswordFailureCount(String memberId);
+
     int save(String memberId, String password);
 }

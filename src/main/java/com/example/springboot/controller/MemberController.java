@@ -32,6 +32,21 @@ public class MemberController {
     }
 
     /**
+     * 로그인
+     * <p>
+     * 아이디와 비밀번호로 로그인하는 메소드이다.
+     *
+     * @param memberLoginRequestDTO
+     * @return
+     */
+    @PostMapping("/login")
+    public ResponseResult<MemberLoginResponseDTO> login(@RequestBody MemberLoginRequestDTO memberLoginRequestDTO) {
+        log.info("login memberLoginRequestDTO : {}", memberLoginRequestDTO);
+
+        return ResponseResult.success(memberService.login(memberLoginRequestDTO));
+    }
+
+    /**
      * 아이디 찾기
      * <p>
      * 이름과 휴대폰번호로 아이디를 찾는 메소드이다.
@@ -44,7 +59,7 @@ public class MemberController {
      * @return
      */
     @GetMapping("/find-id")
-    public ResponseResult<List<MemberFindidResponseDTO>> findId(@RequestParam String name, @RequestParam String phoneFirst, @RequestParam String phoneMiddle, @RequestParam String phoneLast, @RequestParam String phoneVerificationCode) {
+    public ResponseResult<List<MemberFindIdDTO>> findId(@RequestParam String name, @RequestParam String phoneFirst, @RequestParam String phoneMiddle, @RequestParam String phoneLast, @RequestParam String phoneVerificationCode) {
         log.info("findId name : {}, phoneFirst : {}, phoneMiddle : {}, phoneLast : {}, phoneVerificationCode : {}", name, phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode);
 
         return ResponseResult.success(memberService.findId(name, phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode));
@@ -63,5 +78,20 @@ public class MemberController {
         log.info("findPassword memberFindPasswordRequestDTO : {}", memberFindPasswordRequestDTO);
 
         return ResponseResult.success(memberService.findPassword(memberFindPasswordRequestDTO));
+    }
+
+    /**
+     * 로그인 갱신
+     * <p>
+     * 로그인을 갱신하는 메소드이다.
+     *
+     * @param memberLoginRenewRequestDTO
+     * @return
+     */
+    @PostMapping("/login-renew")
+    public ResponseResult<MemberLoginRenewResponseDTO> loginRenew(@RequestBody MemberLoginRenewRequestDTO memberLoginRenewRequestDTO) {
+        log.info("loginRenew memberLoginRenewRequestDTO : {}", memberLoginRenewRequestDTO);
+
+        return ResponseResult.success(memberService.loginRenew(memberLoginRenewRequestDTO));
     }
 }

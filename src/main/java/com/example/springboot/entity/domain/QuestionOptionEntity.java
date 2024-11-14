@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -22,8 +24,8 @@ public class QuestionOptionEntity extends CommonColumn {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long questionOptionId;
 
-    @OneToOne(mappedBy = "questionOptionEntity", fetch = FetchType.LAZY)
-    private MemberAnswerVO memberAnswerVO;
+    @OneToMany(mappedBy = "questionOptionEntity", fetch = FetchType.LAZY)
+    private List<MemberAnswerVO> memberAnswerVOList;
 
     @Comment("질문 아이디")
     @Column(name = "QUESTION_ID", nullable = false, insertable = false, updatable = false)

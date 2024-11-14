@@ -13,4 +13,8 @@ public interface MemberRepository extends JpaRepository<MemberEntity, String> {
     @Modifying
     @Query("UPDATE MemberEntity m SET m.password = :password WHERE m.memberId = :memberId")
     int save(String memberId, String password);
+
+    @Modifying
+    @Query("UPDATE MemberEntity m SET m.passwordFailureCount = 0 WHERE m.memberId = :memberId")
+    int resetPasswordFailureCount(String memberId);
 }

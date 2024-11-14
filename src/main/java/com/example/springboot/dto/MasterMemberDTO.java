@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TermsAgreementDTO {
-    private Long termsOfUseId;
-    private Character required;
+public class MasterMemberDTO {
+    private Long memberId;
+    private Long mainCategoryId;
+    private String answerTime;
+    private Double followingCount;
 }
