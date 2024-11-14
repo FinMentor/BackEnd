@@ -1,5 +1,6 @@
 package com.example.springboot.dao;
 
+import com.example.springboot.entity.domain.CommentEntity;
 import com.example.springboot.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,4 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class CommentDAOImpl implements CommentDAO {
     private final CommentRepository commentRepository;
+
+    @Override
+    public CommentEntity save(CommentEntity commentEntity) {
+        return commentRepository.save(commentEntity);
+    }
 }
