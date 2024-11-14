@@ -30,18 +30,19 @@ public class MemberServiceTest {
         }
 
         MemberSignupRequestDTO memberSignupRequestDTO = MemberSignupRequestDTO.builder()
-                .memberId("testUser01")
+                .id("testUser1")
                 .password("123456")
                 .passwordConfirmation("123456")
                 .phoneFirst("010")
-                .phoneMiddle("1234")
-                .phoneLast("5678")
+                .phoneMiddle("1111")
+                .phoneLast("1111")
                 .phoneVerificationCode("123456")
                 .phoneVerifiedStatus("Y")
-                .name("금길동")
-                .email("testUser01@gmail.com")
+                .name("김길동")
+                .email("testUser1@gmail.com")
                 .emailVerificationCode("123456")
                 .emailVerifiedStatus("Y")
+                .introduce("안녕하세요.")
                 .termsAgreementDTOList(termsAgreementDTOList).build();
 
         MemberSignupResponseDTO memberSignupResponseDTO = memberService.signup(memberSignupRequestDTO);

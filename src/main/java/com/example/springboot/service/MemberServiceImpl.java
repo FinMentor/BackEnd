@@ -66,8 +66,7 @@ public class MemberServiceImpl implements MemberService {
                 .id(memberSignupRequestDTO.getId())
                 .password(passwordEncoder.encode(memberSignupRequestDTO.getPassword()))
                 .name(memberSignupRequestDTO.getName())
-                .introduce(memberSignupRequestDTO.getIntroduce())
-                .answerTime(memberSignupRequestDTO.getAnswerTime()).build());
+                .introduce(memberSignupRequestDTO.getIntroduce()).build());
 
         memberSmsDAO.save(MemberSmsEntity.builder()
                 .phoneFirst(memberSignupRequestDTO.getPhoneFirst())

@@ -21,21 +21,23 @@ public class MemberDAOTest {
 
     @Test
     public void findById() {
-        String memberId = "testUser01";
-        Optional<MemberEntity> optionalMemberEntity = memberDAO.findById(memberId);
+        String id = "testUser1";
+        Optional<MemberEntity> optionalMemberEntity = memberDAO.findById(id);
         assertTrue(optionalMemberEntity.isPresent());
     }
 
     @Test
     public void save() {
-        String memberId = "testUser01";
+        String id = "testUser1";
         String password = "123456";
-        String name = "금길동";
+        String name = "김길동";
+        String introduce = "안녕하세요.";
 
         MemberEntity memberEntity = memberDAO.save(MemberEntity.builder()
-                .memberId(memberId)
+                .id(id)
                 .password(passwordEncoder.encode(password))
-                .name(name).build());
+                .name(name)
+                .introduce(introduce).build());
         assertNotNull(memberEntity);
     }
 }

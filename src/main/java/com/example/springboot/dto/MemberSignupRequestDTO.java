@@ -25,6 +25,5 @@ public class MemberSignupRequestDTO {
     private String emailVerificationCode;
     private String emailVerifiedStatus;
     private String introduce;
-    private String answerTime;
     private List<TermsAgreementDTO> termsAgreementDTOList;
 }

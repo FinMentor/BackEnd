@@ -44,7 +44,7 @@ class PostControllerTest {
     public void setUp() {
         // 가짜 멤버 생성 및 findById 설정
         MemberEntity testMember = MemberEntity.builder()
-                .memberId("testUser1")
+                .id("testUser1")
                 .name("Test User")
                 .build();
         Mockito.when(memberRepository.findById("testUser1")).thenReturn(Optional.of(testMember));
@@ -52,7 +52,7 @@ class PostControllerTest {
         // 가짜 Post 데이터 설정
         PostResponseDTO postResponseDTO = PostResponseDTO.builder()
                 .postId(1L)
-                .memberId("testUser1")
+                .memberId(1L)
                 .mainCategoryId(1L)
                 .title("주식 수익 인증")
                 .content("이번 달 주식 수익 인증합니다..")
@@ -85,6 +85,7 @@ class PostControllerTest {
                         .content(content))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+
     @Test
     public void findPostById() throws Exception {
         // Given
@@ -98,6 +99,7 @@ class PostControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.responseEntity.body[0].postId").value(postId));
     }
+
     @Test
     public void findAllPosts() throws Exception {
         // Given
