@@ -20,7 +20,8 @@ public enum ResultCodeEnum {
     MISMATCH_ID_OR_PASSWORD("0010", "아이디 또는 비밀번호 불일치"),
     WITHDRAWAL_MEMBER("0011", "회원탈퇴한 멤버"),
     ERROR_FIVE_TIMES_OVER_PASSWORD("0012", "비밀번호 틀린 횟수 5회이상"),
-    SESSION_EXPIRED("0013", "세션 만료");
+    SESSION_EXPIRED("0013", "세션 만료"),
+    NONEXISTENT_POST("0014","존재하지 않는 게시물");
 
     private String value;
     private String message;

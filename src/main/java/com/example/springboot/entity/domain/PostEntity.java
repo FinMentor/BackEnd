@@ -16,8 +16,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @DynamicInsert
+@Builder
 @Table(name = "POST")
 public class PostEntity extends CommonColumn {
     @Id

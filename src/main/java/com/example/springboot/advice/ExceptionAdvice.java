@@ -115,4 +115,12 @@ public class ExceptionAdvice {
 
         return ResponseResult.fail(ExceptionCodeEnum.SESSION_EXPIRED.getHttpStatus(), ResultCodeEnum.SESSION_EXPIRED.getValue(), ResultCodeEnum.SESSION_EXPIRED.getMessage());
     }
+
+    // 게시글 찾기 실패
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseResult<ErrorResponse> postNotFoundException(PostNotFoundException e) {
+        log.error("ExceptionAdvice postNotFoundException : {}", e.getMessage());
+
+        return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_POST.getHttpStatus(),ResultCodeEnum.NONEXISTENT_POST.getValue(), ResultCodeEnum.NONEXISTENT_POST.getMessage());
+    }
 }
