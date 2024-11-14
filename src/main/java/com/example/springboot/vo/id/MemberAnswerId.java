@@ -10,7 +10,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberAnswerId implements Serializable {
-    private String memberId;
+    private Long memberId;
     private Long questionId;
     private Long questionOptionId;
 }

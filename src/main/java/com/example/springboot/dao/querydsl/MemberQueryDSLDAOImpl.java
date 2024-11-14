@@ -41,4 +41,28 @@ public class MemberQueryDSLDAOImpl implements MemberQueryDSLDAO {
 
         return memberCategoryQueryDSLRepository.selectListMemberByMemberType(memberType, mainCategoryId);
     }
+
+    /**
+     * 멘토랭킹리스트 조회
+     * <p>
+     * 별점으로 멘토랭킹리스트를 조회한다.
+     *
+     * @param memberType
+     * @param mainCategoryId
+     * @return
+     */
+    @Override
+    public List<Long> selectListMentorRankByStar(String memberType, Long mainCategoryId) {
+        if (memberType == null || memberType.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (mainCategoryId == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("mainCategoryId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("selectListMentorRankByStar memberType : {}, mainCategoryId : {}", memberType, mainCategoryId);
+
+        return memberCategoryQueryDSLRepository.selectListMentorRankByStar(memberType, mainCategoryId);
+    }
 }

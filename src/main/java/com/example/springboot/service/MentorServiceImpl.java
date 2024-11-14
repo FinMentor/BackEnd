@@ -25,8 +25,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.apache.hadoop.yarn.webapp.hamlet.HamletSpec.InputType.file;
 
@@ -71,10 +71,11 @@ public class MentorServiceImpl implements MentorService {
         UserBasedRecommender userBasedRecommender = new GenericUserBasedRecommender(dataModel, userNeighborhood, userSimilarity);
         List<RecommendedItem> recommendedItemList = userBasedRecommender.recommend(mainCategoryId, 3);
 
-        List<Long> itemId = new ArrayList<>();
-        recommendedItemList.forEach(recommendedItem -> {
-            itemId.add(recommendedItem.getItemID());
-        });
+        List<Long> itemId = recommendedItemList.isEmpty()
+                ? memberQueryDSLDAO.selectListMentorRankByStar(CommonCodeEnum.MENTOR.getValue(), mainCategoryId)
+                : recommendedItemList.stream()
+                .map(RecommendedItem::getItemID)
+                .collect(Collectors.toList());
 
         return MentorRecommendDTO.builder()
                 .mentorDTOList(memberDAO.findById(itemId).stream().map(memberEntity ->

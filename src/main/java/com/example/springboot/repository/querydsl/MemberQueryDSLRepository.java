@@ -3,6 +3,7 @@ package com.example.springboot.repository.querydsl;
 import com.example.springboot.dto.MenteeMentorDTO;
 import com.example.springboot.vo.QChatroomGroupVO;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -48,6 +49,27 @@ public class MemberQueryDSLRepository {
                                 .and(memberEntity.memberType.eq(memberType))
                                 .and(memberCategoryVO.mainCategoryId.eq(mainCategoryId))
                 )
+                .fetch();
+    }
+
+    public List<Long> selectListMentorRankByStar(String memberType, Long mainCategoryId) {
+        QChatroomGroupVO chatroomGroupVO1 = new QChatroomGroupVO("chatroomGroupVO1");
+        QChatroomGroupVO chatroomGroupVO2 = new QChatroomGroupVO("chatroomGroupVO2");
+
+        return jpaQueryFactory
+                .select(chatroomGroupVO1.memberId)
+                .from(memberEntity)
+                .join(memberEntity.chatroomGroupVOList, chatroomGroupVO1)
+                .join(chatroomGroupVO1.chatroomEntity, chatroomGroupVO2.chatroomEntity)
+                .join(memberEntity.memberCategoryVO, memberCategoryVO)
+                .where(
+                        chatroomGroupVO1.memberId.ne(chatroomGroupVO2.memberId)
+                                .and(chatroomGroupVO1.star.isNotNull())
+                                .and(memberEntity.memberType.eq(memberType))
+                                .and(memberCategoryVO.mainCategoryId.eq(mainCategoryId))
+                )
+                .groupBy(chatroomGroupVO1.memberId)
+                .orderBy(Expressions.numberTemplate(Double.class, "sum({0})", chatroomGroupVO1.star).desc())
                 .fetch();
     }
 }
