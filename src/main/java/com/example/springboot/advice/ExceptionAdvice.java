@@ -121,6 +121,6 @@ public class ExceptionAdvice {
     public ResponseResult<ErrorResponse> postNotFoundException(PostNotFoundException e) {
         log.error("ExceptionAdvice postNotFoundException : {}", e.getMessage());
 
-        return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_POST.getHttpStatus(),ResultCodeEnum.NONEXISTENT_POST.getValue(), ResultCodeEnum.NONEXISTENT_POST.getMessage() );
+        return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_POST.getHttpStatus(),ResultCodeEnum.NONEXISTENT_POST.getValue(), ResultCodeEnum.NONEXISTENT_POST.getMessage());
     }
 }
