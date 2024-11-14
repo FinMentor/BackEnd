@@ -127,6 +127,15 @@ public class MemberDAOImpl implements MemberDAO {
         return memberRepository.save(id, password);
     }
 
+    /**
+     * 멤버리스트 조회
+     * <p>
+     * 메인카테고리아이디로 멤버리스트를 조회하는 메소드이다.
+     *
+     * @param memberType
+     * @param mainCategoryId
+     * @return
+     */
     @Override
     public List<Object[]> selectListMemberByMainCategoryId(String memberType, Long mainCategoryId) {
         if (memberType == null || memberType.isEmpty()) {
@@ -142,6 +151,15 @@ public class MemberDAOImpl implements MemberDAO {
         return memberRepository.selectListMemberByMainCategoryId(memberType, mainCategoryId);
     }
 
+    /**
+     * 멘토랭킹리스트 조회
+     * <p>
+     * 별점으로 멘토랭킹리스트를 조회하는 메소드이다.
+     *
+     * @param memberType
+     * @param mainCategoryId
+     * @return
+     */
     @Override
     public List<Long> selectListMentorRankByStar(String memberType, Long mainCategoryId) {
         if (memberType == null || memberType.isEmpty()) {
