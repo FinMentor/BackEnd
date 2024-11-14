@@ -8,6 +8,7 @@ import lombok.*;
 @Builder
 @ToString
 public class CommentRequestDTO {
+    private Long commentId;
     private String memberId;
     private Long postId;
     private String content;
