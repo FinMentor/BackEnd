@@ -38,7 +38,7 @@ public class MemberSmsDAOImpl implements MemberSmsDAO {
             throw new ErrorRequiredValueValidationException(new StringBuilder("phoneLast는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
-        if (memberSmsEntity.getMemberEntity() == null || memberSmsEntity.getMemberEntity().getMemberId() == null || memberSmsEntity.getMemberEntity().getMemberId().isEmpty()) {
+        if (memberSmsEntity.getMemberEntity() == null || memberSmsEntity.getMemberEntity().getMemberId() == null) {
             throw new ErrorRequiredValueValidationException(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 

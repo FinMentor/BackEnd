@@ -26,7 +26,7 @@ public class SelectedTermsDAOImpl implements SelectedTermsDAO {
      */
     @Override
     public SelectedTermsEntity save(SelectedTermsEntity selectedTermsEntity) {
-        if (selectedTermsEntity.getMemberEntity() == null || selectedTermsEntity.getMemberEntity().getMemberId() == null || selectedTermsEntity.getMemberEntity().getMemberId().isEmpty()) {
+        if (selectedTermsEntity.getMemberEntity() == null || selectedTermsEntity.getMemberEntity().getMemberId() == null) {
             throw new ErrorRequiredValueValidationException(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 

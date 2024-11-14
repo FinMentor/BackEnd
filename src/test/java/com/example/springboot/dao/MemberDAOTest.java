@@ -1,4 +1,4 @@
-package com.example.springboot.repository;
+package com.example.springboot.dao;
 
 import com.example.springboot.entity.domain.MemberEntity;
 import org.junit.jupiter.api.Test;
@@ -12,30 +12,32 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-public class MemberRepositoryTest {
+public class MemberDAOTest {
     @Autowired
-    private MemberRepository memberRepository;
+    private MemberDAO memberDAO;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Test
     public void findById() {
-        String memberId = "testUser01";
-        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberId);
+        String id = "testUser1";
+        Optional<MemberEntity> optionalMemberEntity = memberDAO.findById(id);
         assertTrue(optionalMemberEntity.isPresent());
     }
 
     @Test
     public void save() {
-        String memberId = "testUser01";
+        String id = "testUser1";
         String password = "123456";
-        String name = "금길동";
+        String name = "김길동";
+        String introduce = "안녕하세요.";
 
-        MemberEntity memberEntity = memberRepository.save(MemberEntity.builder()
-                .memberId(memberId)
+        MemberEntity memberEntity = memberDAO.save(MemberEntity.builder()
+                .id(id)
                 .password(passwordEncoder.encode(password))
-                .name(name).build());
+                .name(name)
+                .introduce(introduce).build());
         assertNotNull(memberEntity);
     }
 }

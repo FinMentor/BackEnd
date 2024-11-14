@@ -30,6 +30,7 @@ public class PostDAOImpl implements PostDAO {
     @Override
     public PostEntity save(PostEntity postEntity) {
         validateRequiredFields(postEntity);
+
         log.info("save postEntity: {}", postEntity);
         return postRepository.save(postEntity);
     }

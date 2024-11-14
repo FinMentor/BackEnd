@@ -22,16 +22,16 @@ public class FollowEntity extends CommonColumn {
     private Long followId;
 
     @Comment("팔로워 아이디")
-    @Column(name = "FOLLOWER_ID", length = 50, nullable = false, insertable = false, updatable = false)
-    private String followerId;
+    @Column(name = "FOLLOWER_ID", nullable = false, insertable = false, updatable = false)
+    private Long followerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FOLLOWER_ID")
     private MemberEntity followerEntity;
 
     @Comment("팔로잉 아이디")
-    @Column(name = "FOLLOWING_ID", length = 50, nullable = false, insertable = false, updatable = false)
-    private String followingId;
+    @Column(name = "FOLLOWING_ID", nullable = false, insertable = false, updatable = false)
+    private Long followingId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FOLLOWING_ID")

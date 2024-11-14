@@ -1,8 +1,8 @@
 package com.example.springboot.entity.domain;
 
 import com.example.springboot.entity.common.CommonColumn;
-import com.example.springboot.entity.id.MemberSmsId;
 import com.example.springboot.entity.common.util.ColumnYn;
+import com.example.springboot.entity.id.MemberSmsId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,8 +35,8 @@ public class MemberSmsEntity extends CommonColumn {
     private String phoneLast;
 
     @Comment("멤버 아이디")
-    @Column(name = "MEMBER_ID", length = 50, nullable = false, insertable = false, updatable = false)
-    private String memberId;
+    @Column(name = "MEMBER_ID", nullable = false, insertable = false, updatable = false)
+    private Long memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")

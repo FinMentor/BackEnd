@@ -63,11 +63,10 @@ public class MemberServiceImpl implements MemberService {
 
         // 회원가입 - 멤버, 휴대폰, 이메일, 이용약관동의내역 저장
         MemberEntity memberEntity = memberDAO.save(MemberEntity.builder()
-                .memberId(memberSignupRequestDTO.getMemberId())
+                .id(memberSignupRequestDTO.getId())
                 .password(passwordEncoder.encode(memberSignupRequestDTO.getPassword()))
                 .name(memberSignupRequestDTO.getName())
-                .introduce(memberSignupRequestDTO.getIntroduce())
-                .answerTime(memberSignupRequestDTO.getAnswerTime()).build());
+                .introduce(memberSignupRequestDTO.getIntroduce()).build());
 
         memberSmsDAO.save(MemberSmsEntity.builder()
                 .phoneFirst(memberSignupRequestDTO.getPhoneFirst())
@@ -104,7 +103,7 @@ public class MemberServiceImpl implements MemberService {
      * @param memberSignupRequestDTO
      */
     private void _checkDuplicatedMemberId(MemberSignupRequestDTO memberSignupRequestDTO) {
-        memberDAO.findById(memberSignupRequestDTO.getMemberId()).ifPresent(memberEntity -> {
+        memberDAO.findById(memberSignupRequestDTO.getId()).ifPresent(memberEntity -> {
             throw new DuplicatedIdException(ExceptionCodeEnum.DUPLICATED_ID);
         });
     }
@@ -184,7 +183,7 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public MemberLoginResponseDTO login(MemberLoginRequestDTO memberLoginRequestDTO) {
-        memberDAO.findById(memberLoginRequestDTO.getMemberId()).ifPresentOrElse(
+        memberDAO.findById(memberLoginRequestDTO.getId()).ifPresentOrElse(
                 memberEntity -> {
                     if (!passwordEncoder.matches(memberLoginRequestDTO.getPassword(), memberEntity.getPassword())) {
                         throw new ErrorIdAndPasswordException(ExceptionCodeEnum.MISMATCH_ID_OR_PASSWORD);
@@ -198,14 +197,14 @@ public class MemberServiceImpl implements MemberService {
                         throw new ErrorFiveTimesOverPasswordException(ExceptionCodeEnum.ERROR_FIVE_TIMES_OVER_PASSWORD);
                     }
 
-                    memberDAO.resetPasswordFailureCount(memberEntity.getMemberId());
+                    memberDAO.resetPasswordFailureCount(memberEntity.getId());
                 },
                 () -> {
                     throw new ErrorIdAndPasswordException(ExceptionCodeEnum.MISMATCH_ID_OR_PASSWORD);
                 }
         );
 
-        AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberLoginRequestDTO.getMemberId());
+        AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberLoginRequestDTO.getId());
 
         return MemberLoginResponseDTO.builder()
                 .accessToken(authTokensDTO.getAccessToken())
@@ -316,7 +315,7 @@ public class MemberServiceImpl implements MemberService {
         _checkVerifiedPhone(memberFindPasswordRequestDTO.getPhoneFirst(), memberFindPasswordRequestDTO.getPhoneMiddle(), memberFindPasswordRequestDTO.getPhoneLast(), memberFindPasswordRequestDTO.getPhoneVerificationCode());
 
         // 멤버 조회
-        List<MemberSmsEntity> memberSmsEntityList = memberSmsQueryDSLDAO.selectListMemberByIdAndNameAndPhone(memberFindPasswordRequestDTO.getMemberId(), memberFindPasswordRequestDTO.getName(), memberFindPasswordRequestDTO.getPhoneFirst(), memberFindPasswordRequestDTO.getPhoneMiddle());
+        List<MemberSmsEntity> memberSmsEntityList = memberSmsQueryDSLDAO.selectListMemberByIdAndNameAndPhone(memberFindPasswordRequestDTO.getId(), memberFindPasswordRequestDTO.getName(), memberFindPasswordRequestDTO.getPhoneFirst(), memberFindPasswordRequestDTO.getPhoneMiddle());
 
         if (memberSmsEntityList.isEmpty()) {
             throw new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER);
@@ -330,7 +329,7 @@ public class MemberServiceImpl implements MemberService {
         if (isPasswordChanged) {
             // 비밀번호 변경
             if (Objects.equals(memberFindPasswordRequestDTO.getPassword(), memberFindPasswordRequestDTO.getPasswordConfirmation())) {
-                memberDAO.save(memberFindPasswordRequestDTO.getMemberId(), passwordEncoder.encode(memberFindPasswordRequestDTO.getPassword()));
+                memberDAO.save(memberFindPasswordRequestDTO.getId(), passwordEncoder.encode(memberFindPasswordRequestDTO.getPassword()));
             } else {
                 throw new MismatchPasswordException(ExceptionCodeEnum.MISMATCH_PASSWORD);
             }
@@ -357,7 +356,7 @@ public class MemberServiceImpl implements MemberService {
             return memberDAO.findById(authTokensGenerator.getMemberId(memberLoginRenewRequestDTO.getRefreshToken())).map(
                             memberEntity -> {
                                 if (CommonCodeEnum.YES.getValue().equals(String.valueOf(memberEntity.getAutoLogin()))) {
-                                    AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberEntity.getMemberId());
+                                    AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberEntity.getId());
 
                                     return MemberLoginRenewResponseDTO.builder()
                                             .accessToken(authTokensDTO.getAccessToken())

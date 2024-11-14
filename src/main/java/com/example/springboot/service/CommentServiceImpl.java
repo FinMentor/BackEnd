@@ -51,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
 
         return CommentResponseDTO.builder()
                 .commentId(savedComment.getCommentId())
-                .memberId(savedComment.getMemberEntity().getMemberId())
+                .memberId(savedComment.getMemberEntity().getId())
                 .postId(savedComment.getPostId())
                 .content(savedComment.getContent())
                 .createdAt(savedComment.getCreatedAt())
@@ -70,7 +70,7 @@ public class CommentServiceImpl implements CommentService {
         return comments.stream()
                 .map(commentEntity -> CommentResponseDTO.builder()
                         .commentId(commentEntity.getCommentId())
-                        .memberId(commentEntity.getMemberEntity().getMemberId())
+                        .memberId(commentEntity.getMemberEntity().getId())
                         .postId(commentEntity.getPostId())
                         .content(commentEntity.getContent())
                         .createdAt(commentEntity.getCreatedAt())
@@ -100,7 +100,7 @@ public class CommentServiceImpl implements CommentService {
 
         return CommentResponseDTO.builder()
                 .commentId(updatedComment.getCommentId())
-                .memberId(updatedComment.getMemberEntity().getMemberId())
+                .memberId(updatedComment.getMemberEntity().getId())
                 .postId(updatedComment.getPostId())
                 .content(updatedComment.getContent())
                 .createdAt(updatedComment.getCreatedAt())

@@ -24,17 +24,17 @@ public class AuthTokensGeneratorImpl implements AuthTokensGenerator {
      * <p>
      * 엑세스토큰과 리프레시토큰을 생성하는 메소드이다.
      *
-     * @param memberId
+     * @param id
      * @return
      */
     @Override
-    public AuthTokensDTO generate(String memberId) {
+    public AuthTokensDTO generate(String id) {
         long now = (new Date()).getTime();
         Date accessTokenExpiredAt = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         Date refreshTokenExpiredAt = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
 
-        String accessToken = jwtTokenProvider.accessTokenGenerate(memberId, accessTokenExpiredAt);
-        String refreshToken = jwtTokenProvider.refreshTokenGenerate(memberId, refreshTokenExpiredAt);
+        String accessToken = jwtTokenProvider.accessTokenGenerate(id, accessTokenExpiredAt);
+        String refreshToken = jwtTokenProvider.refreshTokenGenerate(id, refreshTokenExpiredAt);
 
         return AuthTokensDTO.builder()
                 .accessToken(accessToken)

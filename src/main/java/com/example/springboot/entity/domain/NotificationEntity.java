@@ -26,8 +26,8 @@ public class NotificationEntity extends CommonColumn {
     private Long NotificationId;
 
     @Comment("멤버 아이디")
-    @Column(name = "MEMBER_ID", length = 50, nullable = false, insertable = false, updatable = false)
-    private String MemberId;
+    @Column(name = "MEMBER_ID", nullable = false, insertable = false, updatable = false)
+    private Long MemberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")

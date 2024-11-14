@@ -9,5 +9,5 @@ public interface MemberSmsQueryDSLDAO {
 
     List<MemberSmsEntity> selectListMemberSmsByPhoneVerificationCode(String phoneFirst, String phoneMiddle, String phoneVerificationCode);
 
-    List<MemberSmsEntity> selectListMemberByIdAndNameAndPhone(String memberId, String name, String phoneFirst, String phoneMiddle);
+    List<MemberSmsEntity> selectListMemberByIdAndNameAndPhone(String id, String name, String phoneFirst, String phoneMiddle);
 }
