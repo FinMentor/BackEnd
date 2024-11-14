@@ -126,4 +126,34 @@ public class MemberDAOImpl implements MemberDAO {
 
         return memberRepository.save(id, password);
     }
+
+    @Override
+    public List<Object[]> selectListMemberByMainCategoryId(String memberType, Long mainCategoryId) {
+        if (memberType == null || memberType.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (mainCategoryId == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("mainCategoryId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("selectListMemberByMemberType memberType : {}, mainCategoryId : {}", memberType, mainCategoryId);
+
+        return memberRepository.selectListMemberByMainCategoryId(memberType, mainCategoryId);
+    }
+
+    @Override
+    public List<Long> selectListMentorRankByStar(String memberType, Long mainCategoryId) {
+        if (memberType == null || memberType.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (mainCategoryId == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("mainCategoryId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("selectListMentorRankByStar memberType : {}, mainCategoryId : {}", memberType, mainCategoryId);
+
+        return memberRepository.selectListMentorRankByStar(memberType, mainCategoryId);
+    }
 }

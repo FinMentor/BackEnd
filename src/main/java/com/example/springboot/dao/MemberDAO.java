@@ -15,4 +15,8 @@ public interface MemberDAO {
     int resetPasswordFailureCount(String id);
 
     int save(String id, String password);
+
+    List<Object[]> selectListMemberByMainCategoryId(String memberType, Long mainCategoryId);
+
+    List<Long> selectListMentorRankByStar(String memberType, Long mainCategoryId);
 }
