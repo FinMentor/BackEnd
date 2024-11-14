@@ -7,7 +7,10 @@ import java.util.Optional;
 
 public interface PostDAO {
     PostEntity save(PostEntity postEntity);
+
     Optional<PostEntity> findById(Long postId);
+
     List<PostEntity> findAll();
+
     void updateViewCount(Long postId);
 }
