@@ -8,5 +8,4 @@ public class CommentNotFoundException extends RuntimeException {
     public CommentNotFoundException(ExceptionCodeEnum exceptionCodeEnum) {
         super(exceptionCodeEnum.getMessage());
     }
-
 }

@@ -1,13 +1,13 @@
 package com.example.springboot.service;
 
 import com.example.springboot.dao.CommentDAO;
+import com.example.springboot.dao.MemberDAO;
 import com.example.springboot.dto.CommentRequestDTO;
 import com.example.springboot.dto.CommentResponseDTO;
 import com.example.springboot.entity.domain.CommentEntity;
 import com.example.springboot.entity.domain.MemberEntity;
 import com.example.springboot.exception.CommentNotFoundException;
 import com.example.springboot.exception.FailGetMemberException;
-import com.example.springboot.repository.MemberRepository;
 import com.example.springboot.util.ExceptionCodeEnum;
 import com.example.springboot.util.ResultCodeEnum;
 import lombok.RequiredArgsConstructor;
@@ -24,34 +24,31 @@ import java.util.stream.Collectors;
 @Transactional
 @Slf4j
 public class CommentServiceImpl implements CommentService {
-
-    private final MemberRepository memberRepository;
+    private final MemberDAO memberDAO;
     private final CommentDAO commentDAO;
 
     /**
      * 댓글 저장
      * <p>
-     * 댓글을 저장하는 메서드입니다.
+     * 댓글을 저장하는 메서드이다.
      *
      * @param commentRequestDTO
      * @return
      */
     @Override
     public CommentResponseDTO save(CommentRequestDTO commentRequestDTO) {
-        MemberEntity memberEntity = memberRepository.findById(commentRequestDTO.getMemberId())
+        MemberEntity memberEntity = memberDAO.findById(commentRequestDTO.getId())
                 .orElseThrow(() -> new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER));
 
-        CommentEntity commentEntity = CommentEntity.builder()
+        CommentEntity savedComment = commentDAO.save(CommentEntity.builder()
                 .memberEntity(memberEntity)
                 .postId(commentRequestDTO.getPostId())
                 .content(commentRequestDTO.getContent())
-                .build();
-
-        CommentEntity savedComment = commentDAO.save(commentEntity);
+                .build());
 
         return CommentResponseDTO.builder()
                 .commentId(savedComment.getCommentId())
-                .memberId(savedComment.getMemberEntity().getId())
+                .id(savedComment.getMemberEntity().getId())
                 .postId(savedComment.getPostId())
                 .content(savedComment.getContent())
                 .createdAt(savedComment.getCreatedAt())
@@ -60,17 +57,21 @@ public class CommentServiceImpl implements CommentService {
                 .resultMessage(ResultCodeEnum.SUCCESS.getMessage())
                 .build();
     }
+
     /**
-     * 특정 게시글의 모든 댓글 조회
+     * 게시글 전체댓글 조회
+     * <p>
+     * 게시글에 전체댓글을 조회하는 메소드이다.
+     *
+     * @param postId
+     * @return
      */
     @Override
     public List<CommentResponseDTO> findAll(Long postId) {
-        List<CommentEntity> comments = commentDAO.findAllByPostId(postId);
-
-        return comments.stream()
+        return commentDAO.findAllByPostId(postId).stream()
                 .map(commentEntity -> CommentResponseDTO.builder()
                         .commentId(commentEntity.getCommentId())
-                        .memberId(commentEntity.getMemberEntity().getId())
+                        .id(commentEntity.getMemberEntity().getId())
                         .postId(commentEntity.getPostId())
                         .content(commentEntity.getContent())
                         .createdAt(commentEntity.getCreatedAt())
@@ -80,27 +81,31 @@ public class CommentServiceImpl implements CommentService {
                         .build())
                 .collect(Collectors.toList());
     }
+
     /**
      * 댓글 수정
+     * <p>
+     * 댓글을 수정하는 메소드이다.
+     *
+     * @param commentRequestDTO
+     * @return
      */
     @Override
     public CommentResponseDTO update(CommentRequestDTO commentRequestDTO) {
         CommentEntity existingComment = commentDAO.findById(commentRequestDTO.getCommentId())
                 .orElseThrow(() -> new CommentNotFoundException(ExceptionCodeEnum.NONEXISTENT_COMMENT));
 
-        CommentEntity updatedCommentEntity = CommentEntity.builder()
+        // 업데이트된 객체 저장
+        CommentEntity updatedComment = commentDAO.save(CommentEntity.builder()
                 .commentId(existingComment.getCommentId()) // 기존 ID 유지
                 .memberEntity(existingComment.getMemberEntity()) // 기존 멤버 유지
                 .postId(existingComment.getPostId()) // 기존 게시물 ID 유지
                 .content(commentRequestDTO.getContent()) // 새로운 내용 설정
-                .build();
-
-        // 업데이트된 객체 저장
-        CommentEntity updatedComment = commentDAO.save(updatedCommentEntity);
+                .build());
 
         return CommentResponseDTO.builder()
                 .commentId(updatedComment.getCommentId())
-                .memberId(updatedComment.getMemberEntity().getId())
+                .id(updatedComment.getMemberEntity().getId())
                 .postId(updatedComment.getPostId())
                 .content(updatedComment.getContent())
                 .createdAt(updatedComment.getCreatedAt())
@@ -112,11 +117,22 @@ public class CommentServiceImpl implements CommentService {
 
     /**
      * 댓글 삭제
+     * <p>
+     * 댓글을 삭제하는 메소드이다.
+     *
      * @param commentId
+     * @return
      */
     @Override
-    public void delete(Long commentId) {
+    public CommentResponseDTO delete(Long commentId) {
+        // 댓글 조회
         commentDAO.findById(commentId).orElseThrow(() -> new CommentNotFoundException(ExceptionCodeEnum.NONEXISTENT_COMMENT));
+
+        // 댓글 삭제
         commentDAO.deleteById(commentId);
+
+        return CommentResponseDTO.builder()
+                .resultCode(ResultCodeEnum.SUCCESS.getValue())
+                .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
     }
 }

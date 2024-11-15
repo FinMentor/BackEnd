@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 public class CommentRequestDTO {
     private Long commentId;
-    private String memberId;
+    private String id;
     private Long postId;
     private String content;
 }

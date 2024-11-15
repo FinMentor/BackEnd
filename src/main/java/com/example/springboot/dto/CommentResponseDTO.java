@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @ToString
 public class CommentResponseDTO {
     private Long commentId;
-    private String memberId;
+    private String id;
     private Long postId;
     private String content;
     private LocalDateTime createdAt;

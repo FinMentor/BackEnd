@@ -18,56 +18,64 @@ public class CommentController {
     private final CommentService commentService;
 
     /**
-     * 댓글 저장 및 해당 게시글의 모든 댓글 목록 반환
+     * 댓글 저장 및 댓글리스트 조회
+     * <p>
+     * 댓글을 저장하고 댓글리스트를 조회하는 메소드이다.
+     *
+     * @param commentRequestDTO
+     * @return
      */
     @PostMapping("/save")
-    public ResponseResult save(@RequestBody CommentRequestDTO commentRequestDTO) {
-        log.info("save comment: {}", commentRequestDTO);
+    public ResponseResult<List<CommentResponseDTO>> save(@RequestBody CommentRequestDTO commentRequestDTO) {
+        log.info("save commentRequestDTO : {}", commentRequestDTO);
         // 댓글 저장
         commentService.save(commentRequestDTO);
-        // 저장 후 전체 댓글 목록 가져오기
-        List<CommentResponseDTO> comments = commentService.findAll(commentRequestDTO.getPostId());
 
-        // 업데이트된 댓글 목록 반환
-        return ResponseResult.success(comments);
+        return ResponseResult.success(commentService.findAll(commentRequestDTO.getPostId()));
     }
 
     /**
-     * 해당 게시글의 모든 댓글 불러오기
+     * 게시글 전체댓글 조회
+     * <p>
+     * 게시글의 전체댓글을 조회하는 메소드이다.
+     *
+     * @param postId
+     * @return
      */
-    @GetMapping("/getComments")
+    @GetMapping("/all")
     public ResponseResult<List<CommentResponseDTO>> getCommentsByPostId(@RequestParam Long postId) {
-        log.info("Fetching comments for post ID: {}", postId);
+        log.info("getCommentsByPostId postId : {}", postId);
 
-        // 특정 게시글의 모든 댓글 조회
-        List<CommentResponseDTO> comments = commentService.findAll(postId);
-
-        return ResponseResult.success(comments);
+        return ResponseResult.success(commentService.findAll(postId));
     }
 
     /**
      * 댓글 수정
+     * <p>
+     * 댓글을 수정하는 메소드이다.
+     *
+     * @param commentRequestDTO
+     * @return
      */
     @PutMapping("/update")
     public ResponseResult<CommentResponseDTO> update(@RequestBody CommentRequestDTO commentRequestDTO) {
-        log.info("Updating comment: {}", commentRequestDTO);
+        log.info("update commentRequestDTO : {}", commentRequestDTO);
 
-        // 댓글 수정
-        CommentResponseDTO updatedComment = commentService.update(commentRequestDTO);
-
-        return ResponseResult.success(updatedComment);
+        return ResponseResult.success(commentService.update(commentRequestDTO));
     }
 
     /**
      * 댓글 삭제
+     * <p>
+     * 댓글을 삭제하는 메소드이다.
+     *
+     * @param commentId
+     * @return
      */
     @DeleteMapping("/delete")
-    public ResponseResult<Void> delete(@RequestParam Long commentId) {
-        log.info("Deleting comment with ID: {}", commentId);
+    public ResponseResult<CommentResponseDTO> delete(@RequestParam Long commentId) {
+        log.info("delete commentId : {}", commentId);
 
-        // 댓글 삭제
-        commentService.delete(commentId);
-
-        return ResponseResult.success(null);
+        return ResponseResult.success(commentService.delete(commentId));
     }
 }

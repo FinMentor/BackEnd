@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,7 +75,7 @@ public class PostServiceImpl implements PostService {
     /**
      * 게시글 조회
      * <p>
-     * 게시글아이디로 게시글을 조회하는 메소드이다.
+     * 게시아이디로 게시글을 조회하는 메소드이다.
      *
      * @param postId
      * @return
@@ -95,8 +94,8 @@ public class PostServiceImpl implements PostService {
                                     .mainCategoryId(postEntity.getMainCategoryId())
                                     .title(postEntity.getTitle())
                                     .content(postEntity.getContent())
-                                    .viewCount(postEntity.getViewCount().longValue())
-                                    .likeCount(postEntity.getLikeCount().longValue())
+                                    .viewCount(postEntity.getViewCount())
+                                    .likeCount(postEntity.getLikeCount())
                                     .createdAt(postEntity.getCreatedAt())
                                     .updatedAt(postEntity.getUpdatedAt())
                                     .resultCode(ResultCodeEnum.SUCCESS.getValue())
@@ -115,17 +114,15 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public List<PostResponseDTO> findAll() {
-        List<PostEntity> posts = postDAO.findAll();
-
-        return posts.stream()
+        return postDAO.findAll().stream()
                 .map(postEntity -> PostResponseDTO.builder()
                         .postId(postEntity.getPostId())
                         .memberId(postEntity.getMemberId())
                         .mainCategoryId(postEntity.getMainCategoryId())
                         .title(postEntity.getTitle())
                         .content(postEntity.getContent())
-                        .viewCount(postEntity.getViewCount().longValue())
-                        .likeCount(postEntity.getLikeCount().longValue())
+                        .viewCount(postEntity.getViewCount())
+                        .likeCount(postEntity.getLikeCount())
                         .createdAt(postEntity.getCreatedAt())
                         .updatedAt(postEntity.getUpdatedAt())
                         .resultCode(ResultCodeEnum.SUCCESS.getValue())
@@ -133,11 +130,13 @@ public class PostServiceImpl implements PostService {
                         .build())
                 .collect(Collectors.toList());
     }
+
     /**
-     * 게시글 업데이트
+     * 게시글 수정
      * <p>
-     * 게시글 업데이트 하는 메서드이다.
+     * 게시글을 수정하는 메서드이다.
      *
+     * @param postRequestDTO
      * @return
      */
     @Override
@@ -147,7 +146,7 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow(() -> new PostNotFoundException(ExceptionCodeEnum.NONEXISTENT_POST));
 
         // MemberEntity 조회 및 예외 처리
-        MemberEntity memberEntity = memberRepository.findById(postRequestDTO.getMemberId())
+        MemberEntity memberEntity = memberDAO.findById(postRequestDTO.getId())
                 .orElseThrow(() -> new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER));
 
         // 기존 게시글의 필드 업데이트
@@ -171,17 +170,33 @@ public class PostServiceImpl implements PostService {
                 .mainCategoryId(updatedPost.getMainCategoryId())
                 .title(updatedPost.getTitle())
                 .content(updatedPost.getContent())
-                .viewCount(updatedPost.getViewCount().longValue())
-                .likeCount(updatedPost.getLikeCount().longValue())
+                .viewCount(updatedPost.getViewCount())
+                .likeCount(updatedPost.getLikeCount())
                 .createdAt(updatedPost.getCreatedAt())
                 .updatedAt(updatedPost.getUpdatedAt())
                 .resultCode(ResultCodeEnum.SUCCESS.getValue())
                 .resultMessage(ResultCodeEnum.SUCCESS.getMessage())
                 .build();
     }
+
+    /**
+     * 게시글 삭제
+     * <p>
+     * 게시아이디로 게시글을 삭제하는 메소드이다.
+     *
+     * @param postId
+     * @return
+     */
     @Override
-    public void delete(Long postId) {
+    public PostResponseDTO delete(Long postId) {
+        // 게시글 조회
         postDAO.findById(postId).orElseThrow(() -> new PostNotFoundException(ExceptionCodeEnum.NONEXISTENT_POST));
+
+        // 게[시글 삭제
         postDAO.deleteById(postId);
+
+        return PostResponseDTO.builder()
+                .resultCode(ResultCodeEnum.SUCCESS.getValue())
+                .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
     }
 }

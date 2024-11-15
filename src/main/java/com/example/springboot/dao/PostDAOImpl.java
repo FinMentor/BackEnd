@@ -68,9 +68,9 @@ public class PostDAOImpl implements PostDAO {
     }
 
     /**
-     * 조회수 업데이트
+     * 조회수 수정
      * <p>
-     * 조회수를 업데이트하는 메소드이다.
+     * 조회수를 수정하는 메소드이다.
      *
      * @param postId
      */
@@ -86,9 +86,9 @@ public class PostDAOImpl implements PostDAO {
     }
 
     /**
-     * 게시물 업데이트
+     * 게시물 수정
      * <p>
-     * 게시물을 업데이트 하는 메소드이다
+     * 게시물을 수정하는 메소드이다
      *
      * @param postEntity
      * @return
@@ -137,10 +137,7 @@ public class PostDAOImpl implements PostDAO {
     @Override
     public void deleteById(Long postId) {
         if (postId == null) {
-            throw new ErrorRequiredValueValidationException(
-                    new StringBuilder("postId는 "),
-                    ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE
-            );
+            throw new ErrorRequiredValueValidationException(new StringBuilder("postId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
         postRepository.deleteById(postId);
     }

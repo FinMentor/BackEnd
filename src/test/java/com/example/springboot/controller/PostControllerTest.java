@@ -74,7 +74,7 @@ class PostControllerTest {
         String uri = "/api/v1/posts/save";
 
         PostRequestDTO postRequestDTO = PostRequestDTO.builder()
-                .memberId("testUser1")
+                .id("testUser1")
                 .mainCategoryId(1L)
                 .title("주식 수익 인증")
                 .content("이번 달 주식 수익 인증합니다..")
@@ -118,6 +118,7 @@ class PostControllerTest {
         resultActions.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.responseEntity.body[0].postId").value(1L));
     }
+
     @Test
     public void updatePost() throws Exception {
         // Given
@@ -125,7 +126,7 @@ class PostControllerTest {
 
         PostRequestDTO postRequestDTO = PostRequestDTO.builder()
                 .postId(1L)
-                .memberId("testUser1")
+                .id("testUser1")
                 .mainCategoryId(1L)
                 .title("Updated Title")
                 .content("Updated Content")
@@ -133,7 +134,7 @@ class PostControllerTest {
 
         PostResponseDTO updatedResponseDTO = PostResponseDTO.builder()
                 .postId(1L)
-                .memberId("testUser1")
+                .memberId(1L)
                 .mainCategoryId(1L)
                 .title("Updated Title")
                 .content("Updated Content")
@@ -155,6 +156,7 @@ class PostControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.responseEntity.body.title").value("Updated Title"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.responseEntity.body.content").value("Updated Content"));
     }
+
     @Test
     public void deletePost() throws Exception {
         // Given

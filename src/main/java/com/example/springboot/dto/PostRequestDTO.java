@@ -8,6 +8,7 @@ import lombok.*;
 @Builder
 @ToString
 public class PostRequestDTO {
+    private Long postId;
     private String id;
     private Long mainCategoryId;
     private String title;
