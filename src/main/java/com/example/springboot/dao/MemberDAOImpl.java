@@ -174,4 +174,15 @@ public class MemberDAOImpl implements MemberDAO {
 
         return memberRepository.selectListMentorRankByStar(memberType, mainCategoryId);
     }
+
+    @Override
+    public List<Object[]> selectListMentorRankByStar(String memberType) {
+        if (memberType == null || memberType.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("selectListMentorRankByStar memberType : {}", memberType);
+
+        return memberRepository.selectListMentorRankByStar(memberType);
+    }
 }

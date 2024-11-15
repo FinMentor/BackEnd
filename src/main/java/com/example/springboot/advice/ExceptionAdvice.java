@@ -121,7 +121,7 @@ public class ExceptionAdvice {
     public ResponseResult<ErrorResponse> postNotFoundException(PostNotFoundException e) {
         log.error("ExceptionAdvice postNotFoundException : {}", e.getMessage());
 
-        return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_POST.getHttpStatus(),ResultCodeEnum.NONEXISTENT_POST.getValue(), ResultCodeEnum.NONEXISTENT_POST.getMessage());
+        return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_POST.getHttpStatus(), ResultCodeEnum.NONEXISTENT_POST.getValue(), ResultCodeEnum.NONEXISTENT_POST.getMessage());
     }
 
     // 카테고리 찾기 실패
@@ -129,6 +129,14 @@ public class ExceptionAdvice {
     public ResponseResult<ErrorResponse> failGetMainCategoryException(FailGetMainCategoryException e) {
         log.error("ExceptionAdvice failGetMainCategoryException : {}", e.getMessage());
 
-        return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_CATEGORY.getHttpStatus(),ResultCodeEnum.NONEXISTENT_CATEGORY.getValue(), ResultCodeEnum.NONEXISTENT_CATEGORY.getMessage());
+        return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_CATEGORY.getHttpStatus(), ResultCodeEnum.NONEXISTENT_CATEGORY.getValue(), ResultCodeEnum.NONEXISTENT_CATEGORY.getMessage());
+    }
+
+    // 랭킹조회 실패
+    @ExceptionHandler(FailGetRankingException.class)
+    public ResponseResult<ErrorResponse> failGetRankingException(FailGetRankingException e) {
+        log.error("ExceptionAdvice FailGetRankingException : {}", e.getMessage());
+
+        return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_RANKING.getHttpStatus(), ResultCodeEnum.NONEXISTENT_RANKING.getValue(), ResultCodeEnum.NONEXISTENT_RANKING.getMessage());
     }
 }
