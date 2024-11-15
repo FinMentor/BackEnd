@@ -49,4 +49,15 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
             "GROUP BY 1 " +
             "ORDER BY SUM(cg1.STAR) DESC", nativeQuery = true)
     List<Long> selectListMentorRankByStar(String memberType, Long mainCategoryId);
+
+    @Query(value = "SELECT m.MEMBER_ID, m.NAME, m.NICKNAME, m.PROFILE_IMAGE_URL, mac.MAIN_CATEGORY_ID, mac.MAIN_CATEGORY_NAME, CAST(TRUNCATE(SUM(cg.STAR) / COUNT(m.MEMBER_ID), 1) AS DOUBLE) " +
+            "FROM MEMBER m " +
+            "JOIN CHATROOM_GROUP cg ON m.MEMBER_ID = cg.MEMBER_ID " +
+            "JOIN MEMBER_CATEGORY mec ON m.MEMBER_ID = mec.MEMBER_ID " +
+            "JOIN MAIN_CATEGORY mac ON mec.MAIN_CATEGORY_ID = mac.MAIN_CATEGORY_ID " +
+            "WHERE m.MEMBER_TYPE = :memberType " +
+            "GROUP BY 1 " +
+            "ORDER BY 7 DESC " +
+            "LIMIT 3", nativeQuery = true)
+    List<Object[]> selectListMentorRankByStar(String memberType);
 }
