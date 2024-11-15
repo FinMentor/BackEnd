@@ -59,10 +59,10 @@ public class PostEntity extends CommonColumn {
     @Comment("조회수")
     @Column(name = "VIEW_COUNT", nullable = false)
     @ColumnDefault("0")
-    private Integer viewCount;
+    private Long viewCount;
 
     @Comment("좋아요수")
     @Column(name = "LIKE_COUNT", nullable = false)
     @ColumnDefault("0")
-    private Integer likeCount;
+    private Long likeCount;
 }

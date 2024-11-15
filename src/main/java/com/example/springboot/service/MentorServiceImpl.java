@@ -1,7 +1,6 @@
 package com.example.springboot.service;
 
 import com.example.springboot.dao.MemberDAO;
-import com.example.springboot.dao.querydsl.MemberQueryDSLDAO;
 import com.example.springboot.dto.MentorDTO;
 import com.example.springboot.dto.MentorRecommendDTO;
 import com.example.springboot.util.CommonCodeEnum;
@@ -25,8 +24,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.apache.hadoop.yarn.webapp.hamlet.HamletSpec.InputType.file;
 
@@ -36,7 +35,6 @@ import static org.apache.hadoop.yarn.webapp.hamlet.HamletSpec.InputType.file;
 @Transactional
 @Slf4j
 public class MentorServiceImpl implements MentorService {
-    private final MemberQueryDSLDAO memberQueryDSLDAO;
     private final MemberDAO memberDAO;
 
     /**
@@ -53,9 +51,9 @@ public class MentorServiceImpl implements MentorService {
     public MentorRecommendDTO recommendMentor(Long mainCategoryId) throws IOException, TasteException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(String.valueOf(file), true))) {
             // 멤버리스트 조회 및 고수파일 생성
-            memberQueryDSLDAO.selectListMemberByMainCategoryId(CommonCodeEnum.MENTEE.getValue(), mainCategoryId).forEach(mentorMemberDTO -> {
+            memberDAO.selectListMemberByMainCategoryId(CommonCodeEnum.MENTEE.getValue(), mainCategoryId).forEach(menteeMentor -> {
                 try {
-                    bw.write(mentorMemberDTO.getMenteeId() + "," + mentorMemberDTO.getMentorId() + "," + mentorMemberDTO.getStar());
+                    bw.write(menteeMentor[1] + "," + menteeMentor[2] + "," + menteeMentor[3]);
                     bw.newLine();
                 } catch (IOException e) {
                     throw new RuntimeException(e);  // 예외가 발생하면 런타임 예외로 처리
@@ -71,10 +69,11 @@ public class MentorServiceImpl implements MentorService {
         UserBasedRecommender userBasedRecommender = new GenericUserBasedRecommender(dataModel, userNeighborhood, userSimilarity);
         List<RecommendedItem> recommendedItemList = userBasedRecommender.recommend(mainCategoryId, 3);
 
-        List<Long> itemId = new ArrayList<>();
-        recommendedItemList.forEach(recommendedItem -> {
-            itemId.add(recommendedItem.getItemID());
-        });
+        List<Long> itemId = recommendedItemList.isEmpty()
+                ? memberDAO.selectListMentorRankByStar(CommonCodeEnum.MENTOR.getValue(), mainCategoryId)
+                : recommendedItemList.stream()
+                .map(RecommendedItem::getItemID)
+                .collect(Collectors.toList());
 
         return MentorRecommendDTO.builder()
                 .mentorDTOList(memberDAO.findById(itemId).stream().map(memberEntity ->

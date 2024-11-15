@@ -1,5 +1,6 @@
 package com.example.springboot.dao;
 
+import com.example.springboot.dto.MentorOfThreeDTO;
 import com.example.springboot.entity.domain.MemberEntity;
 
 import java.util.List;
@@ -15,4 +16,10 @@ public interface MemberDAO {
     int resetPasswordFailureCount(String id);
 
     int save(String id, String password);
+
+    List<Object[]> selectListMemberByMainCategoryId(String memberType, Long mainCategoryId);
+
+    List<Long> selectListMentorRankByStar(String memberType, Long mainCategoryId);
+
+    List<Object[]> selectListMentorRankByStar(String memberType);
 }

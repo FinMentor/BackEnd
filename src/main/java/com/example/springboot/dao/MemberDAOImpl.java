@@ -126,4 +126,71 @@ public class MemberDAOImpl implements MemberDAO {
 
         return memberRepository.save(id, password);
     }
+
+    /**
+     * 멤버리스트 조회
+     * <p>
+     * 메인카테고리아이디로 멤버리스트를 조회하는 메소드이다.
+     *
+     * @param memberType
+     * @param mainCategoryId
+     * @return
+     */
+    @Override
+    public List<Object[]> selectListMemberByMainCategoryId(String memberType, Long mainCategoryId) {
+        if (memberType == null || memberType.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (mainCategoryId == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("mainCategoryId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("selectListMemberByMemberType memberType : {}, mainCategoryId : {}", memberType, mainCategoryId);
+
+        return memberRepository.selectListMemberByMainCategoryId(memberType, mainCategoryId);
+    }
+
+    /**
+     * 멘토랭킹리스트 조회
+     * <p>
+     * 별점으로 멘토랭킹리스트를 조회하는 메소드이다.
+     *
+     * @param memberType
+     * @param mainCategoryId
+     * @return
+     */
+    @Override
+    public List<Long> selectListMentorRankByStar(String memberType, Long mainCategoryId) {
+        if (memberType == null || memberType.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (mainCategoryId == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("mainCategoryId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("selectListMentorRankByStar memberType : {}, mainCategoryId : {}", memberType, mainCategoryId);
+
+        return memberRepository.selectListMentorRankByStar(memberType, mainCategoryId);
+    }
+
+    /**
+     * 멘토랭킹리스트 조회
+     * <p>
+     * 별점기준 멘토3순위 랭킹리스트를 조회하는 메소드이다.
+     *
+     * @param memberType
+     * @return
+     */
+    @Override
+    public List<Object[]> selectListMentorRankByStar(String memberType) {
+        if (memberType == null || memberType.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("selectListMentorRankByStar memberType : {}", memberType);
+
+        return memberRepository.selectListMentorRankByStar(memberType);
+    }
 }

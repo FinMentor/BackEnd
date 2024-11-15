@@ -25,4 +25,39 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
 
     @Query("SELECT m FROM MemberEntity m WHERE m.memberId IN :memberIdList")
     List<MemberEntity> findById(List<Long> memberIdList);
+
+    @Query(value = "SELECT mc.MAIN_CATEGORY_ID, cg1.MEMBER_ID, cg2.MEMBER_ID, cg1.STAR " +
+            "FROM MEMBER m " +
+            "JOIN CHATROOM_GROUP cg1 ON m.MEMBER_ID = cg1.MEMBER_ID " +
+            "JOIN CHATROOM_GROUP cg2 ON cg1.CHATROOM_ID = cg2.CHATROOM_ID " +
+            "JOIN MEMBER_CATEGORY mc ON m.MEMBER_ID = mc.MEMBER_ID " +
+            "WHERE cg1.MEMBER_ID <> cg2.MEMBER_ID " +
+            "AND cg1.STAR IS NOT NULL " +
+            "AND m.MEMBER_TYPE = :memberType " +
+            "AND mc.MAIN_CATEGORY_ID = :mainCategoryId", nativeQuery = true)
+    List<Object[]> selectListMemberByMainCategoryId(String memberType, Long mainCategoryId);
+
+    @Query(value = "SELECT cg1.MEMBER_ID " +
+            "FROM MEMBER m " +
+            "JOIN CHATROOM_GROUP cg1 ON m.MEMBER_ID = cg1.MEMBER_ID " +
+            "JOIN CHATROOM_GROUP cg2 ON cg1.CHATROOM_ID = cg2.CHATROOM_ID " +
+            "JOIN MEMBER_CATEGORY mc ON m.MEMBER_ID = mc.MEMBER_ID " +
+            "WHERE cg1.MEMBER_ID <> cg2.MEMBER_ID " +
+            "AND cg1.STAR IS NOT NULL " +
+            "AND m.MEMBER_TYPE = :memberType " +
+            "AND mc.MAIN_CATEGORY_ID = :mainCategoryId " +
+            "GROUP BY 1 " +
+            "ORDER BY SUM(cg1.STAR) DESC", nativeQuery = true)
+    List<Long> selectListMentorRankByStar(String memberType, Long mainCategoryId);
+
+    @Query(value = "SELECT m.MEMBER_ID, m.NAME, m.NICKNAME, m.PROFILE_IMAGE_URL, mac.MAIN_CATEGORY_ID, mac.MAIN_CATEGORY_NAME, CAST(TRUNCATE(SUM(cg.STAR) / COUNT(m.MEMBER_ID), 1) AS DOUBLE) " +
+            "FROM MEMBER m " +
+            "JOIN CHATROOM_GROUP cg ON m.MEMBER_ID = cg.MEMBER_ID " +
+            "JOIN MEMBER_CATEGORY mec ON m.MEMBER_ID = mec.MEMBER_ID " +
+            "JOIN MAIN_CATEGORY mac ON mec.MAIN_CATEGORY_ID = mac.MAIN_CATEGORY_ID " +
+            "WHERE m.MEMBER_TYPE = :memberType " +
+            "GROUP BY 1 " +
+            "ORDER BY 7 DESC " +
+            "LIMIT 3", nativeQuery = true)
+    List<Object[]> selectListMentorRankByStar(String memberType);
 }

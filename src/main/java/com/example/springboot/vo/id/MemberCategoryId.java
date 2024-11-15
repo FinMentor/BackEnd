@@ -10,6 +10,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberCategoryId implements Serializable {
-    private String memberId;
+    private Long memberId;
     private Long mainCategoryId;
 }
