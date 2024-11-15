@@ -21,6 +21,13 @@ import java.util.List;
 public class RankingServiceImpl implements RankingService {
     private final MemberDAO memberDAO;
 
+    /**
+     * 전체랭킹 조회
+     * <p>
+     * 멘토전체랭킹을 조회하는 메소드이다.
+     *
+     * @return
+     */
     @Override
     public RankingAllDTO rankingAll() {
         // 전체멘토랭킹3순위 조회

@@ -16,6 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class RankingController {
     private final RankingService rankingService;
 
+    /**
+     * 전체랭킹 조회
+     * <p>
+     * 멘토전채랭킹을 조회하는 메소드이다.
+     *
+     * @return
+     */
     @GetMapping
     public ResponseResult<RankingAllDTO> rankingAll() {
         return ResponseResult.success(rankingService.rankingAll());

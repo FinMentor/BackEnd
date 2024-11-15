@@ -175,6 +175,14 @@ public class MemberDAOImpl implements MemberDAO {
         return memberRepository.selectListMentorRankByStar(memberType, mainCategoryId);
     }
 
+    /**
+     * 멘토랭킹리스트 조회
+     * <p>
+     * 별점기준 멘토3순위 랭킹리스트를 조회하는 메소드이다.
+     *
+     * @param memberType
+     * @return
+     */
     @Override
     public List<Object[]> selectListMentorRankByStar(String memberType) {
         if (memberType == null || memberType.isEmpty()) {
