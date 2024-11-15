@@ -7,10 +7,9 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class PostRequestDTO {
-    private Long postId;
+public class CommentRequestDTO {
+    private Long commentId;
     private String id;
-    private Long mainCategoryId;
-    private String title;
+    private Long postId;
     private String content;
 }

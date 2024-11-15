@@ -24,6 +24,9 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 class PostControllerTest {
@@ -71,7 +74,7 @@ class PostControllerTest {
         String uri = "/api/v1/posts/save";
 
         PostRequestDTO postRequestDTO = PostRequestDTO.builder()
-                .memberId("testUser1")
+                .id("testUser1")
                 .mainCategoryId(1L)
                 .title("주식 수익 인증")
                 .content("이번 달 주식 수익 인증합니다..")
@@ -116,4 +119,56 @@ class PostControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.responseEntity.body[0].postId").value(1L));
     }
 
+    @Test
+    public void updatePost() throws Exception {
+        // Given
+        String uri = "/api/v1/posts/update";
+
+        PostRequestDTO postRequestDTO = PostRequestDTO.builder()
+                .postId(1L)
+                .id("testUser1")
+                .mainCategoryId(1L)
+                .title("Updated Title")
+                .content("Updated Content")
+                .build();
+
+        PostResponseDTO updatedResponseDTO = PostResponseDTO.builder()
+                .postId(1L)
+                .memberId(1L)
+                .mainCategoryId(1L)
+                .title("Updated Title")
+                .content("Updated Content")
+                .viewCount(0L)
+                .likeCount(0L)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        Mockito.when(postService.update(any(PostRequestDTO.class))).thenReturn(updatedResponseDTO);
+
+        String content = objectMapper.writeValueAsString(postRequestDTO);
+
+        // When & Then
+        mockMvc.perform(MockMvcRequestBuilders.put(uri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.responseEntity.body.title").value("Updated Title"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.responseEntity.body.content").value("Updated Content"));
+    }
+
+    @Test
+    public void deletePost() throws Exception {
+        // Given
+        String uri = "/api/v1/posts/delete";
+        Long postId = 1L;
+
+        doNothing().when(postService).delete(postId);
+
+        // When & Then
+        mockMvc.perform(MockMvcRequestBuilders.delete(uri)
+                        .param("postId", String.valueOf(postId))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }

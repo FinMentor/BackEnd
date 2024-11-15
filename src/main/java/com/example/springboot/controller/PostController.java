@@ -58,4 +58,49 @@ public class PostController {
     public ResponseResult<List<PostResponseDTO>> findAll() {
         return ResponseResult.success(postService.findAll());
     }
+
+    /**
+     * 수정할 게시글 조회
+     * <p>
+     * 게시아이디로 수정할 게시글을 조회하는 메소드이다.
+     *
+     * @param postId 수정할 게시글의 ID
+     * @return 수정할 게시글 데이터와 함께 성공 응답 반환
+     */
+    @GetMapping("/update")
+    public ResponseResult<PostResponseDTO> getPostForUpdate(@RequestParam Long postId) {
+        log.info("getPostForUpdate postId : {}", postId);
+
+        return ResponseResult.success(postService.findById(postId));
+    }
+
+    /**
+     * 게시글 수정
+     * <p>
+     * 클라이언트에서 전달받은 게시글 데이터를 업데이트하는 메소드이다.
+     *
+     * @param postRequestDTO 클라이언트에서 전달받은 업데이트할 게시글 데이터
+     * @return 업데이트된 게시글 데이터와 함께 성공 응답 반환
+     */
+    @PutMapping("/update")
+    public ResponseResult<PostResponseDTO> update(@RequestBody PostRequestDTO postRequestDTO) {
+        log.info("update postRequestDTO : {}", postRequestDTO);
+
+        return ResponseResult.success(postService.update(postRequestDTO));
+    }
+
+    /**
+     * 게시글 삭제
+     * <p>
+     * 게시아이디로 게시글을 삭제하는 메소드이다.
+     *
+     * @param postId 삭제할 게시글의 ID
+     * @return 삭제 성공 응답 반환
+     */
+    @DeleteMapping("/delete")
+    public ResponseResult<PostResponseDTO> delete(@RequestParam Long postId) {
+        log.info("delete postId : {}", postId);
+
+        return ResponseResult.success(postService.delete(postId));
+    }
 }
