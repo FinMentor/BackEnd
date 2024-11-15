@@ -1,13 +1,16 @@
 package com.example.springboot.service;
 
+import com.example.springboot.dao.MainCategoryDAO;
+import com.example.springboot.dao.MemberDAO;
 import com.example.springboot.dao.PostDAO;
 import com.example.springboot.dto.PostRequestDTO;
 import com.example.springboot.dto.PostResponseDTO;
+import com.example.springboot.entity.domain.MainCategoryEntity;
 import com.example.springboot.entity.domain.MemberEntity;
 import com.example.springboot.entity.domain.PostEntity;
+import com.example.springboot.exception.FailGetMainCategoryException;
 import com.example.springboot.exception.FailGetMemberException;
 import com.example.springboot.exception.PostNotFoundException;
-import com.example.springboot.repository.MemberRepository;
 import com.example.springboot.util.ExceptionCodeEnum;
 import com.example.springboot.util.ResultCodeEnum;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +27,9 @@ import java.util.stream.Collectors;
 @Transactional
 @Slf4j
 public class PostServiceImpl implements PostService {
-
     private final PostDAO postDAO;
-    private final MemberRepository memberRepository;
+    private final MemberDAO memberDAO;
+    private final MainCategoryDAO mainCategoryDAO;
 
     /**
      * 게시글 저장
@@ -38,29 +41,33 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public PostResponseDTO save(PostRequestDTO postRequestDTO) {
-        MemberEntity memberEntity = memberRepository.findById(postRequestDTO.getMemberId())
+        log.info("save postRequestDTO : {}", postRequestDTO);
+
+        // 멤버 조회
+        MemberEntity memberEntity = memberDAO.findById(postRequestDTO.getId())
                 .orElseThrow(() -> new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER));
 
-        // PostEntity 빌드 시 MemberEntity 설정
-        PostEntity postEntity = PostEntity.builder()
-                .memberEntity(memberEntity) // MemberEntity 설정
-                .mainCategoryId(postRequestDTO.getMainCategoryId())
-                .title(postRequestDTO.getTitle())
-                .content(postRequestDTO.getContent())
-                .build();
+        // 메인카테고리 조회
+        MainCategoryEntity mainCategoryEntity = mainCategoryDAO.findById(postRequestDTO.getMainCategoryId())
+                .orElseThrow(() -> new FailGetMainCategoryException(ExceptionCodeEnum.NONEXISTENT_CATEGORY));
 
-        PostEntity savedPost = postDAO.save(postEntity);
+        // 게시물 저장
+        PostEntity postEntity = postDAO.save(PostEntity.builder()
+                .memberEntity(memberEntity)
+                .mainCategoryEntity(mainCategoryEntity)
+                .title(postRequestDTO.getTitle())
+                .content(postRequestDTO.getContent()).build());
 
         return PostResponseDTO.builder()
-                .postId(savedPost.getPostId())
-                .memberId(savedPost.getMemberId())
-                .mainCategoryId(savedPost.getMainCategoryId())
-                .title(savedPost.getTitle())
-                .content(savedPost.getContent())
-                .viewCount(savedPost.getViewCount().longValue())
-                .likeCount(savedPost.getLikeCount().longValue())
-                .createdAt(savedPost.getCreatedAt())
-                .updatedAt(LocalDateTime.now())
+                .postId(postEntity.getPostId())
+                .memberId(postEntity.getMemberEntity().getMemberId())
+                .mainCategoryId(postEntity.getMainCategoryEntity().getMainCategoryId())
+                .title(postEntity.getTitle())
+                .content(postEntity.getContent())
+                .viewCount(0L)
+                .likeCount(0L)
+                .createdAt(postEntity.getCreatedAt())
+                .updatedAt(postEntity.getUpdatedAt())
                 .resultCode(ResultCodeEnum.SUCCESS.getValue())
                 .resultMessage(ResultCodeEnum.SUCCESS.getMessage())
                 .build();
@@ -76,6 +83,8 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public PostResponseDTO findById(Long postId) {
+        log.info("findById postId : {}", postId);
+
         postDAO.updateViewCount(postId);
 
         return postDAO.findById(postId).map(

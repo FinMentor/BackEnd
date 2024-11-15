@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/v1/master")
+@RequestMapping("/api/v1/mentor")
 @RequiredArgsConstructor
 @Slf4j
 public class MentorController {

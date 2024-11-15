@@ -29,16 +29,20 @@ public class PostDAOImpl implements PostDAO {
      */
     @Override
     public PostEntity save(PostEntity postEntity) {
+        if (postEntity.getMemberEntity() == null || postEntity.getMemberEntity().getMemberId() == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberEntity는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (postEntity.getMainCategoryEntity() == null || postEntity.getMainCategoryEntity().getMainCategoryId() == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("mainCategoryEntity는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
         if (postEntity.getTitle() == null || postEntity.getTitle().isEmpty()) {
             throw new ErrorRequiredValueValidationException(new StringBuilder("title은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         if (postEntity.getContent() == null || postEntity.getContent().isEmpty()) {
             throw new ErrorRequiredValueValidationException(new StringBuilder("content는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
-        }
-
-        if (postEntity.getMemberId() == null) {
-            throw new ErrorRequiredValueValidationException(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         log.info("save postEntity: {}", postEntity);

@@ -123,4 +123,12 @@ public class ExceptionAdvice {
 
         return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_POST.getHttpStatus(),ResultCodeEnum.NONEXISTENT_POST.getValue(), ResultCodeEnum.NONEXISTENT_POST.getMessage());
     }
+
+    // 카테고리 찾기 실패
+    @ExceptionHandler(FailGetMainCategoryException.class)
+    public ResponseResult<ErrorResponse> failGetMainCategoryException(FailGetMainCategoryException e) {
+        log.error("ExceptionAdvice failGetMainCategoryException : {}", e.getMessage());
+
+        return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_CATEGORY.getHttpStatus(),ResultCodeEnum.NONEXISTENT_CATEGORY.getValue(), ResultCodeEnum.NONEXISTENT_CATEGORY.getMessage());
+    }
 }
