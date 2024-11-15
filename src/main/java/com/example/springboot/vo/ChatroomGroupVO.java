@@ -39,5 +39,5 @@ public class ChatroomGroupVO extends CommonColumn {
 
     @Comment("별점")
     @Column(name = "STAR", nullable = true)
-    private Integer star;
+    private Double star;
 }
