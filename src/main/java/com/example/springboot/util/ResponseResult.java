@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 @Getter
 @AllArgsConstructor
 public class ResponseResult<T> {
-    private ResponseEntity responseEntity;
+    private ResponseEntity<T> responseEntity;
 
     // 작업을 성공할 경우
     public static <T> ResponseResult<T> success(T result) {
@@ -16,7 +16,7 @@ public class ResponseResult<T> {
     }
 
     // 작업을 실패할 경우
-    public static <T> ResponseResult<T> fail(HttpStatus httpStatus, String resultCode, String resultMessage) {
+    public static ResponseResult<ErrorResponse> fail(HttpStatus httpStatus, String resultCode, String resultMessage) {
         return new ResponseResult<>(ResponseEntity.status(httpStatus).body(new ErrorResponse(resultCode, resultMessage)));
     }
 }
