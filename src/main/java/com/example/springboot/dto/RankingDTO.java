@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RankingAllDTO {
+public class RankingDTO {
     private List<MentorOfThreeDTO> mentorOfThreeDTOList;
     private String resultCode;
     private String resultMessage;

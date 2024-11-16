@@ -1,6 +1,5 @@
 package com.example.springboot.dao;
 
-import com.example.springboot.dto.MentorOfThreeDTO;
 import com.example.springboot.entity.domain.MemberEntity;
 
 import java.util.List;
@@ -21,5 +20,13 @@ public interface MemberDAO {
 
     List<Long> selectListMentorRankByStar(String memberType, Long mainCategoryId);
 
-    List<Object[]> selectListMentorRankByStar(String memberType);
+    List<Object[]> selectListMentorRankByWeekly(String memberType);
+
+    List<Object[]> selectListMentorRankByMonthly(String memberType);
+
+    List<Object[]> selectListMentorRank(String memberType);
+
+    List<Object[]> selectListMentorCategoryRankByWeekly(String memberType, Long mainCategoryId);
+
+    List<Object[]> selectListMentorCategoryRankByMonthly(String memberType, Long mainCategoryId);
 }
