@@ -1,7 +1,9 @@
 package com.example.springboot.service;
 
-import com.example.springboot.dto.RankingAllDTO;
+import com.example.springboot.dto.RankingDTO;
 
 public interface RankingService {
-    RankingAllDTO rankingAll();
+    RankingDTO rankingAll(String term);
+
+    RankingDTO rankingCategory(Long mainCategoryId, String term);
 }

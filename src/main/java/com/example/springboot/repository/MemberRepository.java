@@ -56,8 +56,58 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
             "JOIN MEMBER_CATEGORY mec ON m.MEMBER_ID = mec.MEMBER_ID " +
             "JOIN MAIN_CATEGORY mac ON mec.MAIN_CATEGORY_ID = mac.MAIN_CATEGORY_ID " +
             "WHERE m.MEMBER_TYPE = :memberType " +
+            "AND cg.CREATED_AT BETWEEN TIMESTAMP(DATE_SUB(NOW(), INTERVAL WEEKDAY(NOW()) DAY)) AND TIMESTAMP(DATE_ADD(DATE_SUB(NOW(), INTERVAL WEEKDAY(NOW()) DAY), INTERVAL 6 DAY)) " +
             "GROUP BY 1 " +
             "ORDER BY 7 DESC " +
             "LIMIT 3", nativeQuery = true)
-    List<Object[]> selectListMentorRankByStar(String memberType);
+    List<Object[]> selectListMentorRankByWeekly(String memberType);
+
+    @Query(value = "SELECT m.MEMBER_ID, m.NAME, m.NICKNAME, m.PROFILE_IMAGE_URL, mac.MAIN_CATEGORY_ID, mac.MAIN_CATEGORY_NAME, CAST(TRUNCATE(SUM(cg.STAR) / COUNT(m.MEMBER_ID), 1) AS DOUBLE) " +
+            "FROM MEMBER m " +
+            "JOIN CHATROOM_GROUP cg ON m.MEMBER_ID = cg.MEMBER_ID " +
+            "JOIN MEMBER_CATEGORY mec ON m.MEMBER_ID = mec.MEMBER_ID " +
+            "JOIN MAIN_CATEGORY mac ON mec.MAIN_CATEGORY_ID = mac.MAIN_CATEGORY_ID " +
+            "WHERE m.MEMBER_TYPE = :memberType " +
+            "AND cg.CREATED_AT BETWEEN TIMESTAMP(DATE_FORMAT(NOW(), '%Y-%m-01')) AND TIMESTAMP(LAST_DAY(NOW())) " +
+            "GROUP BY 1 " +
+            "ORDER BY 7 DESC " +
+            "LIMIT 3", nativeQuery = true)
+    List<Object[]> selectListMentorRankByMonthly(String memberType);
+
+    @Query(value = "SELECT m.MEMBER_ID, m.NAME, m.NICKNAME, m.PROFILE_IMAGE_URL, mac.MAIN_CATEGORY_ID, mac.MAIN_CATEGORY_NAME, CAST(TRUNCATE(SUM(cg.STAR) / COUNT(m.MEMBER_ID), 1) AS DOUBLE) " +
+            "FROM MEMBER m " +
+            "JOIN CHATROOM_GROUP cg ON m.MEMBER_ID = cg.MEMBER_ID " +
+            "JOIN MEMBER_CATEGORY mec ON m.MEMBER_ID = mec.MEMBER_ID " +
+            "JOIN MAIN_CATEGORY mac ON mec.MAIN_CATEGORY_ID = mac.MAIN_CATEGORY_ID " +
+            "WHERE m.MEMBER_TYPE = :memberType " +
+            "GROUP BY 1 " +
+            "ORDER BY 7 DESC " +
+            "LIMIT 3", nativeQuery = true)
+    List<Object[]> selectListMentorRank(String memberType);
+
+    @Query(value = "SELECT m.MEMBER_ID, m.NAME, m.NICKNAME, m.PROFILE_IMAGE_URL, mac.MAIN_CATEGORY_ID, mac.MAIN_CATEGORY_NAME, CAST(TRUNCATE(SUM(cg.STAR) / COUNT(m.MEMBER_ID), 1) AS DOUBLE) " +
+            "FROM MEMBER m " +
+            "JOIN CHATROOM_GROUP cg ON m.MEMBER_ID = cg.MEMBER_ID " +
+            "JOIN MEMBER_CATEGORY mec ON m.MEMBER_ID = mec.MEMBER_ID " +
+            "JOIN MAIN_CATEGORY mac ON mec.MAIN_CATEGORY_ID = mac.MAIN_CATEGORY_ID " +
+            "WHERE m.MEMBER_TYPE = :memberType " +
+            "AND cg.CREATED_AT BETWEEN TIMESTAMP(DATE_SUB(NOW(), INTERVAL WEEKDAY(NOW()) DAY)) AND TIMESTAMP(DATE_ADD(DATE_SUB(NOW(), INTERVAL WEEKDAY(NOW()) DAY), INTERVAL 6 DAY)) " +
+            "AND mac.MAIN_CATEGORY_ID = :mainCategoryId " +
+            "GROUP BY 1 " +
+            "ORDER BY 7 DESC " +
+            "LIMIT 3", nativeQuery = true)
+    List<Object[]> selectListMentorCategoryRankByWeekly(String memberType, Long mainCategoryId);
+
+    @Query(value = "SELECT m.MEMBER_ID, m.NAME, m.NICKNAME, m.PROFILE_IMAGE_URL, mac.MAIN_CATEGORY_ID, mac.MAIN_CATEGORY_NAME, CAST(TRUNCATE(SUM(cg.STAR) / COUNT(m.MEMBER_ID), 1) AS DOUBLE) " +
+            "FROM MEMBER m " +
+            "JOIN CHATROOM_GROUP cg ON m.MEMBER_ID = cg.MEMBER_ID " +
+            "JOIN MEMBER_CATEGORY mec ON m.MEMBER_ID = mec.MEMBER_ID " +
+            "JOIN MAIN_CATEGORY mac ON mec.MAIN_CATEGORY_ID = mac.MAIN_CATEGORY_ID " +
+            "WHERE m.MEMBER_TYPE = :memberType " +
+            "AND cg.CREATED_AT BETWEEN TIMESTAMP(DATE_FORMAT(NOW(), '%Y-%m-01')) AND TIMESTAMP(LAST_DAY(NOW())) " +
+            "AND mac.MAIN_CATEGORY_ID = :mainCategoryId " +
+            "GROUP BY 1 " +
+            "ORDER BY 7 DESC " +
+            "LIMIT 3", nativeQuery = true)
+    List<Object[]> selectListMentorCategoryRankByMonthly(String memberType, Long mainCategoryId);
 }

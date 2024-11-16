@@ -10,7 +10,9 @@ public enum CommonCodeEnum {
     NO("N", null),
     MENTOR("mentor", null),
     MENTEE("mentee", null),
-    FIVE("", 5L);
+    FIVE("", 5L),
+    WEEKLY("weekly", null),
+    MONTHLY("monthly", null);
 
     private String value;
     private Long num;
