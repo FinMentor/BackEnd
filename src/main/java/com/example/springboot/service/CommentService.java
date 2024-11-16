@@ -6,7 +6,7 @@ import com.example.springboot.dto.CommentResponseDTO;
 import java.util.List;
 
 public interface CommentService {
-    CommentResponseDTO save(CommentRequestDTO commentRequestDTO);
+    List<CommentResponseDTO> save(CommentRequestDTO commentRequestDTO);
 
     List<CommentResponseDTO> findAll(Long postId);
 

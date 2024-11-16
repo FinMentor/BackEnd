@@ -33,8 +33,8 @@ public class CommentDAOImpl implements CommentDAO {
             throw new ErrorRequiredValueValidationException(new StringBuilder("memberEntity는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
-        if (commentEntity.getPostId() == null) {
-            throw new ErrorRequiredValueValidationException(new StringBuilder("postId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        if (commentEntity.getPostEntity() == null || commentEntity.getPostEntity().getPostId() == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("postEntity는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         if (commentEntity.getContent() == null || commentEntity.getContent().isEmpty()) {

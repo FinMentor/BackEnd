@@ -141,33 +141,35 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public PostResponseDTO update(PostRequestDTO postRequestDTO) {
-        // 게시글 조회 및 예외 처리
+        log.info("update postRequestDTO : {}", postRequestDTO);
+
+        // 게시글 조회
         PostEntity existingPost = postDAO.findById(postRequestDTO.getPostId())
                 .orElseThrow(() -> new PostNotFoundException(ExceptionCodeEnum.NONEXISTENT_POST));
 
-        // MemberEntity 조회 및 예외 처리
+        // 멤버 조회
         MemberEntity memberEntity = memberDAO.findById(postRequestDTO.getId())
                 .orElseThrow(() -> new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER));
 
-        // 기존 게시글의 필드 업데이트
-        existingPost = PostEntity.builder()
+        // 메인카테고리 조회
+        MainCategoryEntity mainCategoryEntity = mainCategoryDAO.findById(postRequestDTO.getMainCategoryId())
+                .orElseThrow(() -> new FailGetMainCategoryException(ExceptionCodeEnum.NONEXISTENT_CATEGORY));
+
+        // 게시글 수정
+        PostEntity updatedPost = postDAO.save(PostEntity.builder()
                 .postId(existingPost.getPostId())
-                .memberEntity(memberEntity) // MemberEntity 설정
-                .mainCategoryId(postRequestDTO.getMainCategoryId())
+                .memberEntity(memberEntity)
+                .mainCategoryEntity(mainCategoryEntity)
                 .title(postRequestDTO.getTitle())
                 .content(postRequestDTO.getContent())
                 .viewCount(existingPost.getViewCount()) // 기존 조회수 유지
-                .likeCount(existingPost.getLikeCount()) // 기존 좋아요 수 유지
-                .build();
+                .likeCount(existingPost.getLikeCount()) // 기존 좋아요수 유지
+                .build());
 
-        // 업데이트된 게시글 저장
-        PostEntity updatedPost = postDAO.save(existingPost);
-
-        // 결과 반환
         return PostResponseDTO.builder()
                 .postId(updatedPost.getPostId())
-                .memberId(updatedPost.getMemberId())
-                .mainCategoryId(updatedPost.getMainCategoryId())
+                .memberId(updatedPost.getMemberEntity().getMemberId())
+                .mainCategoryId(updatedPost.getMainCategoryEntity().getMainCategoryId())
                 .title(updatedPost.getTitle())
                 .content(updatedPost.getContent())
                 .viewCount(updatedPost.getViewCount())

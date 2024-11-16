@@ -28,10 +28,8 @@ public class CommentController {
     @PostMapping("/save")
     public ResponseResult<List<CommentResponseDTO>> save(@RequestBody CommentRequestDTO commentRequestDTO) {
         log.info("save commentRequestDTO : {}", commentRequestDTO);
-        // 댓글 저장
-        commentService.save(commentRequestDTO);
 
-        return ResponseResult.success(commentService.findAll(commentRequestDTO.getPostId()));
+        return ResponseResult.success(commentService.save(commentRequestDTO));
     }
 
     /**
