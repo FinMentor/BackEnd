@@ -30,9 +30,10 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
      * @return
      */
     @Override
-    public String accessTokenGenerate(String subject, Date expiredAt) {
+    public String accessTokenGenerate(String subject, String memberType, Date expiredAt) {
         return Jwts.builder()
                 .setSubject(subject)
+                .claim("memberType", memberType)
                 .setIssuedAt(new Date())
                 .setExpiration(expiredAt)
                 .signWith(key)
@@ -49,9 +50,10 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
      * @return
      */
     @Override
-    public String refreshTokenGenerate(String subject, Date expiredAt) {
+    public String refreshTokenGenerate(String subject, String memberType, Date expiredAt) {
         return Jwts.builder()
                 .setSubject(subject)
+                .claim("memberType", memberType)
                 .setIssuedAt(new Date())
                 .setExpiration(expiredAt)
                 .signWith(key)

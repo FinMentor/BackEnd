@@ -24,13 +24,13 @@ public class AuthTokensGeneratorImpl implements AuthTokensGenerator {
      * @return
      */
     @Override
-    public AuthTokensDTO generate(String id) {
+    public AuthTokensDTO generate(String id, String memberType) {
         long now = (new Date()).getTime();
         Date accessTokenExpiredAt = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         Date refreshTokenExpiredAt = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
 
-        String accessToken = jwtTokenProvider.accessTokenGenerate(id, accessTokenExpiredAt);
-        String refreshToken = jwtTokenProvider.refreshTokenGenerate(id, refreshTokenExpiredAt);
+        String accessToken = jwtTokenProvider.accessTokenGenerate(id, memberType, accessTokenExpiredAt);
+        String refreshToken = jwtTokenProvider.refreshTokenGenerate(id, memberType, refreshTokenExpiredAt);
 
         return AuthTokensDTO.builder()
                 .accessToken(accessToken)
