@@ -29,17 +29,7 @@ public class PostDAOImpl implements PostDAO {
      */
     @Override
     public PostEntity save(PostEntity postEntity) {
-        if (postEntity.getTitle() == null || postEntity.getTitle().isEmpty()) {
-            throw new ErrorRequiredValueValidationException(new StringBuilder("title은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
-        }
-
-        if (postEntity.getContent() == null || postEntity.getContent().isEmpty()) {
-            throw new ErrorRequiredValueValidationException(new StringBuilder("content는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
-        }
-
-        if (postEntity.getMemberId() == null) {
-            throw new ErrorRequiredValueValidationException(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
-        }
+        validateRequiredFields(postEntity);
 
         log.info("save postEntity: {}", postEntity);
 
@@ -78,9 +68,9 @@ public class PostDAOImpl implements PostDAO {
     }
 
     /**
-     * 조회수 업데이트
+     * 조회수 수정
      * <p>
-     * 조회수를 업데이트하는 메소드이다.
+     * 조회수를 수정하는 메소드이다.
      *
      * @param postId
      */
@@ -93,5 +83,62 @@ public class PostDAOImpl implements PostDAO {
         log.info("updateViewCount postId : {}", postId);
 
         postRepository.updateViewCount(postId);
+    }
+
+    /**
+     * 게시물 수정
+     * <p>
+     * 게시물을 수정하는 메소드이다
+     *
+     * @param postEntity
+     * @return
+     */
+    @Override
+    public PostEntity update(PostEntity postEntity) {
+        validateRequiredFields(postEntity);
+
+        log.info("update postEntity: {}", postEntity);
+
+        return postRepository.save(postEntity);
+    }
+
+    /**
+     * 필수값 검증
+     * <p>
+     * 필수값을 검증하는 메소드이다.
+     *
+     * @param postEntity
+     */
+    private void validateRequiredFields(PostEntity postEntity) {
+        if (postEntity.getMemberEntity() == null || postEntity.getMemberEntity().getMemberId() == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberEntity는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (postEntity.getMainCategoryEntity() == null || postEntity.getMainCategoryEntity().getMainCategoryId() == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("mainCategoryEntity는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (postEntity.getTitle() == null || postEntity.getTitle().isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("title은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (postEntity.getContent() == null || postEntity.getContent().isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("content는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+    }
+
+    /**
+     * 게시글 삭제
+     * <p>
+     * 게시아이디로 게시글을 삭제하는 메소드이다.
+     *
+     * @param postId
+     */
+    @Override
+    public void deleteById(Long postId) {
+        if (postId == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("postId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+        postRepository.deleteById(postId);
     }
 }

@@ -174,4 +174,109 @@ public class MemberDAOImpl implements MemberDAO {
 
         return memberRepository.selectListMentorRankByStar(memberType, mainCategoryId);
     }
+
+    /**
+     * 멘토랭킹리스트 조회 By 주간
+     * <p>
+     * 주간 별점기준 멘토3순위 랭킹리스트를 조회하는 메소드이다.
+     *
+     * @param memberType
+     * @return
+     */
+    @Override
+    public List<Object[]> selectListMentorRankByWeekly(String memberType) {
+        if (memberType == null || memberType.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("selectListMentorRankByWeekly memberType : {}", memberType);
+
+        return memberRepository.selectListMentorRankByWeekly(memberType);
+    }
+
+    /**
+     * 멘토랭킹리스트 조회 By 월간
+     * <p>
+     * 월간 별점기준 멘토3순위 랭킹리스트를 조회하는 메소드이다.
+     *
+     * @param memberType
+     * @return
+     */
+    @Override
+    public List<Object[]> selectListMentorRankByMonthly(String memberType) {
+        if (memberType == null || memberType.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("selectListMentorRankByMonthly memberType : {}", memberType);
+
+        return memberRepository.selectListMentorRankByMonthly(memberType);
+    }
+
+    /**
+     * 멘토랭킹리스트 조회
+     * <p>
+     * 별점기준 멘토3순위 랭킹리스트를 조회하는 메소드이다.
+     *
+     * @param memberType
+     * @return
+     */
+    @Override
+    public List<Object[]> selectListMentorRank(String memberType) {
+        if (memberType == null || memberType.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("selectListMentorRank memberType : {}", memberType);
+
+        return memberRepository.selectListMentorRank(memberType);
+    }
+
+    /**
+     * 카테고리 멘토랭킹리스트 조회 By 주간
+     * <p>
+     * 주간 카테고리 별점기준 멘토3순위 랭킹리스트를 조회하는 메소드이다.
+     *
+     * @param memberType
+     * @param mainCategoryId
+     * @return
+     */
+    @Override
+    public List<Object[]> selectListMentorCategoryRankByWeekly(String memberType, Long mainCategoryId) {
+        if (memberType == null || memberType.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (mainCategoryId == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("mainCategoryId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("selectListMentorCategoryRankByWeekly memberType : {}, mainCategoryId : {}", memberType, mainCategoryId);
+
+        return memberRepository.selectListMentorCategoryRankByWeekly(memberType, mainCategoryId);
+    }
+
+    /**
+     * 카테고리 멘토랭킹리스트 조회 By 월간
+     * <p>
+     * 월간 카테고리 별점기준 멘토3순위 랭킹리스트를 조회하는 메소드이다.
+     *
+     * @param memberType
+     * @param mainCategoryId
+     * @return
+     */
+    @Override
+    public List<Object[]> selectListMentorCategoryRankByMonthly(String memberType, Long mainCategoryId) {
+        if (memberType == null || memberType.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (mainCategoryId == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("mainCategoryId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("selectListMentorCategoryRankByMonthly memberType : {}, mainCategoryId : {}", memberType, mainCategoryId);
+
+        return memberRepository.selectListMentorCategoryRankByMonthly(memberType, mainCategoryId);
+    }
 }

@@ -13,4 +13,8 @@ public interface PostDAO {
     List<PostEntity> findAll();
 
     void updateViewCount(Long postId);
+
+    PostEntity update(PostEntity postEntity);
+
+    void deleteById(Long postId);
 }
