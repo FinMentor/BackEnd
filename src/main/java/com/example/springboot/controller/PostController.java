@@ -60,21 +60,6 @@ public class PostController {
     }
 
     /**
-     * 수정할 게시글 조회
-     * <p>
-     * 게시아이디로 수정할 게시글을 조회하는 메소드이다.
-     *
-     * @param postId 수정할 게시글의 ID
-     * @return 수정할 게시글 데이터와 함께 성공 응답 반환
-     */
-    @GetMapping("/update")
-    public ResponseResult<PostResponseDTO> getPostForUpdate(@RequestParam Long postId) {
-        log.info("getPostForUpdate postId : {}", postId);
-
-        return ResponseResult.success(postService.findById(postId));
-    }
-
-    /**
      * 게시글 수정
      * <p>
      * 클라이언트에서 전달받은 게시글 데이터를 업데이트하는 메소드이다.
