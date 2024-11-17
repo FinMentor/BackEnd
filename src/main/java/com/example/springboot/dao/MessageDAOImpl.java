@@ -20,7 +20,13 @@ public class MessageDAOImpl implements MessageDAO {
     private final MessageRepository messageRepository;
 
     @Override
-    public void saveMessage(MessageEntity messageEntity) {
+    public void saveMessage(MessageDTO messageDTO) {
+        MessageEntity messageEntity = MessageEntity.builder()
+                .memberId(1L)
+                .chatroomId(messageDTO.getChatroomId())
+                .content(messageDTO.getContent())
+                .messageType(messageDTO.getMessageType())
+                .build();
         messageRepository.save(messageEntity);
     }
 

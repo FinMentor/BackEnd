@@ -1,6 +1,7 @@
 package com.example.springboot.dao;
 
 import com.example.springboot.dto.ChatRoomDTO;
+import com.example.springboot.entity.domain.ChatroomEntity;
 import com.example.springboot.repository.ChatroomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,5 +29,14 @@ public class ChatroomDAOImpl implements ChatroomDAO {
                         .updatedAt(entity.getUpdatedAt())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void createChatroom(Long memberId, ChatRoomDTO chatroomDTO) {
+        ChatroomEntity chatroomEntity =  ChatroomEntity.builder()
+                .chatroomId(chatroomDTO.getChatRoomId())
+                .subject(chatroomDTO.getSubject())
+                .build();
+        chatroomRepository.save(chatroomEntity);
     }
 }

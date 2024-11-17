@@ -8,6 +8,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface MessageDAO {
-    void saveMessage(MessageEntity messageEntity);
+    void saveMessage(MessageDTO messageDTO);
     List<MessageDTO> findByChatroomIdAndMemberId(Long chatroomId, Long memberId, Pageable pageable);
 }

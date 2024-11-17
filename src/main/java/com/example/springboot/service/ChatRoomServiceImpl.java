@@ -14,7 +14,12 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final ChatroomDAO chatroomDAO;
 
     @Override
-    public List<ChatRoomDTO> findChatRooms(Long memberId) {
+    public List<ChatRoomDTO> findAllChatRooms(Long memberId) {
         return chatroomDAO.getChatroomsByMemberId(memberId);
+    }
+
+    @Override
+    public void createChatRoom(Long memberId, ChatRoomDTO chatRoomDTO) {
+        chatroomDAO.createChatroom(memberId, chatRoomDTO);
     }
 }

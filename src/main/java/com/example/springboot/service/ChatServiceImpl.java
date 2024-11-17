@@ -22,14 +22,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void saveMessage(MessageDTO messageDTO) {
-        MessageEntity messageEntity = MessageEntity.builder()
-                .memberId(1L)
-                .chatroomId(messageDTO.getChatroomId())
-                .content(messageDTO.getContent())
-                .messageType(messageDTO.getMessageType())
-                .build();
-
-        messageDAO.saveMessage(messageEntity);
+        messageDAO.saveMessage(messageDTO);
     }
 
     @Override

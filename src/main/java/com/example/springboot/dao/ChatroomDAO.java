@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ChatroomDAO {
     List<ChatRoomDTO> getChatroomsByMemberId(Long memberId);
-
+    void createChatroom(Long memberId, ChatRoomDTO chatroomDTO);
 }

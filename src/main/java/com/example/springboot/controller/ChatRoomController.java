@@ -1,26 +1,31 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.dao.ChatroomDAO;
+import com.example.springboot.dto.ChatRoomDTO;
 import com.example.springboot.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/chatroom")
 @RequiredArgsConstructor
 public class ChatRoomController {
-    private final ChatroomDAO chatroomDAO;
-
+    private final ChatRoomService chatRoomService;
     /**
-     *
+     * 모든 채팅방 조회
      * @return
      */
     @GetMapping
-    public ResponseEntity findChatRooms() {
+    public ResponseEntity findAllChatRooms() {
         Long memberId = 1L;
-        return ResponseEntity.ok(chatroomDAO.getChatroomsByMemberId(memberId));
+        return ResponseEntity.ok(chatRoomService.findAllChatRooms(memberId));
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity createChatRoom(@RequestBody ChatRoomDTO chatRoomDTO) {
+        Long memberId = 1L;
+        chatRoomService.createChatRoom(memberId, chatRoomDTO);
+        return ResponseEntity.ok().build();
     }
 }

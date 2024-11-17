@@ -28,17 +28,17 @@ public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
 
     // 채팅방의 이전 메시지 조회
-    @GetMapping("/api/v1/chat/rooms/{chatroomId}/messages")
-    public ResponseEntity<List<MessageDTO>> getChatHistory(
-            @PathVariable Long chatroomId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "50") int size,
-            @RequestParam Long memberId) {
-        Pageable pageable = PageRequest.of(page, size);
-        List<MessageDTO> chatHistory = chatService.getChatHistory(chatroomId, memberId, pageable);
-        log.info(chatHistory.toString());
-        return ResponseEntity.ok(chatHistory);
-    }
+//    @GetMapping("/api/v1/chat/rooms/{chatroomId}/messages")
+//    public ResponseEntity<List<MessageDTO>> getChatHistory(
+//            @PathVariable Long chatroomId,
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "50") int size,
+//            @RequestParam Long memberId) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        List<MessageDTO> chatHistory = chatService.getChatHistory(chatroomId, memberId, pageable);
+//        log.info(chatHistory.toString());
+//        return ResponseEntity.ok(chatHistory);
+//    }
 
     // 채팅방 입장 시 필요한 초기 데이터 조회 (메시지 히스토리 + 채팅방 정보)
     @GetMapping("/api/v1/chat/rooms/{chatroomId}/enter")
@@ -62,6 +62,7 @@ public class ChatController {
     // 기존 WebSocket 메시지 처리
     @MessageMapping("/{chatRoomId}/chat.sendMessage")
     public void sendMessage(@Payload MessageDTO messageDTO, @DestinationVariable String chatRoomId) {
+        chatService.saveMessage(messageDTO);
         messagingTemplate.convertAndSend("/topic/chat/" + chatRoomId, messageDTO);
     }
 }
