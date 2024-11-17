@@ -2,16 +2,12 @@ package com.example.springboot.service;
 
 import com.example.springboot.dto.AuthTokensDTO;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
-@Transactional
-@Slf4j
 public class AuthTokensGeneratorImpl implements AuthTokensGenerator {
     private static final String BEARER_TYPE = "Bearer";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60;    // 1시간
