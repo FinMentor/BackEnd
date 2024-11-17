@@ -3,7 +3,10 @@ package com.example.springboot.service;
 import com.example.springboot.dao.MemberDAO;
 import com.example.springboot.dto.MentorDTO;
 import com.example.springboot.dto.MentorRecommendDTO;
+import com.example.springboot.entity.domain.MemberEntity;
+import com.example.springboot.exception.FailGetMemberException;
 import com.example.springboot.util.CommonCodeEnum;
+import com.example.springboot.util.ExceptionCodeEnum;
 import com.example.springboot.util.ResultCodeEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +30,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.apache.hadoop.yarn.webapp.hamlet.HamletSpec.InputType.file;
-
 
 @Service
 @RequiredArgsConstructor
@@ -42,32 +43,38 @@ public class MentorServiceImpl implements MentorService {
      * <p>
      * 아이템 기반 필터링으로 고수를 추천하는 메소드이다.
      *
+     * @param id
      * @param mainCategoryId
      * @return
      * @throws IOException
      * @throws TasteException
      */
     @Override
-    public MentorRecommendDTO recommendMentor(Long mainCategoryId) throws IOException, TasteException {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(String.valueOf(file), true))) {
+    public MentorRecommendDTO recommendMentor(String id, Long mainCategoryId) throws IOException, TasteException {
+        log.info("recommendMentor id : {}, mainCategoryId : {}", id, mainCategoryId);
+
+        // 멘티멤버 조회
+        MemberEntity mentee = memberDAO.findById(id).orElseThrow(() -> new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER));
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(String.valueOf(mainCategoryId), true))) {
             // 멤버리스트 조회 및 고수파일 생성
             memberDAO.selectListMemberByMainCategoryId(CommonCodeEnum.MENTEE.getValue(), mainCategoryId).forEach(menteeMentor -> {
                 try {
                     bw.write(menteeMentor[1] + "," + menteeMentor[2] + "," + menteeMentor[3]);
                     bw.newLine();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);  // 예외가 발생하면 런타임 예외로 처리
+                    throw new RuntimeException(e);
                 }
             });
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        DataModel dataModel = new FileDataModel(new File(String.valueOf(file)));
+        DataModel dataModel = new FileDataModel(new File(String.valueOf(mainCategoryId)));
         UserSimilarity userSimilarity = new PearsonCorrelationSimilarity(dataModel);
         UserNeighborhood userNeighborhood = new ThresholdUserNeighborhood(0.1, userSimilarity, dataModel);
         UserBasedRecommender userBasedRecommender = new GenericUserBasedRecommender(dataModel, userNeighborhood, userSimilarity);
-        List<RecommendedItem> recommendedItemList = userBasedRecommender.recommend(mainCategoryId, 3);
+        List<RecommendedItem> recommendedItemList = userBasedRecommender.recommend(mentee.getMemberId(), 3);
 
         List<Long> itemId = recommendedItemList.isEmpty()
                 ? memberDAO.selectListMentorRankByStar(CommonCodeEnum.MENTOR.getValue(), mainCategoryId)
@@ -76,12 +83,12 @@ public class MentorServiceImpl implements MentorService {
                 .collect(Collectors.toList());
 
         return MentorRecommendDTO.builder()
-                .mentorDTOList(memberDAO.findById(itemId).stream().map(memberEntity ->
+                .mentorDTOList(memberDAO.findById(itemId).stream().map(mentor ->
                         MentorDTO.builder()
-                                .id(memberEntity.getId())
-                                .name(memberEntity.getName())
-                                .nickname(memberEntity.getNickname())
-                                .profileImageUrl(memberEntity.getProfileImageUrl()).build()
+                                .id(mentor.getId())
+                                .name(mentor.getName())
+                                .nickname(mentor.getNickname())
+                                .profileImageUrl(mentor.getProfileImageUrl()).build()
                 ).toList())
                 .resultCode(ResultCodeEnum.SUCCESS.getValue())
                 .resultMessage(ResultCodeEnum.SUCCESS.getMessage())
