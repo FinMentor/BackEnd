@@ -59,7 +59,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
             "AND cg.CREATED_AT BETWEEN TIMESTAMP(DATE_SUB(NOW(), INTERVAL WEEKDAY(NOW()) DAY)) AND TIMESTAMP(DATE_ADD(DATE_SUB(NOW(), INTERVAL WEEKDAY(NOW()) DAY), INTERVAL 6 DAY)) " +
             "GROUP BY 1 " +
             "ORDER BY 7 DESC " +
-            "LIMIT 3", nativeQuery = true)
+            "LIMIT 10", nativeQuery = true)
     List<Object[]> selectListMentorRankByWeekly(String memberType);
 
     @Query(value = "SELECT m.MEMBER_ID, m.NAME, m.NICKNAME, m.PROFILE_IMAGE_URL, mac.MAIN_CATEGORY_ID, mac.MAIN_CATEGORY_NAME, CAST(TRUNCATE(SUM(cg.STAR) / COUNT(m.MEMBER_ID), 1) AS DOUBLE) " +
@@ -71,7 +71,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
             "AND cg.CREATED_AT BETWEEN TIMESTAMP(DATE_FORMAT(NOW(), '%Y-%m-01')) AND TIMESTAMP(LAST_DAY(NOW())) " +
             "GROUP BY 1 " +
             "ORDER BY 7 DESC " +
-            "LIMIT 3", nativeQuery = true)
+            "LIMIT 10", nativeQuery = true)
     List<Object[]> selectListMentorRankByMonthly(String memberType);
 
     @Query(value = "SELECT m.MEMBER_ID, m.NAME, m.NICKNAME, m.PROFILE_IMAGE_URL, mac.MAIN_CATEGORY_ID, mac.MAIN_CATEGORY_NAME, CAST(TRUNCATE(SUM(cg.STAR) / COUNT(m.MEMBER_ID), 1) AS DOUBLE) " +
@@ -95,7 +95,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
             "AND mac.MAIN_CATEGORY_ID = :mainCategoryId " +
             "GROUP BY 1 " +
             "ORDER BY 7 DESC " +
-            "LIMIT 3", nativeQuery = true)
+            "LIMIT 10", nativeQuery = true)
     List<Object[]> selectListMentorCategoryRankByWeekly(String memberType, Long mainCategoryId);
 
     @Query(value = "SELECT m.MEMBER_ID, m.NAME, m.NICKNAME, m.PROFILE_IMAGE_URL, mac.MAIN_CATEGORY_ID, mac.MAIN_CATEGORY_NAME, CAST(TRUNCATE(SUM(cg.STAR) / COUNT(m.MEMBER_ID), 1) AS DOUBLE) " +
@@ -108,6 +108,6 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
             "AND mac.MAIN_CATEGORY_ID = :mainCategoryId " +
             "GROUP BY 1 " +
             "ORDER BY 7 DESC " +
-            "LIMIT 3", nativeQuery = true)
+            "LIMIT 10", nativeQuery = true)
     List<Object[]> selectListMentorCategoryRankByMonthly(String memberType, Long mainCategoryId);
 }
