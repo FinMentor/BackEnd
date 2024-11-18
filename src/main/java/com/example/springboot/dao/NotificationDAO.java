@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface NotificationDAO {
     List<NotificationEntity> findAllByMemberId(Long memberId);
+
+    NotificationEntity save(NotificationEntity notificationEntity);
 }
