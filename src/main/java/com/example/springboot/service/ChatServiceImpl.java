@@ -1,14 +1,9 @@
 package com.example.springboot.service;
 
 import com.example.springboot.dao.MessageDAO;
-import com.example.springboot.dao.ChatroomDAO;
 import com.example.springboot.dto.MessageDTO;
-import com.example.springboot.dto.ChatRoomDTO;
-import com.example.springboot.entity.domain.MessageEntity;
-import com.example.springboot.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 

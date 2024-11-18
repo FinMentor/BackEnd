@@ -25,7 +25,7 @@ public class ChatroomGroupVO extends CommonColumn {
     private Long memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_ID")
+    @JoinColumn(name = "MEMBER_ID", insertable = false, updatable = false)
     private MemberEntity memberEntity;
 
     @Id
@@ -34,7 +34,7 @@ public class ChatroomGroupVO extends CommonColumn {
     private Long chatroomId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CHATROOM_ID")
+    @JoinColumn(name = "CHATROOM_ID", insertable = false, updatable = false)
     private ChatroomEntity chatroomEntity;
 
     @Comment("별점")

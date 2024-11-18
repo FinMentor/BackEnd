@@ -1,15 +1,13 @@
 package com.example.springboot.dao;
 
-import com.example.springboot.dto.ChatRoomDTO;
 import com.example.springboot.entity.domain.ChatroomEntity;
+import com.example.springboot.exception.ErrorRequiredValueValidationException;
 import com.example.springboot.repository.ChatroomRepository;
+import com.example.springboot.util.ExceptionCodeEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -18,25 +16,22 @@ import java.util.stream.Collectors;
 public class ChatroomDAOImpl implements ChatroomDAO {
     private final ChatroomRepository chatroomRepository;
 
+    /**
+     * 채팅방 생성
+     * <p>
+     * 채팅방을 생성하는 메소드이다.
+     *
+     * @param chatroomEntity
+     * @return
+     */
     @Override
-    public List<ChatRoomDTO> getChatroomsByMemberId(Long memberId) {
-        return chatroomRepository.findByChatroomGroupVOList_MemberId(memberId)
-                .stream()
-                .map(entity -> ChatRoomDTO.builder()
-                        .chatRoomId(entity.getChatroomId())
-                        .subject(entity.getSubject())
-                        .createdAt(entity.getCreatedAt())
-                        .updatedAt(entity.getUpdatedAt())
-                        .build())
-                .collect(Collectors.toList());
-    }
+    public ChatroomEntity createChatroom(ChatroomEntity chatroomEntity) {
+        if (chatroomEntity == null || chatroomEntity.getSubject() == null || chatroomEntity.getSubject().isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("subject는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
 
-    @Override
-    public void createChatroom(Long memberId, ChatRoomDTO chatroomDTO) {
-        ChatroomEntity chatroomEntity =  ChatroomEntity.builder()
-                .chatroomId(chatroomDTO.getChatRoomId())
-                .subject(chatroomDTO.getSubject())
-                .build();
-        chatroomRepository.save(chatroomEntity);
+        log.info("createChatroom chatroomEntity : {}", chatroomEntity);
+
+        return chatroomRepository.save(chatroomEntity);
     }
 }

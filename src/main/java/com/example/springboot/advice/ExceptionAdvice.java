@@ -147,4 +147,12 @@ public class ExceptionAdvice {
 
         return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_NOTIFICATION.getHttpStatus(), ResultCodeEnum.NONEXISTENT_NOTIFICATION.getValue(), ResultCodeEnum.NONEXISTENT_NOTIFICATION.getMessage());
     }
+
+    // 채팅방 없음
+    @ExceptionHandler(FailGetChatroomException.class)
+    public ResponseResult<ErrorResponse> failGetChatroomException(FailGetChatroomException e) {
+        log.error("ExceptionAdvice failGetChatroomException : {}", e.getMessage());
+
+        return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_CHATROOM.getHttpStatus(), ResultCodeEnum.NONEXISTENT_CHATROOM.getValue(), ResultCodeEnum.NONEXISTENT_CHATROOM.getMessage());
+    }
 }

@@ -24,7 +24,8 @@ public enum ExceptionCodeEnum {
     NONEXISTENT_COMMENT(HttpStatus.NOT_FOUND, "댓글이 존재하지 않습니다."),
     NONEXISTENT_CATEGORY(HttpStatus.NOT_FOUND, "카테고리가 존재하지 않습니다."),
     NONEXISTENT_RANKING(HttpStatus.NOT_FOUND, "랭킹이 존재하지 않습니다."),
-    NONEXISTENT_NOTIFICATION(HttpStatus.NOT_FOUND, "알림내역이 존재하지 않습니다.");
+    NONEXISTENT_NOTIFICATION(HttpStatus.NOT_FOUND, "알림내역이 존재하지 않습니다."),
+    NONEXISTENT_CHATROOM(HttpStatus.NOT_FOUND, "채팅방이 존재하지 않습니다.");
 
     private HttpStatus httpStatus;
     private String message;

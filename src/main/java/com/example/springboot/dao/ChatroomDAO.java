@@ -1,10 +1,7 @@
 package com.example.springboot.dao;
 
-import com.example.springboot.dto.ChatRoomDTO;
-
-import java.util.List;
+import com.example.springboot.entity.domain.ChatroomEntity;
 
 public interface ChatroomDAO {
-    List<ChatRoomDTO> getChatroomsByMemberId(Long memberId);
-    void createChatroom(Long memberId, ChatRoomDTO chatroomDTO);
+    ChatroomEntity createChatroom(ChatroomEntity chatroomEntity);
 }

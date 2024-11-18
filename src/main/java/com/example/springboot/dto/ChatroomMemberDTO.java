@@ -5,14 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ChatroomDTO {
-    private List<ChatroomMemberDTO> chatroomMemberDTOList;
-    private String resultCode;
-    private String resultMessage;
+public class ChatroomMemberDTO {
+    private Long chatroomId;
+    private String subject;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
