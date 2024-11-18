@@ -15,17 +15,29 @@ import java.util.List;
 public class ChatServiceImpl implements ChatService {
     private final MessageDAO messageDAO;
 
+    /**
+     * 메시지 저장
+     * <p>
+     * 전송한 메시지를 저장하는 메소드이다.
+     * @param messageDTO
+     */
     @Override
     public void saveMessage(MessageDTO messageDTO) {
         messageDAO.saveMessage(messageDTO);
     }
 
+    /**
+     * 채팅내역 조회
+     * <p>
+     * 채팅방의 채팅 기록을 조회하는 메소드이다.
+     * @param chatroomId
+     * @param id
+     * @param pageable
+     * @return
+     */
     @Override
-    public List<MessageDTO> getChatHistory(Long chatroomId, Long memberId, Pageable pageable) {
-        // 페이징 처리된 메시지 목록 조회
-        log.info("메시지 목록 조회 Service 시작");
-        log.info("memberId: {}", memberId);
-        return messageDAO.findByChatroomIdAndMemberId(chatroomId, memberId, pageable);
+    public List<MessageDTO> getChatHistory(Long chatroomId, String id, Pageable pageable) {
+        return messageDAO.findByChatroomIdAndMemberId(chatroomId, id, pageable);
     }
 
 }

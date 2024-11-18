@@ -93,4 +93,19 @@ public class ChatroomServiceImpl implements ChatroomService {
                 .resultCode(ResultCodeEnum.SUCCESS.getValue())
                 .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
     }
+
+    /**
+     * 채팅방 삭제
+     * <p>
+     * 채팅방, 채팅내역을 삭제하는 메소드이다.
+     * @param id
+     * @param chatroomId
+     */
+    @Override
+    public ChatroomResponseDTO exitChatroom(String id, Long chatroomId) {
+        chatroomDAO.exitChatroom(id, chatroomId);
+        return ChatroomResponseDTO.builder()
+                .resultCode(ResultCodeEnum.SUCCESS.getValue())
+                .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
+    }
 }

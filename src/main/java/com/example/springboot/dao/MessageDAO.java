@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface MessageDAO {
     void saveMessage(MessageDTO messageDTO);
-    List<MessageDTO> findByChatroomIdAndMemberId(Long chatroomId, Long memberId, Pageable pageable);
+    List<MessageDTO> findByChatroomIdAndMemberId(Long chatroomId, String id, Pageable pageable);
 }

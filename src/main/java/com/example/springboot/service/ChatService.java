@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ChatService {
     void saveMessage(MessageDTO messageDTO);
-    List<MessageDTO> getChatHistory(Long chatroomId, Long memberId, Pageable pageable);
+    List<MessageDTO> getChatHistory(Long chatroomId, String id, Pageable pageable);
 }

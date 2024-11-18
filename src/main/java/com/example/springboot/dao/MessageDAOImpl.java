@@ -19,20 +19,35 @@ import java.util.stream.Collectors;
 public class MessageDAOImpl implements MessageDAO {
     private final MessageRepository messageRepository;
 
+    /**
+     * 메시지 저장
+     * <p>
+     * 전송한 메시지를 저장 메소드이다.
+     * @param messageDTO
+     */
     @Override
     public void saveMessage(MessageDTO messageDTO) {
         MessageEntity messageEntity = MessageEntity.builder()
-                .memberId(1L)
+                .memberId(messageDTO.getMemberId())
                 .chatroomId(messageDTO.getChatroomId())
                 .content(messageDTO.getContent())
                 .messageType(messageDTO.getMessageType())
                 .build();
+        log.info("save message : {}", messageEntity);
         messageRepository.save(messageEntity);
     }
 
+    /**
+     * 채팅 내역 조회
+     * <p>
+     * 채팅방 접속시 채팅 내역을 조회하는 메소드이다.
+     * @param chatroomId
+     * @param id
+     * @param pageable
+     * @return
+     */
     @Override
-    public List<MessageDTO> findByChatroomIdAndMemberId(Long chatroomId, Long memberId, Pageable pageable) {
-        log.info("메시지 DAO시작");
+    public List<MessageDTO> findByChatroomIdAndMemberId(Long chatroomId, String id, Pageable pageable) {
         List<MessageDTO> messageDTOList = messageRepository.findByChatroomId(chatroomId, pageable)
                 .getContent()
                 .stream()
