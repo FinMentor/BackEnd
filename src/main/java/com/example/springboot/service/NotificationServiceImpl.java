@@ -52,6 +52,10 @@ public class NotificationServiceImpl implements NotificationService {
                 })
                 .orElseThrow(() -> new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER));
 
+        if (notificationMemberDTOList.isEmpty()) {
+            throw new FailGetNotificationException(ExceptionCodeEnum.NONEXISTENT_NOTIFICATION);
+        }
+
         return NotificationDTO.builder()
                 .notificationMemberDTOList(notificationMemberDTOList)
                 .resultCode(ResultCodeEnum.SUCCESS.getValue())
