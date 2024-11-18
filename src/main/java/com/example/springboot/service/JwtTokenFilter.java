@@ -2,6 +2,7 @@ package com.example.springboot.service;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,20 +23,28 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String header = request.getHeader("Authorization");
+        String token = getJwtFromCookies(request.getCookies());
 
-        if (header != null && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
-            if (authTokensGenerator.validateTokens(token)) {
-                String username = authTokensGenerator.getMemberId(token);
+        if (token != null && authTokensGenerator.validateTokens(token)) {
+            String username = authTokensGenerator.getMemberId(token);
 
-                User user = new User(username, "", new ArrayList<>());
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            User user = new User(username, "", new ArrayList<>());
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         chain.doFilter(request, response);
+    }
+
+    String getJwtFromCookies(Cookie[] cookies) {
+        if (cookies == null)
+            return null;
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("jwt")) {
+                return cookie.getValue();
+            }
+        }
+        return null;
     }
 }
