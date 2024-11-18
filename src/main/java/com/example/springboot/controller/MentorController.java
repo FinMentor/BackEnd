@@ -6,6 +6,8 @@ import com.example.springboot.util.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.mahout.cf.taste.common.TasteException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,15 +27,16 @@ public class MentorController {
      * <p>
      * 분야를 기반으로 고수를 추천해주는 메소드이다.
      *
+     * @param userDetails
      * @param mainCategoryId
      * @return
      * @throws IOException
      * @throws TasteException
      */
     @GetMapping("/recommend")
-    public ResponseResult<MentorRecommendDTO> recommendMentor(@RequestParam Long mainCategoryId) throws IOException, TasteException {
-        log.info("recommendMaster mainCategoryId : {}", mainCategoryId);
+    public ResponseResult<MentorRecommendDTO> recommendMentor(@AuthenticationPrincipal UserDetails userDetails, @RequestParam Long mainCategoryId) throws IOException, TasteException {
+        log.info("recommendMaster userDetails : {}, mainCategoryId : {}", userDetails, mainCategoryId);
 
-        return ResponseResult.success(masterService.recommendMentor(mainCategoryId));
+        return ResponseResult.success(masterService.recommendMentor(userDetails.getUsername(), mainCategoryId));
     }
 }

@@ -183,34 +183,31 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public MemberLoginResponseDTO login(MemberLoginRequestDTO memberLoginRequestDTO) {
-        memberDAO.findById(memberLoginRequestDTO.getId()).ifPresentOrElse(
-                memberEntity -> {
-                    if (!passwordEncoder.matches(memberLoginRequestDTO.getPassword(), memberEntity.getPassword())) {
-                        throw new ErrorIdAndPasswordException(ExceptionCodeEnum.MISMATCH_ID_OR_PASSWORD);
-                    }
+        return memberDAO.findById(memberLoginRequestDTO.getId()).map(
+                        memberEntity -> {
+                            if (!passwordEncoder.matches(memberLoginRequestDTO.getPassword(), memberEntity.getPassword())) {
+                                throw new ErrorIdAndPasswordException(ExceptionCodeEnum.MISMATCH_ID_OR_PASSWORD);
+                            }
 
-                    if (CommonCodeEnum.NO.getValue().equals(String.valueOf(memberEntity.getMemberStatus()))) {
-                        throw new WithdrawalOfMemberException(ExceptionCodeEnum.WITHDRAWAL_MEMBER);
-                    }
+                            if (CommonCodeEnum.NO.getValue().equals(String.valueOf(memberEntity.getMemberStatus()))) {
+                                throw new WithdrawalOfMemberException(ExceptionCodeEnum.WITHDRAWAL_MEMBER);
+                            }
 
-                    if (memberEntity.getPasswordFailureCount() >= CommonCodeEnum.FIVE.getNum()) {
-                        throw new ErrorFiveTimesOverPasswordException(ExceptionCodeEnum.ERROR_FIVE_TIMES_OVER_PASSWORD);
-                    }
+                            if (memberEntity.getPasswordFailureCount() >= CommonCodeEnum.FIVE.getNum()) {
+                                throw new ErrorFiveTimesOverPasswordException(ExceptionCodeEnum.ERROR_FIVE_TIMES_OVER_PASSWORD);
+                            }
 
-                    memberDAO.resetPasswordFailureCount(memberEntity.getId());
-                },
-                () -> {
-                    throw new ErrorIdAndPasswordException(ExceptionCodeEnum.MISMATCH_ID_OR_PASSWORD);
-                }
-        );
+                            memberDAO.resetPasswordFailureCount(memberEntity.getId());
 
-        AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberLoginRequestDTO.getId());
+                            AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberEntity.getId(), memberEntity.getMemberType());
 
-        return MemberLoginResponseDTO.builder()
-                .accessToken(authTokensDTO.getAccessToken())
-                .refreshToken(authTokensDTO.getRefreshToken())
-                .resultCode(ResultCodeEnum.SUCCESS.getValue())
-                .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
+                            return MemberLoginResponseDTO.builder()
+                                    .accessToken(authTokensDTO.getAccessToken())
+                                    .refreshToken(authTokensDTO.getRefreshToken())
+                                    .resultCode(ResultCodeEnum.SUCCESS.getValue())
+                                    .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
+                        })
+                .orElseThrow(() -> new ErrorIdAndPasswordException(ExceptionCodeEnum.MISMATCH_ID_OR_PASSWORD));
     }
 
     /**
@@ -356,7 +353,7 @@ public class MemberServiceImpl implements MemberService {
             return memberDAO.findById(authTokensGenerator.getMemberId(memberLoginRenewRequestDTO.getRefreshToken())).map(
                             memberEntity -> {
                                 if (CommonCodeEnum.YES.getValue().equals(String.valueOf(memberEntity.getAutoLogin()))) {
-                                    AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberEntity.getId());
+                                    AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberEntity.getId(), memberEntity.getMemberType());
 
                                     return MemberLoginRenewResponseDTO.builder()
                                             .accessToken(authTokensDTO.getAccessToken())

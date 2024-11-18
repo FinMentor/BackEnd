@@ -6,5 +6,5 @@ import org.apache.mahout.cf.taste.common.TasteException;
 import java.io.IOException;
 
 public interface MentorService {
-    MentorRecommendDTO recommendMentor(Long mainCategoryId) throws IOException, TasteException;
+    MentorRecommendDTO recommendMentor(String id, Long mainCategoryId) throws IOException, TasteException;
 }

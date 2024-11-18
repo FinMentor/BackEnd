@@ -2,16 +2,12 @@ package com.example.springboot.service;
 
 import com.example.springboot.dto.AuthTokensDTO;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
-@Transactional
-@Slf4j
 public class AuthTokensGeneratorImpl implements AuthTokensGenerator {
     private static final String BEARER_TYPE = "Bearer";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60;    // 1시간
@@ -28,13 +24,13 @@ public class AuthTokensGeneratorImpl implements AuthTokensGenerator {
      * @return
      */
     @Override
-    public AuthTokensDTO generate(String id) {
+    public AuthTokensDTO generate(String id, String memberType) {
         long now = (new Date()).getTime();
         Date accessTokenExpiredAt = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         Date refreshTokenExpiredAt = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
 
-        String accessToken = jwtTokenProvider.accessTokenGenerate(id, accessTokenExpiredAt);
-        String refreshToken = jwtTokenProvider.refreshTokenGenerate(id, refreshTokenExpiredAt);
+        String accessToken = jwtTokenProvider.accessTokenGenerate(id, memberType, accessTokenExpiredAt);
+        String refreshToken = jwtTokenProvider.refreshTokenGenerate(id, memberType, refreshTokenExpiredAt);
 
         return AuthTokensDTO.builder()
                 .accessToken(accessToken)

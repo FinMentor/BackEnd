@@ -5,18 +5,14 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
 @Component
-@Transactional
-@Slf4j
 public class JwtTokenProviderImpl implements JwtTokenProvider {
     private final Key key;
 
@@ -34,9 +30,10 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
      * @return
      */
     @Override
-    public String accessTokenGenerate(String subject, Date expiredAt) {
+    public String accessTokenGenerate(String subject, String memberType, Date expiredAt) {
         return Jwts.builder()
                 .setSubject(subject)
+                .claim("memberType", memberType)
                 .setIssuedAt(new Date())
                 .setExpiration(expiredAt)
                 .signWith(key)
@@ -53,9 +50,10 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
      * @return
      */
     @Override
-    public String refreshTokenGenerate(String subject, Date expiredAt) {
+    public String refreshTokenGenerate(String subject, String memberType, Date expiredAt) {
         return Jwts.builder()
                 .setSubject(subject)
+                .claim("memberType", memberType)
                 .setIssuedAt(new Date())
                 .setExpiration(expiredAt)
                 .signWith(key)
