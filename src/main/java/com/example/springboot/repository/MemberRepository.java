@@ -47,7 +47,8 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
             "AND m.MEMBER_TYPE = :memberType " +
             "AND mc.MAIN_CATEGORY_ID = :mainCategoryId " +
             "GROUP BY 1 " +
-            "ORDER BY SUM(cg1.STAR) DESC", nativeQuery = true)
+            "ORDER BY SUM(cg1.STAR) DESC " +
+            "LIMIT 3", nativeQuery = true)
     List<Long> selectListMentorRankByStar(String memberType, Long mainCategoryId);
 
     @Query(value = "SELECT m.MEMBER_ID, m.NAME, m.NICKNAME, m.PROFILE_IMAGE_URL, mac.MAIN_CATEGORY_ID, mac.MAIN_CATEGORY_NAME, CAST(TRUNCATE(SUM(cg.STAR) / COUNT(m.MEMBER_ID), 1) AS DOUBLE) " +

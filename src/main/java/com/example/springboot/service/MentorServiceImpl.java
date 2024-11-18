@@ -1,9 +1,12 @@
 package com.example.springboot.service;
 
+import com.example.springboot.dao.MainCategoryDAO;
 import com.example.springboot.dao.MemberDAO;
 import com.example.springboot.dto.MentorDTO;
 import com.example.springboot.dto.MentorRecommendDTO;
+import com.example.springboot.entity.domain.MainCategoryEntity;
 import com.example.springboot.entity.domain.MemberEntity;
+import com.example.springboot.exception.FailGetMainCategoryException;
 import com.example.springboot.exception.FailGetMemberException;
 import com.example.springboot.util.CommonCodeEnum;
 import com.example.springboot.util.ExceptionCodeEnum;
@@ -37,6 +40,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class MentorServiceImpl implements MentorService {
     private final MemberDAO memberDAO;
+    private final MainCategoryDAO mainCategoryDAO;
 
     /**
      * 고수 추천
@@ -85,10 +89,12 @@ public class MentorServiceImpl implements MentorService {
         return MentorRecommendDTO.builder()
                 .mentorDTOList(memberDAO.findById(itemId).stream().map(mentor ->
                         MentorDTO.builder()
-                                .id(mentor.getId())
+                                .memberId(mentor.getMemberId())
                                 .name(mentor.getName())
                                 .nickname(mentor.getNickname())
-                                .profileImageUrl(mentor.getProfileImageUrl()).build()
+                                .profileImageUrl(mentor.getProfileImageUrl())
+                                .answerTime(mentor.getAnswerTime())
+                                .mainCategoryName(mainCategoryDAO.findById(mainCategoryId).map(MainCategoryEntity::getMainCategoryName).orElseThrow(() -> new FailGetMainCategoryException(ExceptionCodeEnum.NONEXISTENT_CATEGORY))).build()
                 ).toList())
                 .resultCode(ResultCodeEnum.SUCCESS.getValue())
                 .resultMessage(ResultCodeEnum.SUCCESS.getMessage())
