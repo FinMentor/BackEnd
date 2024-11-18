@@ -23,11 +23,11 @@ public class NotificationEntity extends CommonColumn {
     @Comment("알림 내역 아이디")
     @Column(name = "NOTIFICATION_ID", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long NotificationId;
+    private Long notificationId;
 
     @Comment("멤버 아이디")
     @Column(name = "MEMBER_ID", nullable = false, insertable = false, updatable = false)
-    private Long MemberId;
+    private Long memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")

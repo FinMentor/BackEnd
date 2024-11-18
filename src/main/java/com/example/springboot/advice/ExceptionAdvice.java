@@ -135,8 +135,16 @@ public class ExceptionAdvice {
     // 랭킹조회 실패
     @ExceptionHandler(FailGetRankingException.class)
     public ResponseResult<ErrorResponse> failGetRankingException(FailGetRankingException e) {
-        log.error("ExceptionAdvice FailGetRankingException : {}", e.getMessage());
+        log.error("ExceptionAdvice failGetRankingException : {}", e.getMessage());
 
         return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_RANKING.getHttpStatus(), ResultCodeEnum.NONEXISTENT_RANKING.getValue(), ResultCodeEnum.NONEXISTENT_RANKING.getMessage());
+    }
+
+    // 알림내역 없음
+    @ExceptionHandler(FailGetNotificationException.class)
+    public ResponseResult<ErrorResponse> failGetNotificationException(FailGetNotificationException e) {
+        log.error("ExceptionAdvice failGetNotificationException : {}", e.getMessage());
+
+        return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_NOTIFICATION.getHttpStatus(), ResultCodeEnum.NONEXISTENT_NOTIFICATION.getValue(), ResultCodeEnum.NONEXISTENT_NOTIFICATION.getMessage());
     }
 }
