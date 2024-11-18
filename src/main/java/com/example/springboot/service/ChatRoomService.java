@@ -7,4 +7,6 @@ import java.util.List;
 public interface ChatRoomService {
     List<ChatRoomDTO> findAllChatRooms(Long memberId);
     void createChatRoom(Long memberId, ChatRoomDTO chatRoomDTO);
+
+    void exitChatRoom(String username);
 }

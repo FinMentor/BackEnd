@@ -5,6 +5,8 @@ import com.example.springboot.dto.ChatRoomDTO;
 import com.example.springboot.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,8 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
+
+
     /**
      * 모든 채팅방 조회
+     *
      * @return
      */
     @GetMapping
@@ -22,6 +27,12 @@ public class ChatRoomController {
         return ResponseEntity.ok(chatRoomService.findAllChatRooms(memberId));
     }
 
+    /**
+     * 채팅방 생성하기
+     *
+     * @param chatRoomDTO
+     * @return
+     */
     @PostMapping("/create")
     public ResponseEntity createChatRoom(@RequestBody ChatRoomDTO chatRoomDTO) {
         Long memberId = 1L;

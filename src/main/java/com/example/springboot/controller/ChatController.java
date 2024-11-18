@@ -2,6 +2,7 @@ package com.example.springboot.controller;
 
 import com.example.springboot.dto.MessageDTO;
 import com.example.springboot.service.ChatService;
+import com.example.springboot.util.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -27,22 +28,18 @@ public class ChatController {
     private final ChatService chatService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    // 채팅방의 이전 메시지 조회
-//    @GetMapping("/api/v1/chat/rooms/{chatroomId}/messages")
-//    public ResponseEntity<List<MessageDTO>> getChatHistory(
-//            @PathVariable Long chatroomId,
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "50") int size,
-//            @RequestParam Long memberId) {
-//        Pageable pageable = PageRequest.of(page, size);
-//        List<MessageDTO> chatHistory = chatService.getChatHistory(chatroomId, memberId, pageable);
-//        log.info(chatHistory.toString());
-//        return ResponseEntity.ok(chatHistory);
-//    }
-
-    // 채팅방 입장 시 필요한 초기 데이터 조회 (메시지 히스토리 + 채팅방 정보)
+    /**
+     * 채팅 내역 조회
+     * <p>
+     * 채팅방 입장 시 이전 내용을 조회하는 메소드
+     * @param chatroomId
+     * @param page
+     * @param size
+     * @param memberId
+     * @return
+     */
     @GetMapping("/api/v1/chat/rooms/{chatroomId}/enter")
-    public ResponseEntity<Map<String, Object>> enterChatRoom(
+    public ResponseResult<Map<String, Object>> enterChatRoom(
             @PathVariable Long chatroomId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size,
@@ -50,16 +47,21 @@ public class ChatController {
         
             log.info("채팅방 입장 요청 - chatroomId: {}, page: {}, size: {}", chatroomId, page, size);
             Pageable pageable = PageRequest.of(page, size);
-            Map<String, Object> response = new HashMap<>();
             List<MessageDTO> messages = chatService.getChatHistory(chatroomId, memberId, pageable);
-                
-            log.info("조회된 메시지 수: {}", messages.size());
-                response.put("messages", messages);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("messages", messages);
             
-                return ResponseEntity.ok(response);
+            return ResponseResult.success(response);
     }
 
-    // 기존 WebSocket 메시지 처리
+    /**
+     * 채팅 메시지 처리
+     * <p>
+     * 메시지를 전달하고 저장하는 메소드
+     * @param messageDTO
+     * @param chatRoomId
+     */
     @MessageMapping("/{chatRoomId}/chat.sendMessage")
     public void sendMessage(@Payload MessageDTO messageDTO, @DestinationVariable String chatRoomId) {
         chatService.saveMessage(messageDTO);

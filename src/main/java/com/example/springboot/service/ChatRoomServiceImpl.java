@@ -22,4 +22,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     public void createChatRoom(Long memberId, ChatRoomDTO chatRoomDTO) {
         chatroomDAO.createChatroom(memberId, chatRoomDTO);
     }
+
+    @Override
+    public void exitChatRoom(String username) {
+        chatroomDAO.exitChatRoom(username);
+    }
 }
