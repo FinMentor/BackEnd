@@ -24,7 +24,8 @@ public enum ResultCodeEnum {
     NONEXISTENT_POST("0014","존재하지 않는 게시물"),
     NONEXISTENT_COMMENT("0015", "존재하지 않는 댓글"),
     NONEXISTENT_CATEGORY("0016", "카테고리 찾기 실패"),
-    NONEXISTENT_RANKING("0017", "랭킹조회 실패");
+    NONEXISTENT_RANKING("0017", "랭킹조회 실패"),
+    NONEXISTENT_NOTIFICATION("0018", "알림내역 없음");
 
     private String value;
     private String message;
