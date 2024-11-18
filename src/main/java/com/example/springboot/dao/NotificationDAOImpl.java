@@ -19,9 +19,9 @@ public class NotificationDAOImpl implements NotificationDAO {
     private final NotificationRepository notificationRepository;
 
     /**
-     * 알람전체 조회
+     * 알림전체 조회
      * <p>
-     * 멤버아이디로 알람리스트를 전체조회하는 메소드이다.
+     * 멤버아이디로 알림 전체를 조회하는 메소드이다.
      *
      * @param memberId
      * @return
@@ -35,5 +35,28 @@ public class NotificationDAOImpl implements NotificationDAO {
         log.info("findById memberId : {}", memberId);
 
         return notificationRepository.findAllByMemberId(memberId);
+    }
+
+    /**
+     * 알림 저장
+     * <p>
+     * 알림을 저장하는 메소드이다.
+     *
+     * @param notificationEntity
+     * @return
+     */
+    @Override
+    public NotificationEntity save(NotificationEntity notificationEntity) {
+        if (notificationEntity == null || notificationEntity.getMemberEntity() == null || notificationEntity.getMemberEntity().getMemberId() == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberEntity는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (notificationEntity.getMessage() == null || notificationEntity.getMessage().isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("message는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("save notificationEntity : {}", notificationEntity);
+
+        return notificationRepository.save(notificationEntity);
     }
 }
