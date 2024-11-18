@@ -8,4 +8,6 @@ public interface ChatroomGroupDAO {
     List<ChatroomGroupVO> getListChatroomByMemberId(Long memberId);
 
     ChatroomGroupVO createChatroomGroup(ChatroomGroupVO chatroomGroupVO);
+
+    void deleteByChatroomId(Long chatroomId);
 }

@@ -2,7 +2,9 @@ package com.example.springboot.dao;
 
 import com.example.springboot.dto.MessageDTO;
 import com.example.springboot.entity.domain.MessageEntity;
+import com.example.springboot.exception.ErrorRequiredValueValidationException;
 import com.example.springboot.repository.MessageRepository;
+import com.example.springboot.util.ExceptionCodeEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -63,5 +65,23 @@ public class MessageDAOImpl implements MessageDAO {
                 .collect(Collectors.toList());
         log.info("메시지 조회 완료 :{}", messageDTOList);
         return messageDTOList;
+    }
+
+    /**
+     * 메시지 삭제
+     * <p>
+     * 메시지를 삭제하는 메소드이다.
+     *
+     * @param chatroomId
+     */
+    @Override
+    public void deleteByChatroomId(Long chatroomId) {
+        if (chatroomId == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("chatroomId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("deleteByChatroomId chatroomId : {}", chatroomId);
+
+        messageRepository.deleteByChatroomId(chatroomId);
     }
 }

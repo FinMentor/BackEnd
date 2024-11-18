@@ -59,4 +59,22 @@ public class ChatroomGroupDAOImpl implements ChatroomGroupDAO {
 
         return chatroomGroupRepository.save(chatroomGroupVO);
     }
+
+    /**
+     * 채팅방그룹 삭제
+     * <p>
+     * 채팅방그룹을 삭제하는 메소드이다.
+     *
+     * @param chatroomId
+     */
+    @Override
+    public void deleteByChatroomId(Long chatroomId) {
+        if (chatroomId == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("chatroomId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("deleteByChatroomId chatroomId : {}", chatroomId);
+
+        chatroomGroupRepository.deleteByChatroomId(chatroomId);
+    }
 }
