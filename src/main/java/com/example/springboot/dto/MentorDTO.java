@@ -10,8 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class MentorDTO {
-    private String id;
+    private Long memberId;
     private String name;
     private String nickname;
     private String profileImageUrl;
+    private String answerTime;
+    private String mainCategoryName;
 }
