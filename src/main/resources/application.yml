@@ -35,7 +35,6 @@ naver:
 coolsms:
   api-key: NCSZGBYEUUF0QADU
   api-secret: PDYDAPMULLX63CPDEVQWTUGITRV4NQAN
-
 jasypt:
   encryptor:
     password: yUZp9wkybdGwzOlUW8Dh8a8g9G2eka0z6vXVCMhCCc2aw1qV8s
