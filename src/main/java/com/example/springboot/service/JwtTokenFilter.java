@@ -37,11 +37,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
-    String getJwtFromCookies(Cookie[] cookies) {
+    private String getJwtFromCookies(Cookie[] cookies) {
         if (cookies == null)
             return null;
         for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("jwt")) {
+            if ("jwt".equals(cookie.getName())) {
                 return cookie.getValue();
             }
         }

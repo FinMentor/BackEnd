@@ -41,31 +41,51 @@
         const socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
 
-        stompClient.connect({}, function(frame) {
-            console.log('STOMP 연결 성공:', frame);
-            stompClient.subscribe(`/topic/chat/${chatRoomId}`, function(message) {
-                displayMessage(JSON.parse(message.body));
-            });
-        });
+        // JWT를 브라우저 쿠키에서 가져오기
+        const cookies = document.cookie.split('; ').reduce((acc, cookie) => {
+            const [key, value] = cookie.split('=');
+            acc[key] = value;
+            return acc;
+        }, {});
+        const jwt = cookies['jwt']; // 쿠키에서 JWT 추출
+
+        console.log('JWT 전달:', jwt); // JWT 값 확인
+
+        stompClient.connect(
+            { Cookie: `jwt=${jwt}` }, // JWT를 nativeHeader로 전달
+            function (frame) {
+                console.log('STOMP 연결 성공:', frame);
+                stompClient.subscribe(`/topic/chat/${chatRoomId}`, function (message) {
+                    displayMessage(JSON.parse(message.body));
+                });
+            },
+            function (error) {
+                console.error('STOMP 연결 실패:', error);
+            }
+        );
     }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const memberId = urlParams.get('memberId') || prompt("Enter your Member ID:");
 
     function sendMessage() {
         if (messageInput.value.trim()) {
             const message = {
-                memberId: 'user1', // 실제 로그인한 사용자 ID로 대체
+                memberId: memberId, // 각 사용자의 고유 ID
                 chatroomId: chatRoomId,
                 content: messageInput.value,
                 messageType: 'N'
             };
-            stompClient.send(`/app/${chatRoomId}/chat.sendMessage`, {}, JSON.stringify(message));
+            stompClient.send(`/api/v1/chat/send`, {}, JSON.stringify(message));
             messageInput.value = '';
         }
     }
 
+
     function displayMessage(message) {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message');
-        messageDiv.classList.add(message.memberId === 'user1' ? 'sent' : 'received');
+        messageDiv.classList.add(message.memberId === memberId ? 'sent' : 'received');
         messageDiv.textContent = `${message.memberId}: ${message.content}`;
         messageArea.appendChild(messageDiv);
         messageArea.scrollTop = messageArea.scrollHeight;
