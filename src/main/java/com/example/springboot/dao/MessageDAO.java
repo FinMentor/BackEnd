@@ -1,14 +1,15 @@
 package com.example.springboot.dao;
 
-import com.example.springboot.dto.MessageDTO;
+import com.example.springboot.entity.domain.MessageEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface MessageDAO {
-    void saveMessage(MessageDTO messageDTO);
+    MessageEntity saveMessage(MessageEntity messageEntity);
 
-    List<MessageDTO> findByChatroomIdAndMemberId(Long chatroomId, String id, Pageable pageable);
+    Page<MessageEntity> findByChatroomIdAndMemberId(Long chatroomId, Long memberId, Pageable pageable);
 
     void deleteByChatroomId(Long chatroomId);
 }
