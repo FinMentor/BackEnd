@@ -7,9 +7,12 @@ import com.example.springboot.service.ChatService;
 import com.example.springboot.util.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.sdk.message.service.MessageService;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class ChatController {
     private final ChatService chatService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     /**
      * 채팅내역 조회
@@ -53,8 +57,10 @@ public class ChatController {
      */
     @MessageMapping("/send")
     public ResponseResult<MessageSendResponseDTO> sendMessage(@Payload MessageSendRequestDTO messageSendRequestDTO) {
-        log.info("sendMessage messageDetailsDTO : {}", messageSendRequestDTO);
+        log.info("roomId:{}",messageSendRequestDTO.getChatroomId());
+        messagingTemplate.convertAndSend("/topic/chat/" + messageSendRequestDTO.getChatroomId(), messageSendRequestDTO);
 
+        log.info("sendMessage messageDetailsDTO : {}", messageSendRequestDTO);
         return ResponseResult.success(chatService.saveMessage(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername(), messageSendRequestDTO));
     }
 }

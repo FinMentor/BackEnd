@@ -36,6 +36,8 @@ public class SecurityConfig {
                 .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/api/v1/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/ws/**").permitAll() // 채팅 테스트를 위해 임시설정
+                        .requestMatchers("/*.html", "/static/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtTokenFilter(authTokensGenerator), UsernamePasswordAuthenticationFilter.class);
 
