@@ -5,14 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MessageDTO {
-    private List<MessageDetailsDTO> messageDetailsDTOList;
-    private String resultCode;
-    private String resultMessage;
+public class MessageSendRequestDTO {
+    private Long chatroomId;
+    private String content;
 }

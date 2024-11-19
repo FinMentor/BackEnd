@@ -12,5 +12,6 @@ import java.util.List;
 public interface ChatroomGroupRepository extends JpaRepository<ChatroomGroupVO, ChatroomGroupId> {
     @Query("SELECT cg FROM ChatroomGroupVO cg JOIN FETCH cg.chatroomEntity c WHERE cg.memberId = :memberId")
     List<ChatroomGroupVO> getListChatroomByMemberId(Long memberId);
+
     void deleteByChatroomId(Long chatroomId);
 }

@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 @Transactional
@@ -42,16 +44,38 @@ public class ChatroomDAOImpl implements ChatroomDAO {
     /**
      * 채팅방 삭제
      * <p>
-     * 채팅방, 채팅내역을 삭제하는 메소드이다.
+     * 채팅방을 삭제하는 메소드이다.
+     *
      * @param id
      * @param chatroomId
      */
     @Override
-    public void exitChatroom(String id, Long chatroomId) {
-        chatroomRepository.deleteById(chatroomId);
-        chatroomGroupRepository.deleteByChatroomId(chatroomId);
-        messageRepository.deleteByChatroomId(chatroomId);
+    public void deleteById(String id, Long chatroomId) {
+        if (id == null || id.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("id는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
 
-        log.info("exitChatroom chatroomId : {}", chatroomId);
+        log.info("exitChatroom id : {}, chatroomId : {}", id, chatroomId);
+
+        chatroomRepository.deleteById(chatroomId);
+    }
+
+    /**
+     * 채팅방 조회
+     * <p>
+     * 채팅방아이디로 채팅방을 조회하는 메소드이다.
+     *
+     * @param chatroomId
+     * @return
+     */
+    @Override
+    public Optional<ChatroomEntity> findById(Long chatroomId) {
+        if (chatroomId == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("chatroomId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("findById chatroomId : {}", chatroomId);
+
+        return chatroomRepository.findById(chatroomId);
     }
 }
