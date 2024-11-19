@@ -3,6 +3,7 @@ package com.example.springboot.service;
 import com.example.springboot.dao.ChatroomDAO;
 import com.example.springboot.dao.ChatroomGroupDAO;
 import com.example.springboot.dao.MemberDAO;
+import com.example.springboot.dao.MessageDAO;
 import com.example.springboot.dto.ChatroomDTO;
 import com.example.springboot.dto.ChatroomMemberDTO;
 import com.example.springboot.dto.ChatroomRequestDTO;
@@ -29,6 +30,7 @@ public class ChatroomServiceImpl implements ChatroomService {
     private final MemberDAO memberDAO;
     private final ChatroomDAO chatroomDAO;
     private final ChatroomGroupDAO chatroomGroupDAO;
+    private final MessageDAO messageDAO;
 
     /**
      * 채팅방리스트 조회
@@ -88,6 +90,30 @@ public class ChatroomServiceImpl implements ChatroomService {
         chatroomGroupDAO.createChatroomGroup(ChatroomGroupVO.builder()
                 .memberId(memberEntity.getMemberId())
                 .chatroomId(chatroomEntity.getChatroomId()).build());
+
+        return ChatroomResponseDTO.builder()
+                .resultCode(ResultCodeEnum.SUCCESS.getValue())
+                .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
+    }
+
+    /**
+     * 채팅방 삭제
+     * <p>
+     * 채팅방, 채팅내역을 삭제하는 메소드이다.
+     *
+     * @param id
+     * @param chatroomId
+     */
+    @Override
+    public ChatroomResponseDTO exitChatroom(String id, Long chatroomId) {
+        // 채팅방 삭제
+        chatroomDAO.deleteById(id, chatroomId);
+
+        // 채팅방그룹 삭제
+        chatroomGroupDAO.deleteByChatroomId(chatroomId);
+
+        // 메시지 삭제
+        messageDAO.deleteByChatroomId(chatroomId);
 
         return ChatroomResponseDTO.builder()
                 .resultCode(ResultCodeEnum.SUCCESS.getValue())

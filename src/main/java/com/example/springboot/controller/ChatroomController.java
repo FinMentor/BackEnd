@@ -48,4 +48,20 @@ public class ChatroomController {
 
         return ResponseResult.success(chatroomService.createChatroom(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername(), chatroomRequestDTO));
     }
+
+    /**
+     * 채팅방 삭제
+     * <p>
+     * 채팅방을 삭제하는 메소드이다.
+     *
+     * @param userdetails
+     * @param chatroomId
+     * @return
+     */
+    @DeleteMapping("/exit")
+    public ResponseResult<ChatroomResponseDTO> exitChatroom(@AuthenticationPrincipal UserDetails userdetails, @RequestParam Long chatroomId) {
+        log.info("exitChatroom userDetails : {}, chatroomId : {}", userdetails, chatroomId);
+
+        return ResponseResult.success(chatroomService.exitChatroom(userdetails.getUsername(), chatroomId));
+    }
 }

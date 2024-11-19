@@ -1,68 +1,60 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.dto.MessageDTO;
+import com.example.springboot.dto.MessageSendRequestDTO;
+import com.example.springboot.dto.MessageSendResponseDTO;
 import com.example.springboot.service.ChatService;
+import com.example.springboot.util.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @RestController
-@Slf4j
+@RequestMapping("/api/v1/chat")
 @RequiredArgsConstructor
+@Slf4j
 public class ChatController {
     private final ChatService chatService;
-    private final SimpMessagingTemplate messagingTemplate;
 
-    // 채팅방의 이전 메시지 조회
-//    @GetMapping("/api/v1/chat/rooms/{chatroomId}/messages")
-//    public ResponseEntity<List<MessageDTO>> getChatHistory(
-//            @PathVariable Long chatroomId,
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "50") int size,
-//            @RequestParam Long memberId) {
-//        Pageable pageable = PageRequest.of(page, size);
-//        List<MessageDTO> chatHistory = chatService.getChatHistory(chatroomId, memberId, pageable);
-//        log.info(chatHistory.toString());
-//        return ResponseEntity.ok(chatHistory);
-//    }
+    /**
+     * 채팅내역 조회
+     * <p>
+     * 채팅방 접속시 채팅내역을 조회하는 메소드이다.
+     *
+     * @param chatroomId
+     * @param page
+     * @param size
+     * @param userDetails
+     * @return
+     */
+    @GetMapping("/rooms/enter")
+    public ResponseResult<MessageDTO> enterChatroom(@RequestParam Long chatroomId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size, @AuthenticationPrincipal UserDetails userDetails) {
+        log.info("enterChatroom chatroomId : {}, page : {}, size : {}, userDetails : {}", chatroomId, page, size, userDetails);
 
-    // 채팅방 입장 시 필요한 초기 데이터 조회 (메시지 히스토리 + 채팅방 정보)
-    @GetMapping("/api/v1/chat/rooms/{chatroomId}/enter")
-    public ResponseEntity<Map<String, Object>> enterChatRoom(
-            @PathVariable Long chatroomId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "50") int size,
-            @RequestParam Long memberId) {
-        
-            log.info("채팅방 입장 요청 - chatroomId: {}, page: {}, size: {}", chatroomId, page, size);
-            Pageable pageable = PageRequest.of(page, size);
-            Map<String, Object> response = new HashMap<>();
-            List<MessageDTO> messages = chatService.getChatHistory(chatroomId, memberId, pageable);
-                
-            log.info("조회된 메시지 수: {}", messages.size());
-                response.put("messages", messages);
-            
-                return ResponseEntity.ok(response);
+        return ResponseResult.success(chatService.getChatHistory(chatroomId, userDetails.getUsername(), PageRequest.of(page, size)));
     }
 
-    // 기존 WebSocket 메시지 처리
-    @MessageMapping("/{chatRoomId}/chat.sendMessage")
-    public void sendMessage(@Payload MessageDTO messageDTO, @DestinationVariable String chatRoomId) {
-        chatService.saveMessage(messageDTO);
-        messagingTemplate.convertAndSend("/topic/chat/" + chatRoomId, messageDTO);
+    /**
+     * 메시지 저장 및 전송
+     * <p>
+     * 웹소켓을 통해 메시지를 저장하고 전송하는 메소드이다.
+     *
+     * @param messageSendRequestDTO
+     * @return
+     */
+    @MessageMapping("/send")
+    public ResponseResult<MessageSendResponseDTO> sendMessage(@Payload MessageSendRequestDTO messageSendRequestDTO) {
+        log.info("sendMessage messageDetailsDTO : {}", messageSendRequestDTO);
+
+        return ResponseResult.success(chatService.saveMessage(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername(), messageSendRequestDTO));
     }
 }

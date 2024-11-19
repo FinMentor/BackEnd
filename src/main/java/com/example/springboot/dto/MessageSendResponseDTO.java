@@ -5,14 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MessageDTO {
-    private List<MessageDetailsDTO> messageDetailsDTOList;
+public class MessageSendResponseDTO {
     private String resultCode;
     private String resultMessage;
 }

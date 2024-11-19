@@ -1,11 +1,12 @@
 package com.example.springboot.service;
 
 import com.example.springboot.dto.MessageDTO;
+import com.example.springboot.dto.MessageSendRequestDTO;
+import com.example.springboot.dto.MessageSendResponseDTO;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 public interface ChatService {
-    void saveMessage(MessageDTO messageDTO);
-    List<MessageDTO> getChatHistory(Long chatroomId, Long memberId, Pageable pageable);
+    MessageSendResponseDTO saveMessage(String id, MessageSendRequestDTO messageSendRequestDTO);
+
+    MessageDTO getChatHistory(Long chatroomId, String id, Pageable pageable);
 }

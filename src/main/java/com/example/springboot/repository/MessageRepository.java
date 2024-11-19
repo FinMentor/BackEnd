@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MessageRepository extends JpaRepository<MessageEntity, Long> {
-    Page<MessageEntity> findByChatroomId(
-            Long chatroomId, Pageable pageable
-    );
+    Page<MessageEntity> findByChatroomIdAndMemberId(Long chatroomId, Long memberId, Pageable pageable);
+
+    void deleteByChatroomId(Long chatroomId);
 }

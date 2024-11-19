@@ -8,4 +8,6 @@ public interface ChatroomService {
     ChatroomDTO findAllChatroom(String id);
 
     ChatroomResponseDTO createChatroom(String id, ChatroomRequestDTO chatroomRequestDTO);
+
+    ChatroomResponseDTO exitChatroom(String id, Long chatroomId);
 }
