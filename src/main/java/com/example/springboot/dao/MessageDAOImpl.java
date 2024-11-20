@@ -53,27 +53,22 @@ public class MessageDAOImpl implements MessageDAO {
      * 채팅방 접속시 채팅내역을 조회하는 메소드이다.
      *
      * @param chatroomId
-     * @param memberId
      * @param pageable
      * @return
      */
     @Override
-    public Page<MessageEntity> findByChatroomIdAndMemberId(Long chatroomId, Long memberId, Pageable pageable) {
+    public Page<MessageEntity> findByChatroomId(Long chatroomId, Pageable pageable) {
         if (chatroomId == null) {
             throw new ErrorRequiredValueValidationException(new StringBuilder("chatroomId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
-        }
-
-        if (memberId == null) {
-            throw new ErrorRequiredValueValidationException(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         if (pageable == null) {
             throw new ErrorRequiredValueValidationException(new StringBuilder("pageable는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
-        log.info("findByChatroomIdAndMemberId chatroomId : {}, memberId : {}, pageable : {}", chatroomId, memberId, pageable);
+        log.info("findByChatroomIdAndMemberId chatroomId : {}, pageable : {}", chatroomId, pageable);
 
-        return messageRepository.findByChatroomIdAndMemberId(chatroomId, memberId, pageable);
+        return messageRepository.findByChatroomId(chatroomId, pageable);
     }
 
     /**

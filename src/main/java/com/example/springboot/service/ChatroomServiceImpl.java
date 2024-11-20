@@ -4,10 +4,7 @@ import com.example.springboot.dao.ChatroomDAO;
 import com.example.springboot.dao.ChatroomGroupDAO;
 import com.example.springboot.dao.MemberDAO;
 import com.example.springboot.dao.MessageDAO;
-import com.example.springboot.dto.ChatroomDTO;
-import com.example.springboot.dto.ChatroomMemberDTO;
-import com.example.springboot.dto.ChatroomRequestDTO;
-import com.example.springboot.dto.ChatroomResponseDTO;
+import com.example.springboot.dto.*;
 import com.example.springboot.entity.domain.ChatroomEntity;
 import com.example.springboot.entity.domain.MemberEntity;
 import com.example.springboot.exception.FailGetChatroomException;
@@ -17,9 +14,12 @@ import com.example.springboot.util.ResultCodeEnum;
 import com.example.springboot.vo.ChatroomGroupVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.net.ntp.TimeStamp;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -48,22 +48,25 @@ public class ChatroomServiceImpl implements ChatroomService {
                 .orElseThrow(() -> new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER));
 
         // 채팅방리스트 조회
-        List<ChatroomMemberDTO> chatroomMemberDTOList = chatroomGroupDAO.getListChatroomByMemberId(memberId).stream()
+        List<ChatroomDetailDTO> chatroomDetailDTOList = chatroomGroupDAO.getListChatroomByMemberId(memberId).stream()
                 .map(chatroomGroupVO -> {
-                    return ChatroomMemberDTO.builder()
-                            .chatroomId(chatroomGroupVO.getChatroomEntity().getChatroomId())
-                            .subject(chatroomGroupVO.getChatroomEntity().getSubject())
-                            .createdAt(chatroomGroupVO.getChatroomEntity().getCreatedAt())
-                            .updatedAt(chatroomGroupVO.getChatroomEntity().getUpdatedAt()).build();
+                    return ChatroomDetailDTO.builder()
+                            .senderId((Long) chatroomGroupVO[0])
+                            .receiverId((Long) chatroomGroupVO[1])
+                            .chatroomId((Long) chatroomGroupVO[2])
+                            .receiverProfileUrl((String) chatroomGroupVO[3])
+                            .recentMessage((String) chatroomGroupVO[4])
+                            .createdAt(((Timestamp) chatroomGroupVO[5]).toLocalDateTime())
+                            .build();
                 })
                 .toList();
 
-        if (chatroomMemberDTOList.isEmpty()) {
+        if (chatroomDetailDTOList.isEmpty()) {
             throw new FailGetChatroomException(ExceptionCodeEnum.NONEXISTENT_CHATROOM);
         }
 
         return ChatroomDTO.builder()
-                .chatroomMemberDTOList(chatroomMemberDTOList)
+                .chatroomDetailDTOList(chatroomDetailDTOList)
                 .resultCode(ResultCodeEnum.SUCCESS.getValue())
                 .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
     }

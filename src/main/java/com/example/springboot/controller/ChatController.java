@@ -10,13 +10,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/v1/chat")
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class ChatController {
     private final ChatService chatService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     /**
      * 채팅내역 조회
@@ -52,9 +55,12 @@ public class ChatController {
      * @return
      */
     @MessageMapping("/send")
-    public ResponseResult<MessageSendResponseDTO> sendMessage(@Payload MessageSendRequestDTO messageSendRequestDTO) {
-        log.info("sendMessage messageDetailsDTO : {}", messageSendRequestDTO);
+    public ResponseResult<MessageSendResponseDTO> sendMessage(@Payload MessageSendRequestDTO messageSendRequestDTO,
+                                                              Principal principal) {
+        log.info("roomId:{}",messageSendRequestDTO.getChatroomId());
+        messagingTemplate.convertAndSend("/topic/chat/" + messageSendRequestDTO.getChatroomId(), messageSendRequestDTO);
 
-        return ResponseResult.success(chatService.saveMessage(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername(), messageSendRequestDTO));
+        log.info("sendMessage messageDetailsDTO : {}", messageSendRequestDTO);
+        return ResponseResult.success(chatService.saveMessage(principal.getName(), messageSendRequestDTO));
     }
 }
