@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ChatroomDTO {
-    private List<ChatroomMemberDTO> chatroomMemberDTOList;
+    private List<ChatroomDetailDTO> chatroomDetailDTOList;
     private String resultCode;
     private String resultMessage;
 }

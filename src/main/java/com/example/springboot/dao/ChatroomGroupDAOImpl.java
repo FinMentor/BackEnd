@@ -1,5 +1,6 @@
 package com.example.springboot.dao;
 
+import com.example.springboot.dto.ChatroomDetailDTO;
 import com.example.springboot.exception.ErrorRequiredValueValidationException;
 import com.example.springboot.repository.ChatroomGroupRepository;
 import com.example.springboot.util.ExceptionCodeEnum;
@@ -27,7 +28,7 @@ public class ChatroomGroupDAOImpl implements ChatroomGroupDAO {
      * @return
      */
     @Override
-    public List<ChatroomGroupVO> getListChatroomByMemberId(Long memberId) {
+    public List<Object[]> getListChatroomByMemberId(Long memberId) {
         if (memberId == null) {
             throw new ErrorRequiredValueValidationException(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }

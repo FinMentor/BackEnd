@@ -80,7 +80,7 @@ public class ChatServiceImpl implements ChatService {
         MemberEntity memberEntity = memberDAO.findById(id).orElseThrow(() -> new FailGetMainCategoryException(ExceptionCodeEnum.NONEXISTENT_MEMBER));
 
         // 채팅내역 조회
-        List<MessageDetailsDTO> messageDetailsDTOList = messageDAO.findByChatroomIdAndMemberId(chatroomId, memberEntity.getMemberId(), pageable).getContent().stream().map(
+        List<MessageDetailsDTO> messageDetailsDTOList = messageDAO.findByChatroomId(chatroomId, pageable).getContent().stream().map(
                         messageEntity ->
                                 MessageDetailsDTO.builder()
                                         .messageId(messageEntity.getMessageId())
