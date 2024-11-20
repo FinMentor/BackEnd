@@ -139,6 +139,6 @@ public class MemberEntity extends CommonColumn {
     private String introduce;
 
     @Comment("답변 가능한 시간")
-    @Column(name = "ANSWER_TIME", length = 10, nullable = true)
+    @Column(name = "ANSWER_TIME", length = 20, nullable = true)
     private String answerTime;
 }
