@@ -199,7 +199,7 @@ public class MemberServiceImpl implements MemberService {
 
                             memberDAO.resetPasswordFailureCount(memberEntity.getId());
 
-                            AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberEntity.getId(), memberEntity.getMemberType());
+                            AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberEntity.getId(), memberEntity.getMemberType(), memberEntity.getMemberId());
 
                             return MemberLoginResponseDTO.builder()
                                     .accessToken(authTokensDTO.getAccessToken())
@@ -353,7 +353,7 @@ public class MemberServiceImpl implements MemberService {
             return memberDAO.findById(authTokensGenerator.getMemberId(memberLoginRenewRequestDTO.getRefreshToken())).map(
                             memberEntity -> {
                                 if (CommonCodeEnum.YES.getValue().equals(String.valueOf(memberEntity.getAutoLogin()))) {
-                                    AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberEntity.getId(), memberEntity.getMemberType());
+                                    AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberEntity.getId(), memberEntity.getMemberType(), memberEntity.getMemberId());
 
                                     return MemberLoginRenewResponseDTO.builder()
                                             .accessToken(authTokensDTO.getAccessToken())
