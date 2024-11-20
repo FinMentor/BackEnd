@@ -13,6 +13,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/v1/chat")
@@ -56,11 +59,12 @@ public class ChatController {
      * @return
      */
     @MessageMapping("/send")
-    public ResponseResult<MessageSendResponseDTO> sendMessage(@Payload MessageSendRequestDTO messageSendRequestDTO) {
+    public ResponseResult<MessageSendResponseDTO> sendMessage(@Payload MessageSendRequestDTO messageSendRequestDTO,
+                                                              Principal principal) {
         log.info("roomId:{}",messageSendRequestDTO.getChatroomId());
         messagingTemplate.convertAndSend("/topic/chat/" + messageSendRequestDTO.getChatroomId(), messageSendRequestDTO);
 
         log.info("sendMessage messageDetailsDTO : {}", messageSendRequestDTO);
-        return ResponseResult.success(chatService.saveMessage(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername(), messageSendRequestDTO));
+        return ResponseResult.success(chatService.saveMessage(principal.getName(), messageSendRequestDTO));
     }
 }

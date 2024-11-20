@@ -30,7 +30,7 @@ public class ChatroomController {
     @GetMapping
     public ResponseResult<ChatroomDTO> findAllChatroom(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("findAllChatroom userDetails : {}", userDetails);
-
+        // 프로필 이미지, 사용자 닉네임, 마지막메시지 내용
         return ResponseResult.success(chatroomService.findAllChatroom(userDetails.getUsername()));
     }
 

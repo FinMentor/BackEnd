@@ -13,6 +13,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -49,10 +50,16 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     String jwt = accessor.getFirstNativeHeader("Cookie");
 
                     if (jwt != null && jwt.startsWith("jwt=")) {
-                        jwt = jwt.substring(4); // "Bearer " 제거
+                        jwt = jwt.substring(4);
                         if (authTokensGenerator.validateTokens(jwt)) {
                             String username = authTokensGenerator.getMemberId(jwt);
-                            accessor.setUser(new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>()));
+//                            accessor.setUser(new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>()));
+                            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                    username, null, new ArrayList<>());
+                            accessor.setUser(authentication);
+
+                            // SecurityContext 설정
+                            SecurityContextHolder.getContext().setAuthentication(authentication);
                             log.info("JWT 검증 성공, 사용자 설정: {}", username);
                         } else {
                             throw new IllegalArgumentException("Invalid JWT token");
