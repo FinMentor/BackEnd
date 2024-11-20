@@ -26,14 +26,17 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
      * 멤버아이디와 유효시간으로 엑세스토큰을 생성하는 메소드이다.
      *
      * @param subject
+     * @param memberType
+     * @param memberId
      * @param expiredAt
      * @return
      */
     @Override
-    public String accessTokenGenerate(String subject, String memberType, Date expiredAt) {
+    public String accessTokenGenerate(String subject, String memberType, Long memberId, Date expiredAt) {
         return Jwts.builder()
                 .setSubject(subject)
                 .claim("memberType", memberType)
+                .claim("memberId", memberId)
                 .setIssuedAt(new Date())
                 .setExpiration(expiredAt)
                 .signWith(key)
@@ -46,11 +49,13 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
      * 멤버아이디와 유효시간으로 리프레시토큰을 생성하는 메소드이다.
      *
      * @param subject
+     * @param memberType
+     * @param memberId
      * @param expiredAt
      * @return
      */
     @Override
-    public String refreshTokenGenerate(String subject, String memberType, Date expiredAt) {
+    public String refreshTokenGenerate(String subject, String memberType, Long memberId, Date expiredAt) {
         return Jwts.builder()
                 .setSubject(subject)
                 .claim("memberType", memberType)
