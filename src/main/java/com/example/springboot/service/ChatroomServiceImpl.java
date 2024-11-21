@@ -59,7 +59,11 @@ public class ChatroomServiceImpl implements ChatroomService {
                             .chatroomId((Long) chatroomGroupVO[4])
                             .receiverProfileUrl((String) chatroomGroupVO[5])
                             .recentMessage((String) chatroomGroupVO[6])
-                            .createdAt(((Timestamp) chatroomGroupVO[7]).toLocalDateTime())
+                            .createdAt(
+                                    chatroomGroupVO[7] != null
+                                            ? ((Timestamp) chatroomGroupVO[7]).toLocalDateTime()
+                                            : null
+                            )
                             .build();
                 })
                 .toList();
