@@ -1,5 +1,6 @@
 package com.example.springboot.controller;
 
+import com.example.springboot.dto.PostDTO;
 import com.example.springboot.dto.PostRequestDTO;
 import com.example.springboot.dto.PostResponseDTO;
 import com.example.springboot.service.PostService;
@@ -7,8 +8,6 @@ import com.example.springboot.util.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -52,11 +51,14 @@ public class PostController {
      * <p>
      * 게시글리스트를 조회하는 메소드이다.
      *
-     * @return 게시글리스트와 함께 성공 응답 반환
+     * @param mainCategoryId
+     * @return
      */
     @GetMapping
-    public ResponseResult<List<PostResponseDTO>> findAll() {
-        return ResponseResult.success(postService.findAll());
+    public ResponseResult<PostDTO> findAll(Long mainCategoryId) {
+        log.info("findAll mainCategoryId : {}", mainCategoryId);
+
+        return ResponseResult.success(postService.findAll(mainCategoryId));
     }
 
     /**
