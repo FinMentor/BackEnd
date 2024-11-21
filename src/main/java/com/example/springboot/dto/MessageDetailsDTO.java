@@ -14,8 +14,10 @@ import java.time.LocalDateTime;
 public class MessageDetailsDTO {
     private Long messageId;
     private Long memberId;
+    private String nickname;
     private Long chatroomId;
     private String content;
+    private String profileImageUrl;
     private Character messageType;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

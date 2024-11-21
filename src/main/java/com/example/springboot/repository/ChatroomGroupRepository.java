@@ -16,12 +16,14 @@ public interface ChatroomGroupRepository extends JpaRepository<ChatroomGroupVO, 
     void deleteByChatroomId(Long chatroomId);
 
     @Query(value = """
-        SELECT cg1.MEMBER_ID AS senderId, 
+        SELECT cg1.MEMBER_ID AS senderId,
+                m1.NICKNAME AS senderNickName,
                cg2.MEMBER_ID AS receiverId,
+                m2.NICKNAME AS receiverNickName,
                cg1.CHATROOM_ID,
                m2.PROFILE_IMAGE_URL AS receiverProfileImage,
                ms.CONTENT AS recentMessage,
-               ms.CREATED_AT 
+               ms.CREATED_AT
         FROM CHATROOM_GROUP cg1
         JOIN CHATROOM_GROUP cg2 ON cg1.CHATROOM_ID = cg2.CHATROOM_ID
         JOIN MEMBER m1 ON m1.MEMBER_ID = cg1.MEMBER_ID

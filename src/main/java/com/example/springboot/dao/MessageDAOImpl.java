@@ -66,7 +66,7 @@ public class MessageDAOImpl implements MessageDAO {
             throw new ErrorRequiredValueValidationException(new StringBuilder("pageable는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
-        log.info("findByChatroomIdAndMemberId chatroomId : {}, pageable : {}", chatroomId, pageable);
+        log.info("findByChatroomId  chatroomId : {}, pageable : {}", chatroomId, pageable);
 
         return messageRepository.findByChatroomId(chatroomId, pageable);
     }

@@ -12,4 +12,6 @@ import lombok.NoArgsConstructor;
 public class MessageSendRequestDTO {
     private Long chatroomId;
     private String content;
+    private String nickname;
+    private String profileImageUrl;
 }
