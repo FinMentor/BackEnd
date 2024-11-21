@@ -3,10 +3,7 @@ package com.example.springboot.service;
 import com.example.springboot.dao.MainCategoryDAO;
 import com.example.springboot.dao.MemberDAO;
 import com.example.springboot.dao.PostDAO;
-import com.example.springboot.dto.PostDTO;
-import com.example.springboot.dto.PostDetailsDTO;
-import com.example.springboot.dto.PostRequestDTO;
-import com.example.springboot.dto.PostResponseDTO;
+import com.example.springboot.dto.*;
 import com.example.springboot.entity.domain.MainCategoryEntity;
 import com.example.springboot.entity.domain.MemberEntity;
 import com.example.springboot.entity.domain.PostEntity;
@@ -149,6 +146,48 @@ public class PostServiceImpl implements PostService {
 
         return PostDTO.builder()
                 .postDetailsDTOList(postDetailsDTOList)
+                .resultCode(ResultCodeEnum.SUCCESS.getValue())
+                .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
+    }
+
+    /**
+     * 고수 게시글리스트 조회
+     * <p>
+     * 고수의 게시글리스트를 조회하는 메소드이다.
+     *
+     * @param mainCategoryId
+     * @return
+     */
+    @Override
+    public PostMentorDTO mentorPostAll(Long mainCategoryId) {
+        List<PostMentorDetailsDTO> postMentorDetailsDTOList;
+
+        if (mainCategoryId == null) {
+            // 전체 게시물 조회
+            postMentorDetailsDTOList = postDAO.findAllMentor(CommonCodeEnum.EXPERT.getValue()).stream().map(
+                            postEntity -> PostMentorDetailsDTO.builder()
+                                    .postId(postEntity.getPostId())
+                                    .title(postEntity.getTitle())
+                                    .postImageUrl(postEntity.getPostImageUrl())
+                                    .nickname(postEntity.getMemberEntity().getNickname()).build())
+                    .toList();
+        } else {
+            // 카테고리별 게시물 조회
+            postMentorDetailsDTOList = postDAO.findAllMentorByMainCategoryId(mainCategoryId, CommonCodeEnum.EXPERT.getValue()).stream().map(
+                            postEntity -> PostMentorDetailsDTO.builder()
+                                    .postId(postEntity.getPostId())
+                                    .title(postEntity.getTitle())
+                                    .postImageUrl(postEntity.getPostImageUrl())
+                                    .nickname(postEntity.getMemberEntity().getNickname()).build())
+                    .toList();
+        }
+
+        if (postMentorDetailsDTOList.isEmpty()) {
+            throw new PostNotFoundException(ExceptionCodeEnum.NONEXISTENT_POST);
+        }
+
+        return PostMentorDTO.builder()
+                .postMentorDetailsDTOList(postMentorDetailsDTOList)
                 .resultCode(ResultCodeEnum.SUCCESS.getValue())
                 .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
     }

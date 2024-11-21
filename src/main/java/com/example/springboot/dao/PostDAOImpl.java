@@ -99,6 +99,49 @@ public class PostDAOImpl implements PostDAO {
     }
 
     /**
+     * 고수 게시물리스트 전체 조회
+     * <p>
+     * 고수의 게시물리스트를 전체 조회하는 메소드이다.
+     *
+     * @param postType
+     * @return
+     */
+    @Override
+    public List<PostEntity> findAllMentor(String postType) {
+        if (postType == null || postType.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("postType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("findAllMentor postType : {}", postType);
+
+        return postRepository.findAllMentor(postType);
+    }
+
+    /**
+     * 고수 게시물리스트 전체 조회 By categoryId
+     * <p>
+     * 카테고리별로 고수 게시물리스트 전체를 조회하는 메소드이다.
+     *
+     * @param mainCategoryId
+     * @param postType
+     * @return
+     */
+    @Override
+    public List<PostEntity> findAllMentorByMainCategoryId(Long mainCategoryId, String postType) {
+        if (mainCategoryId == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("mainCategoryId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (postType == null || postType.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("postType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("findAllMentorByMainCategoryId mainCategoryId : {}, postType : {}", mainCategoryId, postType);
+
+        return postRepository.findAllMentorByMainCategoryId(mainCategoryId, postType);
+    }
+
+    /**
      * 조회수 수정
      * <p>
      * 조회수를 수정하는 메소드이다.

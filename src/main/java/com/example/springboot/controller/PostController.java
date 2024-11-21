@@ -1,6 +1,7 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.dto.PostDTO;
+import com.example.springboot.dto.PostMentorDTO;
 import com.example.springboot.dto.PostRequestDTO;
 import com.example.springboot.dto.PostResponseDTO;
 import com.example.springboot.service.PostService;
@@ -59,6 +60,21 @@ public class PostController {
         log.info("findAll mainCategoryId : {}", mainCategoryId);
 
         return ResponseResult.success(postService.findAll(mainCategoryId));
+    }
+
+    /**
+     * 고수 게시글리스트 조회
+     * <p>
+     * 고수의 게시글리스트를 조회하는 메소드이다.
+     *
+     * @param mainCategoryId
+     * @return
+     */
+    @GetMapping("/mentor")
+    public ResponseResult<PostMentorDTO> mentorPostAll(Long mainCategoryId) {
+        log.info("mentorPostAll mainCategoryId : {}", mainCategoryId);
+
+        return ResponseResult.success(postService.mentorPostAll(mainCategoryId));
     }
 
     /**
