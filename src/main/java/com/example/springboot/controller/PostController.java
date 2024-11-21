@@ -37,8 +37,8 @@ public class PostController {
      * <p>
      * 게시글아이디로 조회와 조회수를 업데이트를 하는 메소드이다.
      *
-     * @param postId 조회할 게시글의 ID
-     * @return 조회된 게시글 데이터와 함께 성공 응답 반환
+     * @param postId
+     * @return
      */
     @GetMapping("/detail")
     public ResponseResult<PostResponseDTO> findById(@RequestParam Long postId) {
@@ -56,7 +56,7 @@ public class PostController {
      * @return
      */
     @GetMapping
-    public ResponseResult<PostDTO> findAll(Long mainCategoryId) {
+    public ResponseResult<PostDTO> findAll(@RequestParam Long mainCategoryId) {
         log.info("findAll mainCategoryId : {}", mainCategoryId);
 
         return ResponseResult.success(postService.findAll(mainCategoryId));
@@ -71,7 +71,7 @@ public class PostController {
      * @return
      */
     @GetMapping("/mentor")
-    public ResponseResult<PostMentorDTO> mentorPostAll(Long mainCategoryId) {
+    public ResponseResult<PostMentorDTO> mentorPostAll(@RequestParam Long mainCategoryId) {
         log.info("mentorPostAll mainCategoryId : {}", mainCategoryId);
 
         return ResponseResult.success(postService.mentorPostAll(mainCategoryId));
