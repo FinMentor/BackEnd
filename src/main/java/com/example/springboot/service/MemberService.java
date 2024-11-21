@@ -14,4 +14,6 @@ public interface MemberService {
     MemberFindPasswordResponseDTO findPassword(MemberFindPasswordRequestDTO memberFindPasswordRequestDTO);
 
     MemberLoginRenewResponseDTO loginRenew(MemberLoginRenewRequestDTO memberLoginRenewRequestDTO);
+
+    MemberInfoDTO userinfo(Long memberId);
 }

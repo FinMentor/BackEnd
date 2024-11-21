@@ -5,6 +5,8 @@ import com.example.springboot.service.MemberService;
 import com.example.springboot.util.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -93,5 +95,20 @@ public class MemberController {
         log.info("loginRenew memberLoginRenewRequestDTO : {}", memberLoginRenewRequestDTO);
 
         return ResponseResult.success(memberService.loginRenew(memberLoginRenewRequestDTO));
+    }
+
+    /**
+     * 유저 정보 확인
+     * <p>
+     * 유저 정보를 확인하는 메소드이다.
+     *
+     * @param memberId
+     * @return
+     */
+    @GetMapping("/userinfo")
+    public ResponseResult<MemberInfoDTO> userinfo(@RequestParam Long memberId) {
+        log.info("userinfo memberId : {}", memberId);
+
+        return ResponseResult.success(memberService.userinfo(memberId));
     }
 }

@@ -96,10 +96,13 @@ public class ChatroomServiceImpl implements ChatroomService {
         chatroomGroupDAO.createChatroomGroup(ChatroomGroupVO.builder()
                 .memberId(memberEntity.getMemberId())
                 .chatroomId(chatroomEntity.getChatroomId()).build());
+        chatroomGroupDAO.createChatroomGroup(ChatroomGroupVO.builder()
+                .memberId(chatroomRequestDTO.getMemberId())
+                .chatroomId(chatroomEntity.getChatroomId()).build());
 
         // 회원가입시 AI챗봇 채팅방 생성
         if(chatroomRequestDTO.getSubject().equals("AI 챗봇")){
-            chatService.saveMessage("AIBot", new MessageSendRequestDTO(chatroomEntity.getChatroomId(), "ㅎㅇ 난 챗봇",memberEntity.getNickname(),memberEntity.getProfileImageUrl()));
+            chatService.saveMessage("AIBot", new MessageSendRequestDTO(chatroomEntity.getChatroomId(), "ㅎㅇ 난 챗봇",memberEntity.getNickname(), memberEntity.getProfileImageUrl()));
 
             chatroomGroupDAO.createChatroomGroup(ChatroomGroupVO.builder()
                     .memberId(100L)
