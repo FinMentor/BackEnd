@@ -213,6 +213,32 @@ public class PostDAOImpl implements PostDAO {
         if (postId == null) {
             throw new ErrorRequiredValueValidationException(new StringBuilder("postId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
+
+        log.info("deleteById postId : {}", postId);
+
         postRepository.deleteById(postId);
+    }
+
+    /**
+     * 게시글상세 조회
+     * <p>
+     * 게시글아이디로 게시글을 상세조회하는 메소드이다.
+     *
+     * @param postId
+     * @return
+     */
+    @Override
+    public List<Object[]> postDetails(Long postId, String postType) {
+        if (postId == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("postId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (postType == null || postType.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("postType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("postDetails postId : {}, postType : {}", postId, postType);
+
+        return postRepository.postDetails(postId, postType);
     }
 }

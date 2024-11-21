@@ -1,9 +1,6 @@
 package com.example.springboot.controller;
 
-import com.example.springboot.dto.PostDTO;
-import com.example.springboot.dto.PostMentorDTO;
-import com.example.springboot.dto.PostRequestDTO;
-import com.example.springboot.dto.PostResponseDTO;
+import com.example.springboot.dto.*;
 import com.example.springboot.service.PostService;
 import com.example.springboot.util.ResponseResult;
 import lombok.RequiredArgsConstructor;
@@ -41,10 +38,10 @@ public class PostController {
      * @return
      */
     @GetMapping("/detail")
-    public ResponseResult<PostResponseDTO> findById(@RequestParam Long postId) {
+    public ResponseResult<PostAllDTO> postDetails(@RequestParam Long postId) {
         log.info("findById postId : {}", postId);
 
-        return ResponseResult.success(postService.findById(postId));
+        return ResponseResult.success(postService.postDetails(postId));
     }
 
     /**
