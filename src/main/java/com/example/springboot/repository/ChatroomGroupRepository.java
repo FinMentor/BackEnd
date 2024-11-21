@@ -50,7 +50,8 @@ public interface ChatroomGroupRepository extends JpaRepository<ChatroomGroupVO, 
             ) ms ON ms.CHATROOM_ID = cg1.CHATROOM_ID
         WHERE
             cg1.MEMBER_ID <> cg2.MEMBER_ID
-            AND cg1.MEMBER_ID = :memberId;
+            AND cg1.MEMBER_ID = :memberId
+        ORDER BY ms.CREATED_AT DESC
         """, nativeQuery = true)
     List<Object[]> getListChatroomByMemberId(Long memberId);
 }
