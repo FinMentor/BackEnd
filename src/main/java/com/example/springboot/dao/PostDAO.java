@@ -14,6 +14,10 @@ public interface PostDAO {
 
     List<Object[]> findAllByMainCategoryId(Long mainCategoryId, String postType);
 
+    List<PostEntity> findAllMentor(String postType);
+
+    List<PostEntity> findAllMentorByMainCategoryId(Long mainCategoryId, String postType);
+
     void updateViewCount(Long postId);
 
     PostEntity update(PostEntity postEntity);

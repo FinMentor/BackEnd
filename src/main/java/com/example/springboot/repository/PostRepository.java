@@ -43,4 +43,10 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
             "GROUP BY 1 " +
             "ORDER BY p.CREATED_AT DESC", nativeQuery = true)
     List<Object[]> findAll(String postType);
+
+    @Query(value = "SELECT p FROM PostEntity p JOIN FETCH p.memberEntity m WHERE p.postType = :postType ORDER BY p.createdAt DESC")
+    List<PostEntity> findAllMentor(String postType);
+
+    @Query(value = "SELECT p FROM PostEntity p JOIN FETCH p.memberEntity m WHERE p.mainCategoryId = :mainCategoryId AND p.postType = :postType ORDER BY p.createdAt DESC")
+    List<PostEntity> findAllMentorByMainCategoryId(Long mainCategoryId, String postType);
 }
