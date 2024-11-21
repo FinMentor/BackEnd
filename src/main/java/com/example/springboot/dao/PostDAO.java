@@ -23,4 +23,6 @@ public interface PostDAO {
     PostEntity update(PostEntity postEntity);
 
     void deleteById(Long postId);
+
+    List<Object[]> postDetails(Long postId, String postType);
 }

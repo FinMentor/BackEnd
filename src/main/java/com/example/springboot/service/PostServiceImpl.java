@@ -18,7 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -80,28 +84,46 @@ public class PostServiceImpl implements PostService {
      * @return
      */
     @Override
-    public PostResponseDTO findById(Long postId) {
-        log.info("findById postId : {}", postId);
+    public PostAllDTO postDetails(Long postId) {
+        log.info("postDetails postId : {}", postId);
 
         postDAO.updateViewCount(postId);
 
-        return postDAO.findById(postId).map(
-                        postEntity -> {
-                            return PostResponseDTO.builder()
-                                    .postId(postEntity.getPostId())
-                                    .memberId(postEntity.getMemberId())
-                                    .mainCategoryId(postEntity.getMainCategoryId())
-                                    .title(postEntity.getTitle())
-                                    .content(postEntity.getContent())
-                                    .viewCount(postEntity.getViewCount())
-                                    .likeCount(postEntity.getLikeCount())
-                                    .createdAt(postEntity.getCreatedAt())
-                                    .updatedAt(postEntity.getUpdatedAt())
-                                    .resultCode(ResultCodeEnum.SUCCESS.getValue())
-                                    .resultMessage(ResultCodeEnum.SUCCESS.getMessage())
-                                    .build();
+        Map<Long, PostDetailsAllDTO> postDetailsAllDTOMap = postDAO.postDetails(postId, CommonCodeEnum.NORMAL.getValue()).stream()
+                .collect(Collectors.groupingBy(
+                        postDetailsAllDTO -> (Long) postDetailsAllDTO[0],
+                        LinkedHashMap::new,
+                        Collectors.collectingAndThen(Collectors.toList(), commentDetailsDTOS -> {
+                            List<CommentDetailsDTO> commentDetailsDTOList = commentDetailsDTOS.stream()
+                                    .map(commentDetailsDTO -> CommentDetailsDTO.builder()
+                                            .commentId((Long) commentDetailsDTO[9])
+                                            .mainCategoryName((String) commentDetailsDTO[10])
+                                            .nickname((String) commentDetailsDTO[11])
+                                            .profileImageUrl((String) commentDetailsDTO[12])
+                                            .content((String) commentDetailsDTO[13])
+                                            .createdAt((String) commentDetailsDTO[14]).build())
+                                    .toList();
+
+                            Object[] postDetailsAllDTO = commentDetailsDTOS.get(0);
+
+                            return PostDetailsAllDTO.builder()
+                                    .postId((Long) postDetailsAllDTO[0])
+                                    .nickname((String) postDetailsAllDTO[1])
+                                    .profileImageUrl((String) postDetailsAllDTO[2])
+                                    .title((String) postDetailsAllDTO[3])
+                                    .content((String) postDetailsAllDTO[4])
+                                    .viewCount((Long) postDetailsAllDTO[5])
+                                    .likeCount((Long) postDetailsAllDTO[6])
+                                    .commentCount((Long) postDetailsAllDTO[7])
+                                    .createdAt((String) postDetailsAllDTO[8])
+                                    .commentDetailsDTOList(commentDetailsDTOList).build();
                         })
-                .orElseThrow(() -> new PostNotFoundException(ExceptionCodeEnum.NONEXISTENT_POST));
+                ));
+
+        return PostAllDTO.builder()
+                .postDetailsAllDTOList(new ArrayList<>(postDetailsAllDTOMap.values()))
+                .resultCode(ResultCodeEnum.SUCCESS.getValue())
+                .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
     }
 
     /**
