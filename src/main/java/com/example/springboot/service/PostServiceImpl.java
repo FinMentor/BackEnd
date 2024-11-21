@@ -117,16 +117,31 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public PostDTO findAll(Long mainCategoryId) {
-        // 게시글리스트 조회
-        List<PostDetailsDTO> postDetailsDTOList = postDAO.findAllByMainCategoryId(mainCategoryId, CommonCodeEnum.NORMAL.getValue()).stream().map(
-                        postDetailsDTO -> PostDetailsDTO.builder()
-                                .postId((Long) postDetailsDTO[0])
-                                .title((String) postDetailsDTO[1])
-                                .content((String) postDetailsDTO[2])
-                                .likeCount((Long) postDetailsDTO[3])
-                                .commentCount((Long) postDetailsDTO[4])
-                                .createdAt((String) postDetailsDTO[5]).build())
-                .toList();
+        List<PostDetailsDTO> postDetailsDTOList;
+
+        if (mainCategoryId == null) {
+            // 전체 게시물 조회
+            postDetailsDTOList = postDAO.findAll(CommonCodeEnum.NORMAL.getValue()).stream().map(
+                            postDetailsDTO -> PostDetailsDTO.builder()
+                                    .postId((Long) postDetailsDTO[0])
+                                    .title((String) postDetailsDTO[1])
+                                    .content((String) postDetailsDTO[2])
+                                    .likeCount((Long) postDetailsDTO[3])
+                                    .commentCount((Long) postDetailsDTO[4])
+                                    .createdAt((String) postDetailsDTO[5]).build())
+                    .toList();
+        } else {
+            // 카테고리별 게시물 조회
+            postDetailsDTOList = postDAO.findAllByMainCategoryId(mainCategoryId, CommonCodeEnum.NORMAL.getValue()).stream().map(
+                            postDetailsDTO -> PostDetailsDTO.builder()
+                                    .postId((Long) postDetailsDTO[0])
+                                    .title((String) postDetailsDTO[1])
+                                    .content((String) postDetailsDTO[2])
+                                    .likeCount((Long) postDetailsDTO[3])
+                                    .commentCount((Long) postDetailsDTO[4])
+                                    .createdAt((String) postDetailsDTO[5]).build())
+                    .toList();
+        }
 
         if (postDetailsDTOList.isEmpty()) {
             throw new PostNotFoundException(ExceptionCodeEnum.NONEXISTENT_POST);

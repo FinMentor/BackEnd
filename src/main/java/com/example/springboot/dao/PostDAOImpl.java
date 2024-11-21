@@ -58,7 +58,26 @@ public class PostDAOImpl implements PostDAO {
     /**
      * 게시글리스트 조회
      * <p>
-     * 게시글리스트를 조회하는 메소드이다.
+     * 전체 게시글리스트를 조회하는 메소드이다.
+     *
+     * @param postType
+     * @return
+     */
+    @Override
+    public List<Object[]> findAll(String postType) {
+        if (postType == null || postType.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("postType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("findAll postType : {}", postType);
+
+        return postRepository.findAll(postType);
+    }
+
+    /**
+     * 게시글리스트 조회
+     * <p>
+     * 카테고리별 게시글리스트를 조회하는 메소드이다.
      *
      * @param mainCategoryId
      * @param postType
