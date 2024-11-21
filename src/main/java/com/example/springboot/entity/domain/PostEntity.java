@@ -56,6 +56,14 @@ public class PostEntity extends CommonColumn {
     @Column(name = "CONTENT", nullable = false)
     private String content;
 
+    @Comment("게시 이미지")
+    @Column(name = "POST_IMAGE_URL", length = 255, nullable = true)
+    private String postImageUrl;
+
+    @Comment("게시 유형")
+    @Column(name = "POST_TYPE", length = 20, nullable = false)
+    private String postType;
+
     @Comment("조회수")
     @Column(name = "VIEW_COUNT", nullable = false)
     @ColumnDefault("0")

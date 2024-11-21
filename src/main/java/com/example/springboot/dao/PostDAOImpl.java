@@ -56,15 +56,27 @@ public class PostDAOImpl implements PostDAO {
     }
 
     /**
-     * 게시물리스트 조회
+     * 게시글리스트 조회
      * <p>
-     * 게시물리스트를 조회하는 메소드이다.
+     * 게시글리스트를 조회하는 메소드이다.
      *
+     * @param mainCategoryId
+     * @param postType
      * @return
      */
     @Override
-    public List<PostEntity> findAll() {
-        return postRepository.findAll();
+    public List<Object[]> findAllByMainCategoryId(Long mainCategoryId, String postType) {
+        if (mainCategoryId == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("mainCategoryId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        if (postType == null || postType.isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("postType은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("findAll mainCategoryId : {}, postType : {}", mainCategoryId, postType);
+
+        return postRepository.findAllByMainCategoryId(mainCategoryId, postType);
     }
 
     /**

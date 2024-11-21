@@ -1,5 +1,6 @@
 package com.example.springboot.service;
 
+import com.example.springboot.dto.PostDTO;
 import com.example.springboot.dto.PostRequestDTO;
 import com.example.springboot.dto.PostResponseDTO;
 
@@ -10,7 +11,7 @@ public interface PostService {
 
     PostResponseDTO findById(Long postId); // ID로 글 조회
 
-    List<PostResponseDTO> findAll(); // 글 목록 불러오기
+    PostDTO findAll(Long mainCategoryId); // 글 목록 불러오기
 
     PostResponseDTO update(PostRequestDTO postRequestDTO);
 

@@ -10,7 +10,7 @@ public interface PostDAO {
 
     Optional<PostEntity> findById(Long postId);
 
-    List<PostEntity> findAll();
+    List<Object[]> findAllByMainCategoryId(Long mainCategoryId, String postType);
 
     void updateViewCount(Long postId);
 
