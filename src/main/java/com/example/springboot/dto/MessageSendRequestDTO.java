@@ -13,5 +13,6 @@ public class MessageSendRequestDTO {
     private Long chatroomId;
     private String content;
     private String nickname;
+    private Long memberId;
     private String profileImageUrl;
 }
