@@ -5,12 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ChatroomRequestDTO {
+public class MemberInfoDTO {
     private Long memberId;
-    private String subject;
-
+    private String nickname;
+    private String profileImageUrl;
+    private String answerTime;
 }

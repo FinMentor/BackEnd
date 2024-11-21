@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -82,7 +83,7 @@ public class MemberServiceImpl implements MemberService {
                 .emailVerificationCode(memberSignupRequestDTO.getEmailVerificationCode())
                 .emailVerifiedStatus(ColumnYn.valueOf(CommonCodeEnum.YES.getValue())).build());
 
-        chatroomService.createChatroom(memberSignupRequestDTO.getId(), new ChatroomRequestDTO("AI 챗봇"));
+        chatroomService.createChatroom(memberSignupRequestDTO.getId(), new ChatroomRequestDTO(100L,"AI 챗봇"));
 
         memberSignupRequestDTO.getTermsAgreementDTOList().forEach(termsAgreementDTO -> {
             TermsOfUseEntity termsOfUseEntity = termsOfUseDAO.findById(termsAgreementDTO.getTermsOfUseId()).orElseThrow(() -> new FailGetTermsOfUseException(ExceptionCodeEnum.NONEXISTENT_TERMS_OF_USE));
@@ -370,5 +371,21 @@ public class MemberServiceImpl implements MemberService {
         } else {
             throw new SessionExpiredException(ExceptionCodeEnum.SESSION_EXPIRED);
         }
+    }
+
+    @Override
+    public MemberInfoDTO userinfo(Long memberId) {
+        List<Long> memberIds = Collections.singletonList(memberId);
+        return memberDAO.findById(memberIds).stream()
+                .map(memberEntity ->
+                        MemberInfoDTO.builder()
+                                .memberId(memberEntity.getMemberId())
+                                .nickname(memberEntity.getNickname())
+                                .profileImageUrl(memberEntity.getProfileImageUrl())
+                                .answerTime(memberEntity.getAnswerTime())
+                                .build()
+                )
+                .findFirst()
+                .orElseThrow(() ->new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER));
     }
 }
