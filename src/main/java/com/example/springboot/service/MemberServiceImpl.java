@@ -34,7 +34,7 @@ public class MemberServiceImpl implements MemberService {
     private final TermsOfUseDAO termsOfUseDAO;
     private final MemberSmsQueryDSLDAO memberSmsQueryDSLDAO;
     private final AuthTokensGenerator authTokensGenerator;
-
+    private final ChatroomService chatroomService;
     /**
      * 회원가입
      * <p>
@@ -81,6 +81,8 @@ public class MemberServiceImpl implements MemberService {
                 .memberEntity(memberEntity)
                 .emailVerificationCode(memberSignupRequestDTO.getEmailVerificationCode())
                 .emailVerifiedStatus(ColumnYn.valueOf(CommonCodeEnum.YES.getValue())).build());
+
+        chatroomService.createChatroom(memberSignupRequestDTO.getId(), new ChatroomRequestDTO("AI 챗봇"));
 
         memberSignupRequestDTO.getTermsAgreementDTOList().forEach(termsAgreementDTO -> {
             TermsOfUseEntity termsOfUseEntity = termsOfUseDAO.findById(termsAgreementDTO.getTermsOfUseId()).orElseThrow(() -> new FailGetTermsOfUseException(ExceptionCodeEnum.NONEXISTENT_TERMS_OF_USE));

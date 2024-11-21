@@ -31,6 +31,7 @@ public class ChatroomServiceImpl implements ChatroomService {
     private final ChatroomDAO chatroomDAO;
     private final ChatroomGroupDAO chatroomGroupDAO;
     private final MessageDAO messageDAO;
+    private final ChatService chatService;
 
     /**
      * 채팅방리스트 조회
@@ -52,11 +53,13 @@ public class ChatroomServiceImpl implements ChatroomService {
                 .map(chatroomGroupVO -> {
                     return ChatroomDetailDTO.builder()
                             .senderId((Long) chatroomGroupVO[0])
-                            .receiverId((Long) chatroomGroupVO[1])
-                            .chatroomId((Long) chatroomGroupVO[2])
-                            .receiverProfileUrl((String) chatroomGroupVO[3])
-                            .recentMessage((String) chatroomGroupVO[4])
-                            .createdAt(((Timestamp) chatroomGroupVO[5]).toLocalDateTime())
+                            .senderNickName((String) chatroomGroupVO[1])
+                            .receiverId((Long) chatroomGroupVO[2])
+                            .receiverNickName((String) chatroomGroupVO[3])
+                            .chatroomId((Long) chatroomGroupVO[4])
+                            .receiverProfileUrl((String) chatroomGroupVO[5])
+                            .recentMessage((String) chatroomGroupVO[6])
+                            .createdAt(((Timestamp) chatroomGroupVO[7]).toLocalDateTime())
                             .build();
                 })
                 .toList();
@@ -93,6 +96,15 @@ public class ChatroomServiceImpl implements ChatroomService {
         chatroomGroupDAO.createChatroomGroup(ChatroomGroupVO.builder()
                 .memberId(memberEntity.getMemberId())
                 .chatroomId(chatroomEntity.getChatroomId()).build());
+
+        // 회원가입시 AI챗봇 채팅방 생성
+        if(chatroomRequestDTO.getSubject().equals("AI 챗봇")){
+            chatService.saveMessage("AIBot", new MessageSendRequestDTO(chatroomEntity.getChatroomId(), "ㅎㅇ 난 챗봇",memberEntity.getNickname(),memberEntity.getProfileImageUrl()));
+
+            chatroomGroupDAO.createChatroomGroup(ChatroomGroupVO.builder()
+                    .memberId(100L)
+                    .chatroomId(chatroomEntity.getChatroomId()).build());
+        }
 
         return ChatroomResponseDTO.builder()
                 .resultCode(ResultCodeEnum.SUCCESS.getValue())

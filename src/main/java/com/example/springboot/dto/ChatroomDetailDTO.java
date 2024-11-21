@@ -13,7 +13,9 @@ import java.time.LocalDateTime;
 @Builder
 public class ChatroomDetailDTO {
     private Long senderId;
+    private String senderNickName;
     private Long receiverId;
+    private String receiverNickName;
     private Long chatroomId;
     private String receiverProfileUrl;
     private String recentMessage;
