@@ -85,6 +85,25 @@ public class MemberDAOImpl implements MemberDAO {
     }
 
     /**
+     * 멤버 조회
+     * <p>
+     * 멤버아이디로 멤버를 조회하는 메소드이다.
+     *
+     * @param memberId
+     * @return
+     */
+    @Override
+    public Optional<MemberEntity> findById(Long memberId) {
+        if (memberId == null) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        }
+
+        log.info("findById memberId : {}", memberId);
+
+        return memberRepository.findById(memberId);
+    }
+
+    /**
      * 비밀번호실패횟수 초기화
      *
      * 멤버아이디로 비밀번호실패횟수를 초기화하는 메소드이다.

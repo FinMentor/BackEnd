@@ -12,6 +12,8 @@ public interface MemberDAO {
 
     List<MemberEntity> findById(List<Long> memberIdList);
 
+    Optional<MemberEntity> findById(Long memberId);
+
     int resetPasswordFailureCount(String id);
 
     int save(String id, String password);

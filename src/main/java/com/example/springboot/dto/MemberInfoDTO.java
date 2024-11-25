@@ -5,9 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,4 +14,6 @@ public class MemberInfoDTO {
     private String nickname;
     private String profileImageUrl;
     private String answerTime;
+    private String resultCode;
+    private String resultMessage;
 }

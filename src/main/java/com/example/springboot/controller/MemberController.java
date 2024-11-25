@@ -5,8 +5,6 @@ import com.example.springboot.service.MemberService;
 import com.example.springboot.util.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -98,17 +96,17 @@ public class MemberController {
     }
 
     /**
-     * 유저 정보 확인
+     * 멤버정보 조회
      * <p>
-     * 유저 정보를 확인하는 메소드이다.
+     * 멤버정보를 조회하는 메소드이다.
      *
      * @param memberId
      * @return
      */
-    @GetMapping("/userinfo")
-    public ResponseResult<MemberInfoDTO> userinfo(@RequestParam Long memberId) {
-        log.info("userinfo memberId : {}", memberId);
+    @GetMapping("/member-info")
+    public ResponseResult<MemberInfoDTO> memberInfo(@RequestParam Long memberId) {
+        log.info("memberInfo memberId : {}", memberId);
 
-        return ResponseResult.success(memberService.userinfo(memberId));
+        return ResponseResult.success(memberService.memberInfo(memberId));
     }
 }

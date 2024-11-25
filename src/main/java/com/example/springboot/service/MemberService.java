@@ -15,5 +15,5 @@ public interface MemberService {
 
     MemberLoginRenewResponseDTO loginRenew(MemberLoginRenewRequestDTO memberLoginRenewRequestDTO);
 
-    MemberInfoDTO userinfo(Long memberId);
+    MemberInfoDTO memberInfo(Long memberId);
 }

@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -36,6 +35,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberSmsQueryDSLDAO memberSmsQueryDSLDAO;
     private final AuthTokensGenerator authTokensGenerator;
     private final ChatroomService chatroomService;
+
     /**
      * 회원가입
      * <p>
@@ -83,7 +83,7 @@ public class MemberServiceImpl implements MemberService {
                 .emailVerificationCode(memberSignupRequestDTO.getEmailVerificationCode())
                 .emailVerifiedStatus(ColumnYn.valueOf(CommonCodeEnum.YES.getValue())).build());
 
-        chatroomService.createChatroom(memberSignupRequestDTO.getId(), new ChatroomRequestDTO(100L,"AI 챗봇"));
+        chatroomService.createChatroom(memberSignupRequestDTO.getId(), new ChatroomRequestDTO(100L, "AI 챗봇"));
 
         memberSignupRequestDTO.getTermsAgreementDTOList().forEach(termsAgreementDTO -> {
             TermsOfUseEntity termsOfUseEntity = termsOfUseDAO.findById(termsAgreementDTO.getTermsOfUseId()).orElseThrow(() -> new FailGetTermsOfUseException(ExceptionCodeEnum.NONEXISTENT_TERMS_OF_USE));
@@ -373,19 +373,28 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    /**
+     * 멤버정보 조회
+     * <p>
+     * 멤버정보를 조회하는 메소드이다.
+     *
+     * @param memberId
+     * @return
+     */
     @Override
-    public MemberInfoDTO userinfo(Long memberId) {
-        List<Long> memberIds = Collections.singletonList(memberId);
-        return memberDAO.findById(memberIds).stream()
+    public MemberInfoDTO memberInfo(Long memberId) {
+        return memberDAO.findById(memberId).stream()
                 .map(memberEntity ->
                         MemberInfoDTO.builder()
                                 .memberId(memberEntity.getMemberId())
                                 .nickname(memberEntity.getNickname())
                                 .profileImageUrl(memberEntity.getProfileImageUrl())
                                 .answerTime(memberEntity.getAnswerTime())
+                                .resultCode(ResultCodeEnum.SUCCESS.getValue())
+                                .resultMessage(ResultCodeEnum.SUCCESS.getMessage())
                                 .build()
                 )
                 .findFirst()
-                .orElseThrow(() ->new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER));
+                .orElseThrow(() -> new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER));
     }
 }
