@@ -70,6 +70,8 @@ dependencies {
     // 웹소켓
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
+    // redis
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '3.3.2'
 }
 
 tasks.named('test') {
