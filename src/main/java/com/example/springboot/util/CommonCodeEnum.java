@@ -14,7 +14,8 @@ public enum CommonCodeEnum {
     WEEKLY("weekly", null),
     MONTHLY("monthly", null),
     NORMAL("normal", null),
-    EXPERT("expert", null);
+    EXPERT("expert", null),
+    REDIS_KEY("RK:", null);
 
     private String value;
     private Long num;

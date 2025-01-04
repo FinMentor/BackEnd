@@ -11,6 +11,7 @@ import com.example.springboot.util.ExceptionCodeEnum;
 import com.example.springboot.util.ResultCodeEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +37,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberSmsQueryDSLDAO memberSmsQueryDSLDAO;
     private final AuthTokensGenerator authTokensGenerator;
     private final ChatroomService chatroomService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     /**
      * 회원가입
@@ -204,6 +207,8 @@ public class MemberServiceImpl implements MemberService {
 
                             AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberEntity.getId(), memberEntity.getMemberType(), memberEntity.getMemberId());
 
+                            redisTemplate.opsForValue().set(CommonCodeEnum.REDIS_KEY.getValue() + memberEntity.getMemberId(), authTokensDTO.getRefreshToken(), authTokensDTO.getRefreshTokenExpireTime(), TimeUnit.MILLISECONDS);
+
                             return MemberLoginResponseDTO.builder()
                                     .accessToken(authTokensDTO.getAccessToken())
                                     .refreshToken(authTokensDTO.getRefreshToken())
@@ -357,6 +362,8 @@ public class MemberServiceImpl implements MemberService {
                             memberEntity -> {
                                 if (CommonCodeEnum.YES.getValue().equals(String.valueOf(memberEntity.getAutoLogin()))) {
                                     AuthTokensDTO authTokensDTO = authTokensGenerator.generate(memberEntity.getId(), memberEntity.getMemberType(), memberEntity.getMemberId());
+
+                                    redisTemplate.opsForValue().set(CommonCodeEnum.REDIS_KEY.getValue() + memberEntity.getMemberId(), authTokensDTO.getRefreshToken(), authTokensDTO.getRefreshTokenExpireTime(), TimeUnit.MILLISECONDS);
 
                                     return MemberLoginRenewResponseDTO.builder()
                                             .accessToken(authTokensDTO.getAccessToken())
