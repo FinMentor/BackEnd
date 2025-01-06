@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class MemberLoginRenewRequestDTO {
-    String refreshToken;
+    private String refreshToken;
 }

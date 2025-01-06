@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
@@ -47,6 +45,21 @@ public class MemberController {
     }
 
     /**
+     * 로그아웃
+     * <p>
+     * 로그아웃을 통해 Redis 블랙리스트 처리하는 메소드이다.
+     *
+     * @param memberLogoutRequestDTO
+     * @return
+     */
+    @DeleteMapping("/logout")
+    public ResponseResult<MemberLogoutResponseDTO> logout(@RequestBody MemberLogoutRequestDTO memberLogoutRequestDTO) {
+        log.info("logout memberLogoutRequestDTO : {}", memberLogoutRequestDTO);
+
+        return ResponseResult.success(memberService.logout(memberLogoutRequestDTO));
+    }
+
+    /**
      * 아이디 찾기
      * <p>
      * 이름과 휴대폰번호로 아이디를 찾는 메소드이다.
@@ -59,7 +72,7 @@ public class MemberController {
      * @return
      */
     @GetMapping("/find-id")
-    public ResponseResult<List<MemberFindIdDTO>> findId(@RequestParam String name, @RequestParam String phoneFirst, @RequestParam String phoneMiddle, @RequestParam String phoneLast, @RequestParam String phoneVerificationCode) {
+    public ResponseResult<MemberFindIdDTO> findId(@RequestParam String name, @RequestParam String phoneFirst, @RequestParam String phoneMiddle, @RequestParam String phoneLast, @RequestParam String phoneVerificationCode) {
         log.info("findId name : {}, phoneFirst : {}, phoneMiddle : {}, phoneLast : {}, phoneVerificationCode : {}", name, phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode);
 
         return ResponseResult.success(memberService.findId(name, phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode));

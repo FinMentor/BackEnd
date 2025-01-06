@@ -189,6 +189,8 @@ public class MemberServiceImpl implements MemberService {
      */
     @Override
     public MemberLoginResponseDTO login(MemberLoginRequestDTO memberLoginRequestDTO) {
+        log.info("login memberLoginRequestDTO: {}", memberLoginRequestDTO);
+
         return memberDAO.findById(memberLoginRequestDTO.getId()).map(
                         memberEntity -> {
                             if (!passwordEncoder.matches(memberLoginRequestDTO.getPassword(), memberEntity.getPassword())) {
@@ -219,6 +221,35 @@ public class MemberServiceImpl implements MemberService {
     }
 
     /**
+     * 로그아웃
+     * <p>
+     * 로그아웃을 통해 Redis 블랙리스트 처리하는 메소드이다.
+     *
+     * @param memberLogoutRequestDTO
+     * @return
+     */
+    @Override
+    public MemberLogoutResponseDTO logout(MemberLogoutRequestDTO memberLogoutRequestDTO) {
+        log.info("logout memberLogoutRequestDTO: {}", memberLogoutRequestDTO);
+
+        if (authTokensGenerator.validateTokens(memberLogoutRequestDTO.getAccessToken())) {
+            return memberDAO.findById(authTokensGenerator.getMemberId(memberLogoutRequestDTO.getAccessToken())).map(
+                            memberEntity -> {
+                                if (redisTemplate.opsForValue().get(CommonCodeEnum.REDIS_KEY.getValue() + memberEntity.getMemberId()) != null) {
+                                    redisTemplate.delete(CommonCodeEnum.REDIS_KEY.getValue() + memberEntity.getMemberId());
+                                }
+
+                                return MemberLogoutResponseDTO.builder()
+                                        .resultCode(ResultCodeEnum.SUCCESS.getValue())
+                                        .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
+                            })
+                    .orElseThrow(() -> new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER));
+        } else {
+            throw new SessionExpiredException(ExceptionCodeEnum.SESSION_EXPIRED);
+        }
+    }
+
+    /**
      * 아이디 찾기
      * <p>
      * 이름과 휴대폰으로 아이디를 찾는 메소드이다.
@@ -231,7 +262,7 @@ public class MemberServiceImpl implements MemberService {
      * @return
      */
     @Override
-    public List<MemberFindIdDTO> findId(String name, String phoneFirst, String phoneMiddle, String phoneLast, String phoneVerificationCode) {
+    public MemberFindIdDTO findId(String name, String phoneFirst, String phoneMiddle, String phoneLast, String phoneVerificationCode) {
         log.info("findId name : {}, phoneFirst : {}, phoneMiddle : {}, phoneLast : {}, phoneVerificationCode : {}", name, phoneFirst, phoneMiddle, phoneLast, phoneVerificationCode);
 
         // 휴대폰인증 확인
@@ -245,25 +276,27 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // 멤버 할당
-        List<MemberFindIdDTO> memberFindidResponseDTOList = memberSmsEntityList.stream()
+        List<MemberIdDTO> memberIdDTOList = memberSmsEntityList.stream()
                 .map(memberSmsEntity -> {
                     if (!Objects.equals(phoneLast, encryptionService.decrypt(memberSmsEntity.getPhoneLast()))) {
                         return null;
                     }
 
-                    return MemberFindIdDTO.builder()
+                    return MemberIdDTO.builder()
                             .memberId(memberSmsEntity.getMemberEntity().getMemberId())
                             .snsType(memberSmsEntity.getMemberEntity().getSnsType())
-                            .createdAt(memberSmsEntity.getMemberEntity().getCreatedAt())
-                            .build();
+                            .createdAt(memberSmsEntity.getMemberEntity().getCreatedAt()).build();
                 })
                 .filter(Objects::nonNull)
                 .toList();
 
-        if (memberFindidResponseDTOList.isEmpty()) {
+        if (memberIdDTOList.isEmpty()) {
             throw new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER);
         }
-        return memberFindidResponseDTOList;
+        return MemberFindIdDTO.builder()
+                .memberIdDTOList(memberIdDTOList)
+                .resultCode(ResultCodeEnum.SUCCESS.getValue())
+                .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
     }
 
     /**
@@ -371,6 +404,10 @@ public class MemberServiceImpl implements MemberService {
                                             .resultCode(ResultCodeEnum.SUCCESS.getValue())
                                             .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
                                 } else {
+                                    if (redisTemplate.opsForValue().get(CommonCodeEnum.REDIS_KEY.getValue() + memberEntity.getMemberId()) != null) {
+                                        redisTemplate.delete(CommonCodeEnum.REDIS_KEY.getValue() + memberEntity.getMemberId());
+                                    }
+
                                     throw new SessionExpiredException(ExceptionCodeEnum.SESSION_EXPIRED);
                                 }
                             })

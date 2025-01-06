@@ -9,7 +9,9 @@ public interface MemberService {
 
     MemberLoginResponseDTO login(MemberLoginRequestDTO memberLoginRequestDTO);
 
-    List<MemberFindIdDTO> findId(String name, String phoneFirst, String phoneMiddle, String phoneLast, String phoneVerificationCode);
+    MemberLogoutResponseDTO logout(MemberLogoutRequestDTO memberLogoutRequestDTO);
+
+    MemberFindIdDTO findId(String name, String phoneFirst, String phoneMiddle, String phoneLast, String phoneVerificationCode);
 
     MemberFindPasswordResponseDTO findPassword(MemberFindPasswordRequestDTO memberFindPasswordRequestDTO);
 

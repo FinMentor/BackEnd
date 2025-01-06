@@ -6,14 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberFindIdDTO {
-    private List<MemberIdDTO> memberIdDTOList;
-    private String resultCode;
-    private String resultMessage;
+public class MemberIdDTO {
+    private Long memberId;
+    private String snsType;
+    private LocalDateTime createdAt;
 }
