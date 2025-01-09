@@ -14,6 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
@@ -25,12 +29,18 @@ public class FileServiceImpl implements FileService {
     private final FileDAO fileDAO;
 
     @Override
-    public UploadImageDTO uploadImage(String id, MultipartFile multipartFile) {
+    public UploadImageDTO uploadImage(String id, MultipartFile multipartFile) throws IOException {
         MemberEntity memberEntity = memberDAO.findById(id).orElseThrow(() -> new FailGetMemberException(ExceptionCodeEnum.NONEXISTENT_MEMBER));
+
+        String filePath = "/Volumes/bbaek2.synology.me/NAS_WEB_SERVER/" + UUID.randomUUID().toString().replace("-", "") + "_" + multipartFile.getOriginalFilename();
+
+        Path path = Paths.get(filePath);
+        Files.createDirectories(path.getParent());
+        Files.write(path, multipartFile.getBytes());
 
         fileDAO.save(FileEntity.builder()
                 .memberEntity(memberEntity)
-                .filePath("/Volumes/bbaek2.synology.me/NAS_WEB_SERVER/" + UUID.randomUUID().toString().replace("-", "") + "_" + multipartFile.getOriginalFilename()).build());
+                .filePath(filePath).build());
 
         return UploadImageDTO.builder()
                 .resultCode(ResultCodeEnum.SUCCESS.getValue())

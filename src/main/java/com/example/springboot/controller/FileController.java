@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/api/v1/file")
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping("/upload")
-    public ResponseResult<UploadImageDTO> uploadImage(@RequestParam MultipartFile multipartFile) {
+    public ResponseResult<UploadImageDTO> uploadImage(@RequestParam MultipartFile multipartFile) throws IOException {
         log.info("uploadImage multipartFile : {}", multipartFile);
 
         return ResponseResult.success(fileService.uploadImage(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername(), multipartFile));
