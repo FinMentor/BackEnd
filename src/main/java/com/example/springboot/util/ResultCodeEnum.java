@@ -26,7 +26,8 @@ public enum ResultCodeEnum {
     NONEXISTENT_CATEGORY("0016", "카테고리 찾기 실패"),
     NONEXISTENT_RANKING("0017", "랭킹조회 실패"),
     NONEXISTENT_NOTIFICATION("0018", "알림내역 없음"),
-    NONEXISTENT_CHATROOM("0019", "채팅방 없음");
+    NONEXISTENT_CHATROOM("0019", "채팅방 없음"),
+    INVALID_FILE_NAME("0020", "유효하지 않은 파일 이름");
 
     private String value;
     private String message;

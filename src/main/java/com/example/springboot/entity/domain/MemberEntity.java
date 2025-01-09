@@ -73,6 +73,9 @@ public class MemberEntity extends CommonColumn {
     @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
     private List<MessageEntity> messageEntityList;
 
+    @OneToOne(mappedBy = "memberEntity", fetch = FetchType.LAZY)
+    private FileEntity fileEntity;
+
     @Comment("아이디")
     @Column(name = "ID", length = 50, nullable = false, unique = true)
     private String id;
