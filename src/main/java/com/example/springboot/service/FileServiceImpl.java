@@ -56,22 +56,24 @@ public class FileServiceImpl implements FileService {
 
         String filePath = fileUrl + UUID.randomUUID().toString().replace("-", "") + "_" + multipartFile.getOriginalFilename();
 
-        Path path = Paths.get(filePath);
-        Files.createDirectories(path.getParent());
-        Files.write(path, multipartFile.getBytes());
-
         if (fileEntityList.isEmpty()) {
             fileDAO.insert(FileEntity.builder()
                     .memberEntity(memberEntity)
                     .filePath(filePath).build());
         } else {
-            Long fileId = fileEntityList.stream().max(Comparator.comparing(FileEntity::getCreatedAt)).map(FileEntity::getFileId).orElseThrow(() -> new FailGetFileException(ExceptionCodeEnum.NONEXISTENT_FILE));
+            FileEntity fileEntity = fileEntityList.stream().max(Comparator.comparing(FileEntity::getCreatedAt)).orElseThrow(() -> new FailGetFileException(ExceptionCodeEnum.NONEXISTENT_FILE));
+
+            Files.delete(Paths.get(fileEntity.getFilePath()));
 
             fileDAO.update(FileEntity.builder()
-                    .fileId(fileId)
+                    .fileId(fileEntity.getFileId())
                     .memberEntity(memberEntity)
                     .filePath(filePath).build());
         }
+
+        Path path = Paths.get(filePath);
+        Files.createDirectories(path.getParent());
+        Files.write(path, multipartFile.getBytes());
 
         return UploadImageDTO.builder()
                 .resultCode(ResultCodeEnum.SUCCESS.getValue())
