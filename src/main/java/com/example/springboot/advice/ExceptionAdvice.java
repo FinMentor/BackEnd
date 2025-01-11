@@ -156,11 +156,11 @@ public class ExceptionAdvice {
         return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_CHATROOM.getHttpStatus(), ResultCodeEnum.NONEXISTENT_CHATROOM.getValue(), ResultCodeEnum.NONEXISTENT_CHATROOM.getMessage());
     }
 
-    // 유효하지 않은 파일 이름
-    @ExceptionHandler(FileStorageException.class)
-    public ResponseResult<ErrorResponse> fileStorageException(FileStorageException e) {
-        log.error("ExceptionAdvice fileStorageException : {}", e.getMessage());
+    // 존재하지않는 파일
+    @ExceptionHandler(FailGetFileException.class)
+    public ResponseResult<ErrorResponse> failGetFileException(FailGetFileException e) {
+        log.error("ExceptionAdvice failGetFileException : {}", e.getMessage());
 
-        return ResponseResult.fail(ExceptionCodeEnum.INVALID_FILE_NAME.getHttpStatus(), ResultCodeEnum.INVALID_FILE_NAME.getValue(), ResultCodeEnum.INVALID_FILE_NAME.getMessage());
+        return ResponseResult.fail(ExceptionCodeEnum.NONEXISTENT_FILE.getHttpStatus(), ResultCodeEnum.NONEXISTENT_FILE.getValue(), ResultCodeEnum.NONEXISTENT_FILE.getMessage());
     }
 }

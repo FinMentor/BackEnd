@@ -2,6 +2,12 @@ package com.example.springboot.dao;
 
 import com.example.springboot.entity.domain.FileEntity;
 
+import java.util.List;
+
 public interface FileDAO {
-    FileEntity save(FileEntity fileEntity);
+    void insert(FileEntity fileEntity);
+
+    void update(FileEntity fileEntity);
+
+    List<FileEntity> findByMemberId(Long memberId);
 }

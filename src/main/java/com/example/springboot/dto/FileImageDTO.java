@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommentRequestDTO {
-    private Long commentId;
-    private String id;
-    private Long postId;
-    private String content;
+public class FileImageDTO {
+    private String filePath;
+    private String resultCode;
+    private String resultMessage;
 }

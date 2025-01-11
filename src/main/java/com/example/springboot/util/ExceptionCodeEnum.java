@@ -26,7 +26,8 @@ public enum ExceptionCodeEnum {
     NONEXISTENT_RANKING(HttpStatus.NOT_FOUND, "랭킹이 존재하지 않습니다."),
     NONEXISTENT_NOTIFICATION(HttpStatus.NOT_FOUND, "알림내역이 존재하지 않습니다."),
     NONEXISTENT_CHATROOM(HttpStatus.NOT_FOUND, "채팅방이 존재하지 않습니다."),
-    INVALID_FILE_NAME(HttpStatus.BAD_REQUEST, "파일 이름이 유효하지 않습니다.");
+    INVALID_FILE_NAME(HttpStatus.BAD_REQUEST, "파일 이름이 유효하지 않습니다."),
+    NONEXISTENT_FILE(HttpStatus.NOT_FOUND, "파일이 존재하지 않습니다.");
 
     private HttpStatus httpStatus;
     private String message;

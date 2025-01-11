@@ -21,13 +21,13 @@ public enum ResultCodeEnum {
     WITHDRAWAL_MEMBER("0011", "회원탈퇴한 멤버"),
     ERROR_FIVE_TIMES_OVER_PASSWORD("0012", "비밀번호 틀린 횟수 5회이상"),
     SESSION_EXPIRED("0013", "세션 만료"),
-    NONEXISTENT_POST("0014","존재하지 않는 게시물"),
+    NONEXISTENT_POST("0014", "존재하지 않는 게시물"),
     NONEXISTENT_COMMENT("0015", "존재하지 않는 댓글"),
     NONEXISTENT_CATEGORY("0016", "카테고리 찾기 실패"),
     NONEXISTENT_RANKING("0017", "랭킹조회 실패"),
     NONEXISTENT_NOTIFICATION("0018", "알림내역 없음"),
     NONEXISTENT_CHATROOM("0019", "채팅방 없음"),
-    INVALID_FILE_NAME("0020", "유효하지 않은 파일 이름");
+    NONEXISTENT_FILE("0020", "존재하지않는 파일");
 
     private String value;
     private String message;
