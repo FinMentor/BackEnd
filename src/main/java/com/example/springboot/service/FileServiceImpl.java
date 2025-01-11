@@ -12,6 +12,7 @@ import com.example.springboot.util.ExceptionCodeEnum;
 import com.example.springboot.util.ResultCodeEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +33,9 @@ public class FileServiceImpl implements FileService {
     private final MemberDAO memberDAO;
     private final FileDAO fileDAO;
 
+    @Value("${file.image.url}")
+    private String fileUrl;
+
     /**
      * 이미지 업로드
      * <p>
@@ -50,7 +54,7 @@ public class FileServiceImpl implements FileService {
 
         List<FileEntity> fileEntityList = fileDAO.findByMemberId(memberEntity.getMemberId());
 
-        String filePath = "/Volumes/bbaek2.synology.me/NAS_WEB_SERVER/" + UUID.randomUUID().toString().replace("-", "") + "_" + multipartFile.getOriginalFilename();
+        String filePath = fileUrl + UUID.randomUUID().toString().replace("-", "") + "_" + multipartFile.getOriginalFilename();
 
         Path path = Paths.get(filePath);
         Files.createDirectories(path.getParent());
