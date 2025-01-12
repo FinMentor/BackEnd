@@ -31,8 +31,8 @@ public class FileDAOImpl implements FileDAO {
             throw new ErrorRequiredValueValidationException(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
-        if (fileEntity.getFilePath() == null || fileEntity.getFilePath().isEmpty()) {
-            throw new ErrorRequiredValueValidationException(new StringBuilder("filePath는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        if (fileEntity.getFileName() == null || fileEntity.getFileName().isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("fileName은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         log.info("insert fileEntity: {}", fileEntity);
@@ -57,8 +57,8 @@ public class FileDAOImpl implements FileDAO {
             throw new ErrorRequiredValueValidationException(new StringBuilder("memberId는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
-        if (fileEntity.getFilePath() == null || fileEntity.getFilePath().isEmpty()) {
-            throw new ErrorRequiredValueValidationException(new StringBuilder("filePath는 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
+        if (fileEntity.getFileName() == null || fileEntity.getFileName().isEmpty()) {
+            throw new ErrorRequiredValueValidationException(new StringBuilder("fileName은 "), ExceptionCodeEnum.NONEXISTENT_REQUIRED_VALUE);
         }
 
         log.info("update fileEntity: {}", fileEntity);

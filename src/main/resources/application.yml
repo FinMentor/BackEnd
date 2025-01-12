@@ -40,5 +40,7 @@ custom:
     secretKey: umXvaYXe2LfjbmOsZMzXdmJnM9c4kRcHbSuqZlUyezbIGA1w7Yu7vZ8Oqpk33OrfX8O6XS8qwyEfIxB1g7HzJL
 
 file:
+  username: project
+  password: DP9I,@t{
   image:
-    url: /Volumes/bbaek2.synology.me/NAS_WEB_SERVER/
+    url: https://bbaek2.synology.me:5006/NAS_WEB_SERVER/

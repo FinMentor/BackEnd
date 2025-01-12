@@ -29,7 +29,7 @@ public class FileEntity extends CommonColumn {
     @JoinColumn(name = "MEMBER_ID")
     private MemberEntity memberEntity;
 
-    @Comment("파일 경로")
-    @Column(name = "FILE_PATH", length = 100, nullable = false)
-    private String filePath;
+    @Comment("파일 이름")
+    @Column(name = "FILE_NAME", length = 100, nullable = false)
+    private String fileName;
 }

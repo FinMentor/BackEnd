@@ -13,14 +13,17 @@ import com.example.springboot.util.ResultCodeEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -32,6 +35,12 @@ import java.util.UUID;
 public class FileServiceImpl implements FileService {
     private final MemberDAO memberDAO;
     private final FileDAO fileDAO;
+
+    @Value("${file.username}")
+    private String username;
+
+    @Value("${file.password}")
+    private String password;
 
     @Value("${file.image.url}")
     private String fileUrl;
@@ -54,26 +63,30 @@ public class FileServiceImpl implements FileService {
 
         List<FileEntity> fileEntityList = fileDAO.findByMemberId(memberEntity.getMemberId());
 
-        String filePath = fileUrl + UUID.randomUUID().toString().replace("-", "") + "_" + multipartFile.getOriginalFilename();
+        String fileName = UUID.randomUUID().toString().replace("-", "") + "_" + multipartFile.getOriginalFilename();
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setBasicAuth(username, password);
+        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+        HttpEntity<ByteArrayResource> httpEntity = new HttpEntity<>(new ByteArrayResource(multipartFile.getBytes()), httpHeaders);
+        RestTemplate restTemplate = new RestTemplate();
 
         if (fileEntityList.isEmpty()) {
             fileDAO.insert(FileEntity.builder()
                     .memberEntity(memberEntity)
-                    .filePath(filePath).build());
+                    .fileName(fileName).build());
         } else {
             FileEntity fileEntity = fileEntityList.stream().max(Comparator.comparing(FileEntity::getCreatedAt)).orElseThrow(() -> new FailGetFileException(ExceptionCodeEnum.NONEXISTENT_FILE));
 
-            Files.delete(Paths.get(fileEntity.getFilePath()));
+            restTemplate.exchange(fileUrl + fileEntity.getFileName(), HttpMethod.DELETE, httpEntity, Void.class);
 
             fileDAO.update(FileEntity.builder()
                     .fileId(fileEntity.getFileId())
                     .memberEntity(memberEntity)
-                    .filePath(filePath).build());
+                    .fileName(fileName).build());
         }
 
-        Path path = Paths.get(filePath);
-        Files.createDirectories(path.getParent());
-        Files.write(path, multipartFile.getBytes());
+        restTemplate.exchange(fileUrl + fileName, HttpMethod.PUT, httpEntity, Void.class);
 
         return UploadImageDTO.builder()
                 .resultCode(ResultCodeEnum.SUCCESS.getValue())
@@ -97,7 +110,7 @@ public class FileServiceImpl implements FileService {
         FileEntity fileEntity = fileDAO.findByMemberId(memberEntity.getMemberId()).stream().max(Comparator.comparing(FileEntity::getCreatedAt)).orElseThrow(() -> new FailGetFileException(ExceptionCodeEnum.NONEXISTENT_FILE));
 
         return FileImageDTO.builder()
-                .filePath(fileEntity.getFilePath())
+                .filePath(fileUrl + fileEntity.getFileName())
                 .resultCode(ResultCodeEnum.SUCCESS.getValue())
                 .resultMessage(ResultCodeEnum.SUCCESS.getMessage()).build();
     }
