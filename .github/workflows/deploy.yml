@@ -1,5 +1,6 @@
-name: Spring Boot Docker CI/CD Pipeline
+name: CI/CD Pipeline
 
+# 트리거: main 브랜치에 push될 때 또는 pull request가 있을 때 작동
 on:
   push:
     branches:
@@ -22,13 +23,13 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'temurin'
+          distribution: 'temurin'  # 'temurin', 'zulu', 'adopt', etc. 중 하나 선택
 
       # 3. Docker 버전 확인 (디버깅용)
       - name: Check Docker version
         run: docker --version
 
-      # 4. Docker Hub 로그인
+      # 4. Docker 로그인
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -40,26 +41,19 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.gradle/caches
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: |
-            gradle-${{ runner.os }}-
+            ${{ runner.os }}-gradle-
 
-      # 6. Gradle Wrapper 형식 변경 및 실행 권한 추가
-      - name: Remove carriage return characters from gradlew
-        run: sed -i 's/\r//' ./gradlew
-
-      - name: Add execute permission to Gradle wrapper
-        run: chmod +x ./gradlew
-
-      # 7. 애플리케이션 빌드 (Gradle)
+      # 6. 애플리케이션 빌드 (Gradle)
       - name: Build application with Gradle
         run: ./gradlew build -x test
 
-      # 8. Docker 이미지 빌드
+      # 7. Docker 이미지 빌드
       - name: Build Docker image
         run: docker build . -t ${{ secrets.DOCKER_USERNAME }}/backend:latest
 
-      # 9. Docker 이미지 푸시
+      # 8. Docker 이미지 푸시
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
 
@@ -76,8 +70,6 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/backend:latest
-
             docker stop backend || true
             docker rm backend || true
-
             docker run -d -p 8080:8080 --name backend ${{ secrets.DOCKER_USERNAME }}/backend:latest
