@@ -45,8 +45,8 @@ jobs:
             gradle-${{ runner.os }}-
 
       # 6. Gradle Wrapper 형식 변경 및 실행 권한 추가
-      - name: Convert Gradle wrapper to Unix format
-        run: dos2unix ./gradlew
+      - name: Remove carriage return characters from gradlew
+        run: sed -i 's/\r//' ./gradlew
 
       - name: Add execute permission to Gradle wrapper
         run: chmod +x ./gradlew
