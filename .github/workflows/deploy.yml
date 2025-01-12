@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'temurin'  # 'temurin', 'zulu', 'adopt', etc. 중 하나 선택
+          distribution: 'temurin'
 
       # 3. Docker 버전 확인 (디버깅용)
       - name: Check Docker version
@@ -45,15 +45,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # 6. 애플리케이션 빌드 (Gradle)
+      # 6. Gradle Wrapper 실행 권한 추가
+      - name: Add execute permission to Gradle wrapper
+        run: chmod +x ./gradlew
+
+      # 7. 애플리케이션 빌드 (Gradle)
       - name: Build application with Gradle
         run: ./gradlew build -x test
 
-      # 7. Docker 이미지 빌드
+      # 8. Docker 이미지 빌드
       - name: Build Docker image
         run: docker build . -t ${{ secrets.DOCKER_USERNAME }}/backend:latest
 
-      # 8. Docker 이미지 푸시
+      # 9. Docker 이미지 푸시
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
 
