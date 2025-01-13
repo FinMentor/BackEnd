@@ -1,0 +1,103 @@
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>채팅방</title>
+    <style>
+        #messageArea {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+        .message {
+            margin: 5px;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .received {
+            background-color: #f1f1f1;
+        }
+        .sent {
+            background-color: #e3f2fd;
+            margin-left: 50px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<div id="messageArea"></div>
+<input type="text" id="messageInput" placeholder="메시지를 입력하세요">
+<button onclick="sendMessage()">전송</button>
+
+<script>
+    let stompClient = null;
+    const messageArea = document.getElementById('messageArea');
+    const messageInput = document.getElementById('messageInput');
+    const chatRoomId = 1; // 실제 구현시 채팅방 ID로 대체
+
+    function connect() {
+        const socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+
+        // JWT를 브라우저 쿠키에서 가져오기
+        const cookies = document.cookie.split('; ').reduce((acc, cookie) => {
+            const [key, value] = cookie.split('=');
+            acc[key] = value;
+            return acc;
+        }, {});
+        const jwt = cookies['jwt']; // 쿠키에서 JWT 추출
+
+        console.log('JWT 전달:', jwt); // JWT 값 확인
+
+        stompClient.connect(
+            { Cookie: `jwt=${jwt}` }, // JWT를 nativeHeader로 전달
+            function (frame) {
+                console.log('STOMP 연결 성공:', frame);
+                stompClient.subscribe(`/topic/chat/${chatRoomId}`, function (message) {
+                    displayMessage(JSON.parse(message.body));
+                });
+            },
+            function (error) {
+                console.error('STOMP 연결 실패:', error);
+            }
+        );
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const memberId = urlParams.get('memberId') || prompt("Enter your Member ID:");
+
+    function sendMessage() {
+        if (messageInput.value.trim()) {
+            const message = {
+                memberId: memberId, // 각 사용자의 고유 ID
+                chatroomId: chatRoomId,
+                content: messageInput.value,
+                messageType: 'N'
+            };
+            stompClient.send(`/api/v1/chat/send`, {}, JSON.stringify(message));
+            messageInput.value = '';
+        }
+    }
+
+
+    function displayMessage(message) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        messageDiv.classList.add(message.memberId === memberId ? 'sent' : 'received');
+        messageDiv.textContent = `${message.memberId}: ${message.content}`;
+        messageArea.appendChild(messageDiv);
+        messageArea.scrollTop = messageArea.scrollHeight;
+    }
+
+    messageInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    connect(); // 페이지 로드 시 STOMP 연결
+</script>
+</body>
+</html>

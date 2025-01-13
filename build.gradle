@@ -1,0 +1,79 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.3'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // QueryDSL
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+
+    // SMS
+    implementation 'net.nurigo:sdk:4.3.0'
+
+    // 암호화
+    implementation 'org.jasypt:jasypt:1.9.3'
+
+    // JWT
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+
+    // 최신 GSON 버전
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // 테스트
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Optional: Hibernate JPA Model Generator (QueryDSL 관련)
+    annotationProcessor 'org.hibernate:hibernate-jpamodelgen:6.0.0.Final'
+
+    // mahout-integration : 아파치 사용자 기반 필터링
+    implementation group: 'org.apache.mahout', name: 'mahout-integration', version: '0.13.0'
+
+    // springfox-swagger2, springfox-swagger-ui
+    implementation "io.springfox:springfox-swagger2:2.9.2"
+    implementation "io.springfox:springfox-swagger-ui:2.9.2"
+
+    // 웹소켓
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    // redis
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '3.3.2'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
