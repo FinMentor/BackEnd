@@ -57,19 +57,19 @@ jobs:
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      # 1. EC2 서버에 SSH로 접근하여 Docker 컨테이너 업데이트
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@v0.1.8
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
-          script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/backend:latest
-            docker stop backend || true
-            docker rm backend || true
-            docker run -d -p 8080:8080 --name backend ${{ secrets.DOCKER_USERNAME }}/backend:latest
+#  deploy:
+#    runs-on: ubuntu-latest
+#    needs: build
+#    steps:
+#      # 1. EC2 서버에 SSH로 접근하여 Docker 컨테이너 업데이트
+#      - name: Deploy to EC2
+#        uses: appleboy/ssh-action@v0.1.8
+#        with:
+#          host: ${{ secrets.EC2_HOST }}
+#          username: ${{ secrets.EC2_USER }}
+#          key: ${{ secrets.EC2_KEY }}
+#          script: |
+#            docker pull ${{ secrets.DOCKER_USERNAME }}/backend:latest
+#            docker stop backend || true
+#            docker rm backend || true
+#            docker run -d -p 8080:8080 --name backend ${{ secrets.DOCKER_USERNAME }}/backend:latest
